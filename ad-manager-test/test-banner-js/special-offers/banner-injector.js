@@ -7,7 +7,6 @@
             defaultPath: 'achats/special-offers-grid.html'
         };
         const i18n = {
-            localesPath: "locales.json", 
             defaultLang: 'en',
             currentLang: (navigator.language || navigator.userLanguage || 'en').split('-')[0]
         };
@@ -55,13 +54,7 @@
         if (window.ADS_AI_LOCALES) {
             applyI18nAndLoad(window.ADS_AI_LOCALES);
         } else {
-            $.getJSON(i18n.localesPath, applyI18nAndLoad).fail(function() {
-                console.warn("Ads-AI: Locales script/json failed.");
-                $containers.each(function() {
-                   const $el = $(this);
-                   $.get(`${config.apiUrl}?path=${$el.data('path') || config.defaultPath}`, h => $el.html(h));
-                });
-            });
+            console.error("Ads-AI: locales.js not found.");
         }
     });
 })(window.jQuery);

@@ -7,7 +7,6 @@
             defaultPath: 'achats/big-sale-banners.html'
         };
         const i18n = {
-            localesPath: "locales.json", 
             defaultLang: 'en',
             currentLang: (navigator.language || navigator.userLanguage || 'en').split('-')[0]
         };
@@ -55,9 +54,7 @@
         if (window.ADS_AI_LOCALES) {
             applyI18nAndLoad(window.ADS_AI_LOCALES);
         } else {
-            $.getJSON(i18n.localesPath, applyI18nAndLoad).fail(function() {
-                console.warn("Ads-AI: Locales script/json failed.");
-            });
+            console.error("Ads-AI: locales.js not found.");
         }
     });
 })(window.jQuery);

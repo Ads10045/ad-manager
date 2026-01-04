@@ -7,7 +7,6 @@
             defaultPath: 'achats/materiaux-pro-banner.html'
         };
         const i18n = {
-            localesPath: "locales.json", 
             defaultLang: 'en',
             currentLang: (navigator.language || navigator.userLanguage || 'en').split('-')[0]
         };
@@ -54,18 +53,11 @@
             });
         };
 
-        // Si les locales sont déjà chargées via script (window.ADS_AI_LOCALES)
+        // Utilisation des locales chargées via script locales.js (window.ADS_AI_LOCALES)
         if (window.ADS_AI_LOCALES) {
             applyI18nAndLoad(window.ADS_AI_LOCALES);
         } else {
-            // Fallback AJAX si le script n'est pas là
-            $.getJSON(i18n.localesPath, applyI18nAndLoad).fail(function() {
-                console.warn("Ads-AI: Local locales script/json failed. Falling back to raw API.");
-                $containers.each(function() {
-                   const $el = $(this);
-                   $.get(`${config.apiUrl}?path=${$el.data('path') || config.defaultPath}`, h => $el.html(h));
-                });
-            });
+            console.error("Ads-AI: locales.js not found. Localization failed.");
         }
     });
 })(window.jQuery);
