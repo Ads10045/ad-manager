@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Ad Banner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .banner-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="m-0 p-0 flex items-center justify-center h-screen overflow-hidden">
+    <div class="banner-gradient w-"full h-full flex items-center px-8 relative overflow-hidden text-white font-sans">
+        {/* Decorative elements */}
+        <div class="absolute top-[-50px] left-[-50px] w-64 h-64 bg-primary-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[-50px] right-[-50px] w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
+
+        {/* Product Image */}
+        <div class="relative z-10 w-1/3 flex justify-center">
+            <img 
+                src="[imageURL]" 
+                alt="[productName]" 
+                class="max-h-64 object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:scale-105 transition-transform duration-500"
+            />
+        </div>
+
+        {/* Content */}
+        <div class="relative z-10 w-2/3 pl-10">
+            <div class="inline-block px-4 py-1 bg-primary-500 text-white text-xs font-bold rounded-full mb-4 uppercase tracking-widest">
+                Offre Spéciale
+            </div>
+            <h1 class="text-4xl font-black mb-2 leading-tight uppercase tracking-tighter">
+                [productName]
+            </h1>
+            <p class="text-gray-400 text-lg mb-6 line-clamp-2">
+                [productDescription]
+            </p>
+            
+            <div class="flex items-center gap-8">
+                <div>
+                    <span class="block text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Prix Promo</span>
+                    <span class="text-4xl font-black text-white">[productPrice] €</span>
+                </div>
+                <a href="[productLink]" target="_blank" class="bg-white text-gray-950 px-8 py-3 rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-opacity-90 transition-all transform hover:-translate-y-1 shadow-2xl">
+                    Acheter maintenant
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-4 right-8 opacity-20 text-[10px] font-bold uppercase tracking-[0.5em]">
+            Ads-AI Dynamic Generator
+        </div>
+    </div>
+</body>
+</html>
