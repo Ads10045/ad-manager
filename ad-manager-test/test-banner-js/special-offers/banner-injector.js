@@ -2,7 +2,7 @@
     if (!$) return;
     $(document).ready(function() {
         const config = {
-            targetId: '#ads-ai-dynamic-banner',
+            targetClass: '.ads-ai-banner',
             apiUrl: "http://localhost:3001/api/render-preview",
             defaultPath: 'achats/special-offers-grid.html'
         };
@@ -10,9 +10,11 @@
             defaultLang: 'en',
             currentLang: (navigator.language || navigator.userLanguage || 'en').split('-')[0]
         };
-        const $container = $(config.targetId);
-        if ($container.length === 0) return;
-        const customPath = $container.data('path') || config.defaultPath;
+
+        // Supporter ID ou Classe pour la rétrocompatibilité
+        const $containers = $(config.targetClass).length ? $(config.targetClass) : $('#ads-ai-dynamic-banner');
+        
+        if ($containers.length === 0) return;
 
         // Logic to apply translations and load banners
         const applyI18nAndLoad = function(translations) {
