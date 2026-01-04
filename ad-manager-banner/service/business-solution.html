@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .bg-blue-premium { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .text-gradient {
+            background: linear-gradient(to right, #0ea5e9, #2563eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .shape-bg {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body class="m-0 p-0 overflow-hidden font-['Outfit']">
+    <div class="w-[1200px] h-[400px] flex overflow-hidden border border-slate-200 shadow-2xl relative">
+        
+        <!-- PARTIE BLEUE (GAUCHE - VISUEL) -->
+        <div class="w-[40%] h-full bg-[#0ea5e9] relative flex items-end justify-center overflow-hidden">
+            <!-- Triangles décoratifs (inspi image) -->
+            <div class="absolute inset-0 opacity-20">
+                <div class="absolute top-10 left-10 w-32 h-32 bg-white rotate-45 skew-x-12"></div>
+                <div class="absolute bottom-20 right-10 w-40 h-40 bg-sky-300 rotate-12 -skew-y-12"></div>
+                <div class="absolute top-[40%] left-[-20px] w-48 h-48 border-4 border-white/30 rotate-45"></div>
+            </div>
+
+            <!-- Image du profil -->
+            <img 
+                src="[imageURL]" 
+                alt="Expert" 
+                class="relative z-10 max-h-[90%] object-contain filter drop-shadow-[20px_0_30px_rgba(0,0,0,0.3)]"
+                onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800'"
+            />
+            
+            <!-- Décoration de transition (courbe) -->
+            <div class="absolute top-0 right-0 h-full w-24 bg-gradient-to-r from-transparent to-white/10"></div>
+        </div>
+
+        <!-- PARTIE CONTENU (DROITE - TEXTE) -->
+        <div class="w-[60%] h-full bg-white relative p-12 flex flex-col justify-center">
+            <!-- Header / Logo Area -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-slate-900 flex items-center justify-center rounded-lg rotate-45">
+                    <div class="w-4 h-4 bg-white -rotate-45"></div>
+                </div>
+                <div>
+                    <span class="block text-xl font-black text-slate-900 leading-none tracking-tighter uppercase">Vardex</span>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold">Web Development</span>
+                </div>
+            </div>
+
+            <!-- Main Titles -->
+            <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.4em] mb-2">[i18n:banner_title]</h2>
+            <h1 class="text-4xl font-black text-slate-900 leading-[1.1] mb-2 uppercase tracking-tight">
+                For your best <br/>
+                <span class="text-[#0ea5e9]">Business Solution</span>
+            </h1>
+            <p class="text-lg font-bold text-sky-600 mb-6 uppercase tracking-wider">
+                We create powerful user experience
+            </p>
+
+            <!-- Stats/Features -->
+            <div class="flex gap-10 mb-8 pt-6 border-t border-slate-100">
+                <div>
+                    <span class="block text-2xl font-black text-slate-900 tracking-tighter">35+</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest">Award Won</span>
+                </div>
+                <div>
+                    <span class="block text-2xl font-black text-sky-500 tracking-tighter">89+</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest">Happy Clients</span>
+                </div>
+                <div>
+                    <span class="block text-2xl font-black text-slate-900 tracking-tighter">99+</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest">Finished Projects</span>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed italic pr-12">
+                "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
+            </p>
+        </div>
+
+        <!-- FOOTER BAR (SHARED) -->
+        <div class="absolute bottom-0 left-0 w-full h-10 bg-[#0ea5e9] flex items-center justify-between px-12 text-white text-[10px] font-bold z-20">
+            <div class="flex items-center gap-6">
+                <span class="flex items-center gap-2 tracking-wider">📞 [phone]</span>
+                <span class="flex items-center gap-2 tracking-wider">✉️ [email]</span>
+            </div>
+            <span class="tracking-[0.2em] uppercase font-black text-white/90">[website]</span>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads-AI Banner Test - Car Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="./locales.js"></script>
+</head>
+<body class="bg-gray-100 font-sans p-8 flex flex-col items-center justify-center min-h-screen">
+
+    <div class="max-w-[1300px] w-full">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-black text-slate-900 mb-2 uppercase tracking-tight"> Test Bannière Automobile</h1>
+            <p class="text-slate-600 font-medium">Comparaison de modèles (Dark Mode)</p>
+        </header>
+
+        <!-- ZONE DE TEST -->
+        <main class="bg-white p-4 rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden flex justify-center">
+            <div class="ads-ai-banner" 
+                 data-path="automotive/car-comparison.html"
+                 
+                 data-model1-name="Outlander"
+                 data-model1-price="24 895 $"
+                 data-model1-image="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800"
+                 data-model1-feature1="7 places assises"
+                 data-model1-feature2="Moteur V6 3.0L"
+                 data-model1-feature3="Toit ouvrant panoramique"
+                 data-model1-feature4="Garantie 10 ans"
+
+                 data-model2-name="Eclipse Cross"
+                 data-model2-price="22 995 $"
+                 data-model2-image="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=800"
+                 data-model2-feature1="5 places spacieuses"
+                 data-model2-feature2="Turbo 1.5L Injection"
+                 data-model2-feature3="Affichage tête haute"
+                 data-model2-feature4="Super All-Wheel Control"
+
+                 data-model3-name="Shogun Sport"
+                 data-model3-price="39 995 $"
+                 data-model3-image="https://images.unsplash.com/photo-1519641474000-f4674a14849ac?auto=format&fit=crop&q=80&w=800"
+                 data-model3-feature1="Capacités Tout-Terrain"
+                 data-model3-feature2="Diesel 2.4L Turbo"
+                 data-model3-feature3="Boîte auto 8 vitesses"
+                 data-model3-feature4="Blocage différentiel"
+            >
+                <!-- Loading State -->
+                <div class="h-[600px] w-[1200px] flex items-center justify-center text-slate-400 animate-pulse bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                   <div class="text-center">
+                        <span class="block text-4xl mb-2">🚗</span>
+                        <span class="font-bold uppercase tracking-widest text-xs">Chargement du comparateur...</span>
+                   </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-12 text-center">
+            <button onclick="window.location.reload()" class="bg-slate-900 hover:bg-black text-white font-black px-12 py-5 rounded-2xl transition-all shadow-xl active:scale-95 uppercase text-sm tracking-[0.2em]">
+                Recharger
+            </button>
+        </footer>
+    </div>
+
+    <!-- Injecteur local -->
+    <script src="./banner-injector.js"></script>
+</body>
+</html>

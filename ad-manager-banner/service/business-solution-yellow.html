@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="m-0 p-0 overflow-hidden font-['Outfit']">
+    <div class="w-[1200px] h-[400px] flex overflow-hidden border border-slate-200 shadow-2xl relative">
+        
+        <!-- PARTIE ORANGE (GAUCHE - VISUEL) -->
+        <div class="w-[40%] h-full bg-[#f97316] relative flex items-center justify-center overflow-hidden">
+            <!-- Triangles décoratifs (inspi image jaune) -->
+            <div class="absolute inset-0 opacity-30">
+                <div class="absolute top-[-20px] right-[-20px] w-40 h-40 bg-white rotate-45"></div>
+                <div class="absolute bottom-10 left-[-20px] w-32 h-32 bg-orange-400 rotate-12"></div>
+                <div class="absolute top-[30%] right-10 w-24 h-24 border-8 border-white/20 -rotate-12"></div>
+            </div>
+
+            <!-- Image Composition (Start Drawing + Laptop) -->
+            <div class="relative z-10 w-[85%] h-[85%] bg-white rounded-xl shadow-2xl p-4 rotate-[-2deg] overflow-hidden">
+                <img 
+                    src="[imageURL]" 
+                    alt="Start-up workspace" 
+                    class="w-full h-full object-cover rounded-lg"
+                    onerror="this.src='https://images.unsplash.com/photo-1517245385169-d20139b173c7?q=80&w=2069&auto=format&fit=crop'"
+                />
+                <div class="absolute inset-x-0 bottom-8 flex justify-center">
+                   <div class="bg-white/90 backdrop-blur px-6 py-2 rounded-full shadow-lg border border-orange-100">
+                       <span class="text-orange-600 font-black text-2xl tracking-widest uppercase">Start</span>
+                   </div>
+                </div>
+            </div>
+            
+            <!-- Transition -->
+            <div class="absolute top-0 right-0 h-full w-24 bg-gradient-to-r from-transparent to-white/10"></div>
+        </div>
+
+        <!-- PARTIE CONTENU (DROITE - TEXTE) -->
+        <div class="w-[60%] h-full bg-[#fff7ed] relative p-12 flex flex-col justify-center">
+            <!-- Header / Logo Area -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-orange-900 flex items-center justify-center rounded-lg rotate-45">
+                    <div class="w-4 h-4 bg-white -rotate-45"></div>
+                </div>
+                <div>
+                    <span class="block text-xl font-black text-slate-900 leading-none tracking-tighter uppercase">Vardex</span>
+                    <span class="text-[10px] text-orange-600 uppercase tracking-[0.2em] font-bold">Web Development</span>
+                </div>
+            </div>
+
+            <!-- Main Titles -->
+            <h2 class="text-xs font-black text-orange-400 uppercase tracking-[0.4em] mb-2">[i18n:banner_title]</h2>
+            <h1 class="text-4xl font-black text-slate-900 leading-[1.1] mb-2 uppercase tracking-tight">
+                For your best <br/>
+                <span class="text-[#f97316]">Business Solution</span>
+            </h1>
+            <p class="text-lg font-bold text-orange-600 mb-6 uppercase tracking-wider">
+                We create powerful user experience
+            </p>
+
+            <!-- Stats/Features -->
+            <div class="flex gap-10 mb-8 pt-6 border-t border-orange-100">
+                <div>
+                    <span class="block text-2xl font-black text-slate-900 tracking-tighter">35+</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest">Award Won</span>
+                </div>
+                <div>
+                    <span class="block text-2xl font-black text-orange-500 tracking-tighter">89+</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest">Happy Clients</span>
+                </div>
+                <div>
+                    <span class="block text-2xl font-black text-slate-900 tracking-tighter">99+</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-black tracking-widest">Finished Projects</span>
+                </div>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed italic pr-12">
+                "Strategy and innovation for modern entrepreneurs. Build your path to success."
+            </p>
+        </div>
+
+        <!-- FOOTER BAR -->
+        <div class="absolute bottom-0 left-0 w-full h-10 bg-orange-600 flex items-center justify-between px-12 text-white text-[10px] font-bold z-20">
+            <div class="flex items-center gap-6">
+                <span class="flex items-center gap-2 tracking-wider">📞 [phone]</span>
+                <span class="flex items-center gap-2 tracking-wider">✉️ [email]</span>
+            </div>
+            <span class="tracking-[0.2em] uppercase font-black text-white/95">[website]</span>
+        </div>
+    </div>
+</body>
+</html>
