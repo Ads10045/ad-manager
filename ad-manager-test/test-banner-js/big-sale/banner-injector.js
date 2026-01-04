@@ -4,7 +4,7 @@
         const config = {
             targetId: '#ads-ai-dynamic-banner',
             apiUrl: "http://localhost:3001/api/render-preview",
-            defaultPath: 'achats/materiaux-pro-banner.html'
+            defaultPath: 'achats/big-sale-banners.html'
         };
         const i18n = {
             localesPath: "locales.json", 
