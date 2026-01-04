@@ -12,13 +12,13 @@
 
     <div class="max-w-5xl mx-auto">
         <header class="mb-10 text-center">
-            <h1 class="text-3xl font-black text-slate-900 mb-2">ADS-AI <span class="text-green-600">SPECIAL OFFERS TEST</span></h1>
+            <h1 data-i18n="banner_title" class="text-3xl font-black text-slate-900 mb-2 tracking-tight uppercase">Chargement...</h1>
             <p class="text-slate-600">Validation de la grille de promos avec injection dynamique JQuery</p>
         </header>
 
         <!-- ZONE DE TEST -->
         <section class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 mb-8 overflow-hidden">
-            <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 border-b pb-2">Rendu Grille via API Renderer</h2>
+            <h2 data-i18n="limited_time" class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 border-b pb-2">Rendu Grille via API Renderer</h2>
             
             <div id="ads-ai-dynamic-banner" data-path="achats/special-offers-grid.html">
                 <!-- Le script injectera le contenu ici -->
@@ -34,8 +34,8 @@
             </div>
             
             <div class="mt-8 flex justify-center gap-4">
-                <button onclick="window.location.reload()" class="bg-green-600 text-white font-bold px-10 py-4 rounded-xl hover:bg-green-700 transition-all shadow-lg active:scale-95 uppercase text-sm tracking-widest">
-                    🔄 RECHARGER LES OFFRES
+                <button data-i18n="buy_now" onclick="window.location.reload()" class="bg-green-600 text-white font-bold px-10 py-4 rounded-xl hover:bg-green-700 transition-all shadow-lg active:scale-95 uppercase text-sm tracking-widest">
+                    RECHARGER
                 </button>
                 <a href="http://localhost:3001/api-docs" target="_blank" class="bg-slate-800 text-white font-bold px-10 py-4 rounded-xl hover:bg-black transition-all shadow-lg uppercase text-sm tracking-widest">
                     🧪 DOCUMENTATION API
