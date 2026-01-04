@@ -1,0 +1,38 @@
+{
+  "environments": {
+    "local": {
+      "port": 3001,
+      "swagger_url": "http://localhost:3001",
+      "debug": true,
+      "cors": "*",
+      "db_strategy": "prisma"
+    },
+    "dev": {
+      "port": 3001,
+      "swagger_url": "/",
+      "debug": true,
+      "cors": "*",
+      "db_strategy": "sql_api"
+    },
+    "prod": {
+      "port": 3001,
+      "debug": false,
+      "cors": "*",
+      "db_strategy": "sql_api"
+    }
+  },
+  "database": {
+    "targets": {
+      "local": "postgresql://postgres:postgres@localhost:5432/nutriplus?schema=public",
+      "dev": "postgresql://neondb_owner:npg_5AzdsSYIxJ9C@ep-falling-shape-abbss0l8-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require",
+      "prod": "postgresql://neondb_owner:npg_5AzdsSYIxJ9C@ep-falling-shape-abbss0l8-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require"
+    },
+    "neon_sql_endpoint": "https://ep-falling-shape-abbss0l8.eu-west-2.aws.neon.tech/sql",
+    "proxy": "https://corsproxy.io/?"
+  },
+  "external": {
+    "rapidapi_key": "b87a875f68msh27a6a1de220c538p1c15a4jsn75a80b5b7eed"
+  },
+  "current_env": "prod",
+  "active_db_target": "prod"
+}

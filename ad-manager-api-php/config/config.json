@@ -1,0 +1,17 @@
+{
+  "database": {
+    "host": "ep-falling-shape-abbss0l8-pooler.eu-west-2.aws.neon.tech",
+    "port": 5432,
+    "name": "neondb",
+    "sslmode": "require"
+  },
+  "api": {
+    "cors_origin": "*",
+    "version": "1.0.0",
+    "health_message": "PHP Ad-Manager API is running"
+  },
+  "urls": {
+    "neon_sql": "https://ep-falling-shape-abbss0l8.eu-west-2.aws.neon.tech/sql",
+    "proxy": "https://corsproxy.io/?"
+  }
+}

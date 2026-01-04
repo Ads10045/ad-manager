@@ -1,0 +1,103 @@
+const db = require('../utils/db');
+
+/**
+ * @desc Get all products (optionally filtered by category)
+ */
+const getProducts = async (req, res) => {
+  const { category } = req.query;
+  try {
+    const products = await db.execute(
+      () => db.prisma.product.findMany({
+        where: { isActive: true, ...(category && { category }) },
+        orderBy: { createdAt: 'desc' }
+      }),
+      category 
+        ? `SELECT * FROM "Product" WHERE "isActive" = true AND category = '${category}' ORDER BY "createdAt" DESC`
+        : 'SELECT * FROM "Product" WHERE "isActive" = true ORDER BY "createdAt" DESC'
+    );
+    const result = products.rows ? products.rows : products;
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * @desc Get product by ID
+ */
+const getProductById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await db.execute(
+      () => db.prisma.product.findUnique({ where: { id } }),
+      `SELECT * FROM "Product" WHERE id = '${id}' LIMIT 1`
+    );
+    const result = product.rows ? (product.rows[0] || null) : product;
+    if (!result) return res.status(404).json({ error: 'Product not found' });
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * @desc Get products by date range
+ */
+const getProductsByDate = async (req, res) => {
+  const { start, end } = req.query;
+  try {
+    const products = await db.execute(
+      () => db.prisma.product.findMany({
+        where: {
+          createdAt: { gte: new Date(start), lte: new Date(end) }
+        }
+      }),
+      `SELECT * FROM "Product" WHERE "createdAt" BETWEEN '${start}' AND '${end}'`
+    );
+    const result = products.rows ? products.rows : products;
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid date format' });
+  }
+};
+
+/**
+ * @desc Get expired products/promos
+ */
+const getExpiredProducts = async (req, res) => {
+  try {
+    const now = new Date().toISOString();
+    const products = await db.execute(
+      () => db.prisma.product.findMany({
+        where: { expiresAt: { lt: new Date() } }
+      }),
+      `SELECT * FROM "Product" WHERE "expiresAt" < '${now}'`
+    );
+    const result = products.rows ? products.rows : products;
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * @desc Create product
+ */
+const createProduct = async (req, res) => {
+  try {
+    const product = await db.prisma.product.create({
+      data: req.body
+    });
+    res.status(201).json(product);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { 
+  getProducts, 
+  getProductById, 
+  getProductsByDate, 
+  getExpiredProducts, 
+  createProduct 
+};

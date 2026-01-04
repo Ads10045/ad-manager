@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Bannière Achats Matériaux</title>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen p-4">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row border-4 border-orange-500">
+        <!-- Section Visuelle -->
+        <div class="md:w-1/3 bg-orange-600 p-8 flex flex-all items-center justify-center text-white">
+            <div class="text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h2 class="text-3xl font-black uppercase tracking-tighter">Achats Directs</h2>
+                <p class="text-orange-200 mt-2">Équipements & Matériaux</p>
+            </div>
+        </div>
+
+        <!-- Section Contenu -->
+        <div class="md:w-2/3 p-8 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Offre Spéciale</span>
+                    <span class="text-gray-400 text-xs font-mono">ID: [BANNER_ID]</span>
+                </div>
+                <h1 class="text-4xl font-bold text-gray-800 leading-tight">Optimisez vos stocks de chantier aujourd'hui</h1>
+                <p class="text-gray-600 mt-4 text-lg">Découvrez notre catalogue exclusif d'outillage professionnel et bénéficiez de remises groupées sur vos premiers achats.</p>
+            </div>
+
+            <div class="mt-8 flex items-center gap-6">
+                <a href="#" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-lg hover:shadow-orange-200 uppercase tracking-widest">Acheter Maintenant</a>
+                <div class="text-sm">
+                    <p class="text-gray-800 font-bold">Livraison express</p>
+                    <p class="text-gray-400">Sous 24/48h sur site</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

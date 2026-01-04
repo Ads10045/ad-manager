@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Bannière Promotions Flash</title>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+    <div class="relative max-w-5xl w-full bg-gradient-to-r from-red-600 to-rose-700 rounded-3xl shadow-2xl overflow-hidden group">
+        <!-- Décoration Arrière-plan -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-32 -mt-32 transform group-hover:scale-110 transition-transform duration-700"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-black opacity-10 rounded-full -ml-24 -mb-24 transform group-hover:scale-110 transition-transform duration-700"></div>
+
+        <div class="relative p-10 flex flex-col md:flex-row items-center gap-12">
+            <!-- Badge Promo -->
+            <div class="flex-shrink-0 relative">
+                <div class="w-40 h-40 md:w-56 md:h-56 bg-white rounded-full flex flex-col items-center justify-center rotate-12 shadow-inner border-8 border-red-500">
+                    <span class="text-red-600 font-extrabold text-5xl md:text-7xl italic leading-none">-50%</span>
+                    <span class="text-red-900 font-black uppercase text-lg tracking-widest mt-1">FLASH</span>
+                </div>
+            </div>
+
+            <!-- Texte -->
+            <div class="flex-grow text-white text-center md:text-left">
+                <h3 class="text-2xl font-bold uppercase tracking-widest text-red-100 mb-2">Vente Exceptionnelle</h3>
+                <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter leading-none mb-6">LIQUIDATION <br/>TOTALE</h1>
+                <p class="text-xl text-red-100 max-w-xl">Stock limité sur toute la gamme outillage. Premier arrivé, premier servi. Valable exclusivement ce week-end.</p>
+                
+                <div class="mt-8 flex flex-col sm:flex-row items-center gap-6">
+                    <button class="bg-white text-red-600 font-black py-4 px-12 rounded-full text-xl shadow-xl hover:bg-red-50 transition-all uppercase tracking-tighter">Profiter de l'offre</button>
+                    <div class="flex flex-col items-center sm:items-start leading-none">
+                        <span class="text-sm font-bold opacity-80 mb-1 leading-none uppercase tracking-widest">Fin de l'offre dans :</span>
+                        <span class="text-3xl font-mono font-bold leading-none">04:22:15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

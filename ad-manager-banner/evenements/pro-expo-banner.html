@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Bannière Forum Pro</title>
+</head>
+<body class="bg-blue-900 flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-5xl w-full bg-indigo-950 rounded-[40px] shadow-3xl overflow-hidden relative border border-white/10">
+        <!-- Éléments de design futuriste -->
+        <div class="absolute -top-10 -right-10 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
+
+        <div class="relative p-12 flex flex-col md:flex-row items-center gap-12 text-white">
+            <!-- Visuel / Date -->
+            <div class="md:w-1/3 text-center md:border-r border-white/10 md:pr-12">
+                <span class="bg-blue-500 text-white font-black text-6xl block p-6 rounded-3xl shadow-lg shadow-blue-500/30">15</span>
+                <span class="block text-2xl font-black uppercase mt-4 tracking-[0.2em]">MARS 2026</span>
+                <div class="h-1 w-20 bg-blue-400 mx-auto mt-4 rounded-full"></div>
+                <p class="mt-6 text-blue-200 font-medium">Palais des Congrès <br/>Paris, France</p>
+            </div>
+
+            <!-- Contenu -->
+            <div class="md:w-2/3 flex flex-col justify-center">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm font-bold uppercase tracking-wider text-blue-300">Événement Exceptionnel</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter leading-none mb-6">FORUM INTERNATIONAL <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">DES TRAVAUX PUBLICS</span></h1>
+                
+                <p class="text-lg text-blue-100/70 mb-10 max-w-lg leading-relaxed">
+                    Rejoignez 15 000 experts pour façonner l'avenir de l'infrastructure urbaine. Innovation, Networking et Démonstrations en direct.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-6">
+                    <button class="bg-blue-600 hover:bg-white hover:text-blue-950 text-white font-black py-4 px-12 rounded-2xl text-lg shadow-xl shadow-blue-950/20 transition-all uppercase tracking-widest">S'inscrire</button>
+                    <span class="text-sm font-medium opacity-60">Places limitées à 500 auditeurs</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech deco bar -->
+        <div class="absolute bottom-0 right-0 p-8 flex gap-2">
+            <div class="w-1 h-8 bg-blue-400"></div>
+            <div class="w-1 h-8 bg-blue-600"></div>
+            <div class="w-1 h-8 bg-indigo-800"></div>
+        </div>
+    </div>
+</body>
+</html>

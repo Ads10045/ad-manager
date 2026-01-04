@@ -1,0 +1,14 @@
+{
+  "api": {
+    "base_url": "http://localhost:3001/api",
+    "timeout": 5000
+  },
+  "features": {
+    "enable_analytics": true,
+    "dark_mode_supported": true
+  },
+  "theme": {
+    "primary_color": "#f97316",
+    "company_name": "Ads-AI Manager"
+  }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Bannière Info Chantier</title>
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-4xl w-full bg-white rounded-xl shadow-xl overflow-hidden border-t-[12px] border-yellow-400 flex flex-col">
+        <!-- En-tête -->
+        <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-yellow-400 rounded-lg flex items-center justify-center text-slate-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold uppercase tracking-tight">Information Travaux Publics</h2>
+                    <p class="text-slate-400 text-sm">Zone de chantier sécurisée</p>
+                </div>
+            </div>
+            <div class="text-right hidden sm:block">
+                <span class="block text-xs uppercase opacity-60 font-medium">Référence</span>
+                <span class="block font-mono text-yellow-400 font-bold tracking-widest">PJ-2025-084</span>
+            </div>
+        </div>
+
+        <!-- Corps -->
+        <div class="p-10">
+            <h1 class="text-3xl font-black text-slate-800 leading-tight mb-6">Réhabilitation des infrastructures <br/><span class="text-yellow-500 underline decoration-yellow-200">Avenue de la République</span></h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                    <h4 class="text-sm font-bold uppercase text-slate-500 mb-3 tracking-widest flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                        Durée estimée
+                    </h4>
+                    <p class="text-2xl font-bold text-slate-800 italic">Janvier - Mars 2026</p>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                    <h4 class="text-sm font-bold uppercase text-slate-500 mb-3 tracking-widest flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                        Contact Urgence
+                    </h4>
+                    <p class="text-2xl font-bold text-slate-800">01 23 45 67 89</p>
+                </div>
+            </div>
+
+            <p class="text-slate-600 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400 font-medium">Nous vous prions de nous excuser pour la gêne occasionnée. Déviation par la rue du Commerce.</p>
+        </div>
+
+        <!-- Pied de page -->
+        <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all cursor-pointer">
+            <span class="text-xs font-bold uppercase tracking-widest">Ads-AI Services</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Conseil Départemental</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Sécurité Routière</span>
+        </div>
+    </div>
+</body>
+</html>

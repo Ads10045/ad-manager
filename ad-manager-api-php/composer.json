@@ -1,0 +1,13 @@
+{
+    "name": "ads10/ad-manager-api-php",
+    "description": "PHP Backend for Ad Management System",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}

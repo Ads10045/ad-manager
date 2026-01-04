@@ -1,0 +1,21 @@
+{
+  "api": {
+    "base_url": "http://localhost:3001/api",
+    "timeout": 10000
+  },
+  "app": {
+    "name": "Ads-AI Mobile",
+    "version": "1.0.0",
+    "bundle_id": "com.ads10.admanager"
+  },
+  "features": {
+    "push_notifications": true,
+    "offline_mode": false,
+    "debug_logs": true
+  },
+  "theme": {
+    "primary": "#f97316",
+    "secondary": "#334155",
+    "accent": "#ef4444"
+  }
+}
