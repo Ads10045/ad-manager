@@ -50,12 +50,22 @@ app.get('/api/health', (req, res) => {
 });
 
 // Routes Registration
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/products', require('./routes/productRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
-app.use('/api/locations', require('./routes/locationRoutes'));
-app.use('/api/banners', require('./routes/bannerRoutes'));
-app.use('/api/settings', require('./routes/settingRoutes'));
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const locationRoutes = require('./routes/locationRoutes');
+const bannerRoutes = require('./routes/bannerRoutes');
+const renderRoutes = require('./routes/renderRoutes');
+const settingRoutes = require('./routes/settingRoutes');
+
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/locations', locationRoutes);
+app.use('/api/banners', bannerRoutes);
+app.use('/api/render-preview', renderRoutes);
+app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
