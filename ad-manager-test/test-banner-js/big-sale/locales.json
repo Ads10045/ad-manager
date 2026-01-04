@@ -13,5 +13,10 @@
     "banner_title": "BIG FLASH SALE",
     "view_offer": "VIEW OFFER",
     "limited_time": "LIMITED OFFER"
+  },
+  "es": {
+    "banner_title": "GRAN VENTA FLASH",
+    "view_offer": "VER OFERTA",
+    "limited_time": "OFERTA LIMITADA"
   }
 }

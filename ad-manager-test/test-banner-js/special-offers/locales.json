@@ -13,5 +13,10 @@
     "banner_title": "APRIL SPECIAL OFFERS",
     "view_offer": "VIEW OFFER",
     "buy_now": "BUY NOW"
+  },
+  "es": {
+    "banner_title": "OFERTAS ESPECIALES DE ABRIL",
+    "view_offer": "VER OFERTA",
+    "buy_now": "COMPRAR AHORA"
   }
 }

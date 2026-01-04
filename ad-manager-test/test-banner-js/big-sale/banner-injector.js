@@ -8,8 +8,8 @@
         };
         const i18n = {
             localesPath: "locales.json", 
-            defaultLang: 'fr',
-            currentLang: (navigator.language || navigator.userLanguage || 'fr').split('-')[0]
+            defaultLang: 'en',
+            currentLang: (navigator.language || navigator.userLanguage || 'en').split('-')[0]
         };
         const $container = $(config.targetId);
         if ($container.length === 0) return;
