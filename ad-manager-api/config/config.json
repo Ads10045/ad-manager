@@ -31,7 +31,8 @@
     "proxy": "https://corsproxy.io/?"
   },
   "external": {
-    "rapidapi_key": "b87a875f68msh27a6a1de220c538p1c15a4jsn75a80b5b7eed"
+    "rapidapi_key": "b87a875f68msh27a6a1de220c538p1c15a4jsn75a80b5b7eed",
+    "template_base_url": "https://raw.githubusercontent.com/Ads10045/ad-manager/main/ad-manager-banner/"
   },
   "current_env": "prod",
   "active_db_target": "prod"
