@@ -97,46 +97,27 @@
         }
 
         function loadProduct() {
-            // TEST : On essaie localhost ET l'IP locale si ça échoue
-            const API_URL = 'http://127.0.0.1:3001/api/products';
+            // URL de rendu direct HTML
+            const API_URL = 'http://localhost:3001/api/render-preview?path=achats/materiaux-pro-banner.html';
             
-            logDebug(`Appel API sur : ${API_URL}`);
-            $('#product-name').text("Connexion API...");
+            logDebug(`Chargement du rendu HTML : ${API_URL}`);
+            $('#status-progress').css('width', '50%').addClass('bg-orange-500');
 
             $.ajax({
                 url: API_URL,
                 type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    logDebug("Réponse API reçue !");
-                    const products = data.rows || data;
+                crossDomain: true,
+                success: function(htmlContent) {
+                    $('#status-progress').css('width', '100%').addClass('bg-green-500');
+                    logDebug("✅ HTML reçu avec succès !");
                     
-                    if (products && products.length > 0) {
-                        const p = products[Math.floor(Math.random() * products.length)];
-                        logDebug("Produit : " + p.name);
-
-                        // Injection DIRECTE
-                        document.getElementById('product-name').innerText = p.name || 'Inconnu';
-                        document.getElementById('product-description').innerText = p.description || '...';
-                        document.getElementById('product-price').innerText = p.price || '0';
-                        
-                        const img = document.getElementById('product-imageUrl');
-                        img.src = p.imageUrl || '';
-                        img.style.opacity = "1"; // Force affichage
-
-                        logDebug("Affichage terminé.");
-                        $('#body-bg').css('background-color', '#fff7ed');
-                    } else {
-                        logDebug("Erreur : Base de données vide.", "error");
-                    }
+                    // On remplace le contenu complet par le rendu serveur
+                    $('body').html(htmlContent);
                 },
                 error: function(xhr, status, err) {
-                    logDebug("ERREUR API : " + status + " " + err, "error");
-                    // Backup : tentative sur localhost simple
-                    if (API_URL.includes('127.0.0.1')) {
-                        logDebug("Tentative de repli sur localhost...");
-                        // Vous pouvez relancer ici si besoin
-                    }
+                    $('#status-progress').css('width', '100%').addClass('bg-red-500');
+                    logDebug(`❌ ERREUR DE RENDU : ${status} - ${err}`, "error");
+                    $('#product-name').text("Erreur de connexion serveur");
                 }
             });
         }
