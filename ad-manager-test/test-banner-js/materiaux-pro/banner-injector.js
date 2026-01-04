@@ -17,7 +17,8 @@
         
         if ($containers.length === 0) return;
 
-        $.getJSON(i18n.localesPath, function(translations) {
+        // Logic to apply translations and load banners
+        const applyI18nAndLoad = function(translations) {
             const langData = translations[i18n.currentLang] || translations[i18n.defaultLang];
             
             // Traduction de la page hôte
@@ -51,8 +52,20 @@
                     }
                 });
             });
-        }).fail(function() {
-            console.error("Ads-AI: locales.json load failed.");
-        });
+        };
+
+        // Si les locales sont déjà chargées via script (window.ADS_AI_LOCALES)
+        if (window.ADS_AI_LOCALES) {
+            applyI18nAndLoad(window.ADS_AI_LOCALES);
+        } else {
+            // Fallback AJAX si le script n'est pas là
+            $.getJSON(i18n.localesPath, applyI18nAndLoad).fail(function() {
+                console.warn("Ads-AI: Local locales script/json failed. Falling back to raw API.");
+                $containers.each(function() {
+                   const $el = $(this);
+                   $.get(`${config.apiUrl}?path=${$el.data('path') || config.defaultPath}`, h => $el.html(h));
+                });
+            });
+        }
     });
 })(window.jQuery);

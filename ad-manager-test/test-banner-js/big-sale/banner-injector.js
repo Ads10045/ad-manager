@@ -15,34 +15,49 @@
         if ($container.length === 0) return;
         const customPath = $container.data('path') || config.defaultPath;
 
-        $.getJSON(i18n.localesPath, function(translations) {
+        // Logic to apply translations and load banners
+        const applyI18nAndLoad = function(translations) {
             const langData = translations[i18n.currentLang] || translations[i18n.defaultLang];
             
-            // Étape 1.5: Traduire les éléments de la page hôte (data-i18n)
+            // Traduction de la page hôte
             $('[data-i18n]').each(function() {
                 const key = $(this).data('i18n');
-                if (langData[key]) {
-                    $(this).text(langData[key]);
-                }
+                if (langData[key]) $(this).text(langData[key]);
             });
 
-            if (i18n.currentLang === 'ar') {
-                $('body').attr('dir', 'rtl').addClass('font-arabic');
-            }
+            if (i18n.currentLang === 'ar') $('body').attr('dir', 'rtl').addClass('font-arabic');
 
-            $.ajax({
-                url: `${config.apiUrl}?path=${customPath}`,
-                type: 'GET',
-                success: function(htmlContent) {
-                    let localizedHtml = htmlContent;
-                    Object.keys(langData).forEach(key => {
-                        const regex = new RegExp(`\\[i18n:${key}\\]`, 'g');
-                        localizedHtml = localizedHtml.replace(regex, langData[key]);
-                    });
-                    localizedHtml = localizedHtml.replace('[banner_title]', langData['banner_title'] || '');
-                    $container.hide().html(localizedHtml).fadeIn(1000);
-                }
+            // Injection des bannières
+            $containers.each(function() {
+                const $el = $(this);
+                const customPath = $el.data('path') || config.defaultPath;
+
+                $.ajax({
+                    url: `${config.apiUrl}?path=${customPath}`,
+                    type: 'GET',
+                    success: function(htmlContent) {
+                        let localizedHtml = htmlContent;
+                        Object.keys(langData).forEach(key => {
+                            const regex = new RegExp(`\\[i18n:${key}\\]`, 'g');
+                            localizedHtml = localizedHtml.replace(regex, langData[key]);
+                        });
+                        localizedHtml = localizedHtml.replace('[banner_title]', langData['banner_title'] || '');
+                        $el.hide().html(localizedHtml).fadeIn(1000);
+                    },
+                    error: function() {
+                        const err = i18n.currentLang === 'ar' ? "خطأ في التحميل" : "Erreur de chargement";
+                        $el.html(`<div style="border:1px dashed #ccc;padding:10px;text-align:center;color:#999;font-size:12px;">${err}</div>`);
+                    }
+                });
             });
-        });
+        };
+
+        if (window.ADS_AI_LOCALES) {
+            applyI18nAndLoad(window.ADS_AI_LOCALES);
+        } else {
+            $.getJSON(i18n.localesPath, applyI18nAndLoad).fail(function() {
+                console.warn("Ads-AI: Locales script/json failed.");
+            });
+        }
     });
 })(window.jQuery);

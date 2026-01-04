@@ -1,4 +1,4 @@
-{
+window.ADS_AI_LOCALES = {
   "fr": {
     "banner_title": "MATÉRIEL PROFESSIONNEL",
     "view_offer": "VOIR L'OFFRE",
@@ -19,4 +19,4 @@
     "view_offer": "VER OFERTA",
     "limited_time": "OFERTA LIMITADA"
   }
-}
+};
