@@ -123,7 +123,7 @@ app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send(`V3-DEPLOY-SYNC [${new Date().toLocaleString()}] - Server is up and running.`);
+  res.send("OK-READY-V4");
 });
 
 // Launch Server

@@ -8,26 +8,6 @@
   ],
   "routes": [
     {
-      "src": "/api-docs/(.*)",
-      "dest": "src/server.js"
-    },
-    {
-      "src": "/api-docs",
-      "dest": "src/server.js"
-    },
-    {
-      "src": "/catalog-test",
-      "dest": "src/server.js"
-    },
-    {
-      "src": "/api/banniere/(.*)",
-      "dest": "src/server.js"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "src/server.js"
-    },
-    {
       "src": "/(.*)",
       "dest": "src/server.js"
     }
