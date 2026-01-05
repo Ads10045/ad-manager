@@ -1,0 +1,22 @@
+window.ADS_AI_LOCALES = {
+  "fr": {
+    "banner_title": "GRANDE VENTE FLASH",
+    "view_offer": "VOIR L'OFFRE",
+    "limited_time": "OFFRE LIMITÉE"
+  },
+  "ar": {
+    "banner_title": "تخفيضات كبرى",
+    "view_offer": "عرض التفاصيل",
+    "limited_time": "عرض محدود"
+  },
+  "en": {
+    "banner_title": "BIG FLASH SALE",
+    "view_offer": "VIEW OFFER",
+    "limited_time": "LIMITED OFFER"
+  },
+  "es": {
+    "banner_title": "GRAN VENTA FLASH",
+    "view_offer": "VER OFERTA",
+    "limited_time": "OFERTA LIMITADA"
+  }
+};

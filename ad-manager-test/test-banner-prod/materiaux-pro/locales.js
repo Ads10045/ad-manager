@@ -1,0 +1,22 @@
+window.ADS_AI_LOCALES = {
+  "fr": {
+    "banner_title": "MATÉRIEL PROFESSIONNEL",
+    "view_offer": "VOIR L'OFFRE",
+    "limited_time": "OFFRE LIMITÉE"
+  },
+  "ar": {
+    "banner_title": "معدات مهنية",
+    "view_offer": "عرض التفاصيل",
+    "limited_time": "عرض محدود"
+  },
+  "en": {
+    "banner_title": "PROFESSIONAL EQUIPMENT",
+    "view_offer": "VIEW OFFER",
+    "limited_time": "LIMITED OFFER"
+  },
+  "es": {
+    "banner_title": "EQUIPO PROFESIONAL",
+    "view_offer": "VER OFERTA",
+    "limited_time": "OFERTA LIMITADA"
+  }
+};
