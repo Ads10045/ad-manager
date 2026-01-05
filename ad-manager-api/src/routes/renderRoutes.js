@@ -20,5 +20,9 @@ const renderController = require('../controllers/renderController');
  *         description: Rendered HTML banner.
  */
 router.get('/', renderController.renderDynamicPreview);
+router.get('/:category/:banner', (req, res) => {
+    req.params.path = `${req.params.category}/${req.params.banner}`;
+    return renderController.renderDynamicPreviewByPath(req, res);
+});
 
 module.exports = router;

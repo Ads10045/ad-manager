@@ -49,13 +49,25 @@ const renderDynamicPreview = async (req, res) => {
       }
     }
     
-    // 3. Perform tag injection (Supporting both [tag] and DOM mapping)
-    html = html.replace(/\[imageURL\]/g, randomProduct.imageUrl || '');
-    html = html.replace(/\[productName\]/g, randomProduct.name || 'Produit Sans Nom');
-    html = html.replace(/\[productPrice\]/g, randomProduct.price || '0.00');
-    html = html.replace(/\[productDescription\]/g, randomProduct.description || 'Description non disponible.');
-    html = html.replace(/\[productID\]/g, randomProduct.id?.substring(0, 8) || 'N/A');
-    html = html.replace(/\[productLink\]/g, randomProduct.sourceUrl || '#');
+    // 3. Perform tag injection (Universal Mapping)
+    Object.keys(randomProduct).forEach(key => {
+      const value = randomProduct[key] !== null ? String(randomProduct[key]) : '';
+      
+      // On remplace [key] (ex: [id], [name], [margin])
+      const regexExact = new RegExp(`\\[${key}\\]`, 'g');
+      html = html.replace(regexExact, value);
+      
+      // On remplace aussi [keyLowerCase] pour plus de flexibilité
+      const regexLower = new RegExp(`\\[${key.toLowerCase()}\\]`, 'g');
+      html = html.replace(regexLower, value);
+    });
+
+    // Compatibilité rétroactive pour certains tags spécifiques
+    html = html.replace(/\[imageURL\]/gi, randomProduct.imageUrl || '');
+    html = html.replace(/\[productName\]/gi, randomProduct.name || '');
+    html = html.replace(/\[productPrice\]/gi, randomProduct.price || '');
+    html = html.replace(/\[productID\]/gi, randomProduct.id || '');
+    html = html.replace(/\[productLink\]/gi, randomProduct.sourceUrl || '#');
     
     // Injection spécifique pour JQuery (si le template utilise des IDs)
     // On ajoute un script de données globales pour le template
@@ -84,4 +96,9 @@ const renderDynamicPreview = async (req, res) => {
   }
 };
 
-module.exports = { renderDynamicPreview };
+const renderDynamicPreviewByPath = async (req, res) => {
+  req.query.path = req.params.path;
+  return renderDynamicPreview(req, res);
+};
+
+module.exports = { renderDynamicPreview, renderDynamicPreviewByPath };
