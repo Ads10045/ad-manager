@@ -98,14 +98,6 @@ const renderRoutes = require('./routes/renderRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 
 // Routes
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/locations', locationRoutes);
-app.use('/api/banners', bannerRoutes);
-app.use('/api/render-preview', renderRoutes);
-app.use('/api/settings', settingRoutes);
-
 app.get('/catalog-test', (req, res) => {
   const filePath = path.join(__dirname, '../public/catalog-test/index.html');
   res.sendFile(filePath, (err) => {
@@ -114,6 +106,14 @@ app.get('/catalog-test', (req, res) => {
     }
   });
 });
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/locations', locationRoutes);
+app.use('/api/banners', bannerRoutes);
+app.use('/api/render-preview', renderRoutes);
+app.use('/api/settings', settingRoutes);
+
 
 // Root route
 app.get('/', (req, res) => {
