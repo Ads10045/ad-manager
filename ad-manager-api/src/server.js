@@ -149,7 +149,7 @@ app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send("DEPLOYED_STABLE_V5");
+  res.send("DEPLOYED_STABLE_V6 [Auto-extension HTML + Case-Insensitive Tags]");
 });
 
 // Launch Server

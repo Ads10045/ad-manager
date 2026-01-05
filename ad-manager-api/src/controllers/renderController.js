@@ -10,7 +10,12 @@ const config = require('../../config/config.json');
 const renderDynamicPreview = async (req, res) => {
   try {
     // 0. Get template path from query (default to specific one)
-    const relativePath = req.query.path || 'achats/materiaux-pro-banner.html';
+    let relativePath = req.query.path || 'achats/materiaux-pro-banner.html';
+    
+    // Auto-fix: Ajoute .html si l'extension est manquante
+    if (!relativePath.includes('.')) {
+      relativePath += '.html';
+    }
 
     // 1. Fetch a random product from the database
     const products = await db.execute(
@@ -54,17 +59,21 @@ const renderDynamicPreview = async (req, res) => {
       }
     }
     
-    // 3. Perform tag injection (Universal Mapping)
+    // Aliases pour les bannières
+    if (injectDataMap.expiresAt && !injectDataMap.promoExpiry) {
+        injectDataMap.promoExpiry = injectDataMap.expiresAt;
+    }
+    if (injectDataMap.sourceUrl && !injectDataMap.productLink) {
+        injectDataMap.productLink = injectDataMap.sourceUrl;
+    }
+    
+    // 3. Perform tag injection (Universal Case-Insensitive Mapping)
     Object.keys(injectDataMap).forEach(key => {
       const value = injectDataMap[key] !== null ? String(injectDataMap[key]) : '';
       
-      // On remplace [key] (ex: [id], [name], [margin])
-      const regexExact = new RegExp(`\\[${key}\\]`, 'g');
-      html = html.replace(regexExact, value);
-      
-      // On remplace aussi [keyLowerCase] pour plus de flexibilité
-      const regexLower = new RegExp(`\\[${key.toLowerCase()}\\]`, 'g');
-      html = html.replace(regexLower, value);
+      // On remplace [key] de façon insensible à la casse ([id], [ID], [Id]...)
+      const regex = new RegExp(`\\[${key}\\]`, 'gi');
+      html = html.replace(regex, value);
     });
 
     // Compatibilité rétroactive pour certains tags spécifiques
