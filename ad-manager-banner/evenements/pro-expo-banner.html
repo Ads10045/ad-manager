@@ -4,48 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Bannière Forum Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <title>Forum Pro - Ads-AI</title>
+    <style>
+      body { font-family: 'Outfit', sans-serif; margin: 0; padding: 0; }
+      .tech-dark { background: #020617; }
+      
+      @keyframes neonPulse {
+        0%, 100% { opacity: 0.5; filter: blur(20px); }
+        50% { opacity: 0.8; filter: blur(30px); }
+      }
+      .neon-glow { animation: neonPulse 5s infinite; }
+      
+      .clip-diagonal {
+        clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+      }
+      
+      .stadium-border { border-radius: 9999px; }
+    </style>
 </head>
-<body class="bg-blue-900 flex items-center justify-center min-h-screen p-4">
-    <div class="max-w-5xl w-full bg-indigo-950 rounded-[40px] shadow-3xl overflow-hidden relative border border-white/10">
-        <!-- Éléments de design futuriste -->
-        <div class="absolute -top-10 -right-10 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
+<body class="tech-dark flex items-center justify-center min-h-screen p-4 overflow-hidden">
+    <div class="max-w-5xl w-full bg-[#0f172a] rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden relative border border-white/5 group">
+        
+        <!-- Abstract Tech Background -->
+        <div class="absolute top-0 right-0 w-[60%] h-full bg-blue-600/10 clip-diagonal pointer-events-none"></div>
+        <div class="absolute -top-24 -left-24 w-80 h-80 bg-indigo-600/20 rounded-full neon-glow pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[10%] w-64 h-64 bg-cyan-500/10 rounded-full neon-glow pointer-events-none" style="animation-delay: 2s"></div>
 
-        <div class="relative p-12 flex flex-col md:flex-row items-center gap-12 text-white">
-            <!-- Visuel / Date -->
-            <div class="md:w-1/3 text-center md:border-r border-white/10 md:pr-12">
-                <span class="bg-blue-500 text-white font-black text-6xl block p-6 rounded-3xl shadow-lg shadow-blue-500/30">15</span>
-                <span class="block text-2xl font-black uppercase mt-4 tracking-[0.2em]">MARS 2026</span>
-                <div class="h-1 w-20 bg-blue-400 mx-auto mt-4 rounded-full"></div>
-                <p class="mt-6 text-blue-200 font-medium">Palais des Congrès <br/>Paris, France</p>
-            </div>
-
-            <!-- Contenu -->
-            <div class="md:w-2/3 flex flex-col justify-center">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <span class="text-sm font-bold uppercase tracking-wider text-blue-300">Événement Exceptionnel</span>
+        <div class="relative p-12 md:p-16 flex flex-col md:flex-row items-stretch gap-12 text-white">
+            
+            <!-- LEFT SECTION: DATE & BADGE -->
+            <div class="md:w-1/3 flex flex-col items-center justify-center text-center p-8 bg-white/5 rounded-[2.5rem] border border-white/10 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
+                
+                <span class="text-xs font-black uppercase tracking-[0.5em] text-blue-400 mb-6">Prochain Salon</span>
+                
+                <div class="relative mb-4">
+                  <span class="text-9xl font-black italic tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">15</span>
+                  <div class="absolute -top-2 -right-6 bg-red-600 px-3 py-1 rounded-full text-[10px] font-black uppercase rotate-12">LIVE</div>
                 </div>
                 
-                <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter leading-none mb-6">FORUM INTERNATIONAL <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">DES TRAVAUX PUBLICS</span></h1>
+                <span class="text-2xl font-black uppercase tracking-[0.1em] text-white">MARS 2026</span>
                 
-                <p class="text-lg text-blue-100/70 mb-10 max-w-lg leading-relaxed">
-                    Rejoignez 15 000 experts pour façonner l'avenir de l'infrastructure urbaine. Innovation, Networking et Démonstrations en direct.
+                <div class="mt-8 pt-8 border-t border-white/5 w-full">
+                  <p class="text-sm font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+                    Palais des Congrès <br/>
+                    <span class="text-white">Paris, France</span>
+                  </p>
+                </div>
+            </div>
+
+            <!-- RIGHT SECTION: CONTENT -->
+            <div class="md:w-2/3 flex flex-col justify-center py-6">
+                <!-- Header Tags -->
+                <div class="flex items-center gap-4 mb-8">
+                    <span class="px-4 py-1.5 bg-blue-500 text-slate-900 text-[10px] font-black uppercase tracking-widest rounded-full">International</span>
+                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Global Networking Event</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-black leading-[0.9] tracking-tighter uppercase mb-8">
+                  Forum <br/>
+                  <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-600">Industrie 4.0</span>
+                </h1>
+                
+                <p id="event-description" class="text-lg text-slate-400 font-medium leading-relaxed max-w-xl mb-12">
+                  Découvrez les innovations qui façonnent l'industrie de demain. Rencontrez les leaders mondiaux et participez aux démonstrations exclusives.
                 </p>
 
-                <div class="flex flex-wrap items-center gap-6">
-                    <button class="bg-blue-600 hover:bg-white hover:text-blue-950 text-white font-black py-4 px-12 rounded-2xl text-lg shadow-xl shadow-blue-950/20 transition-all uppercase tracking-widest">S'inscrire</button>
-                    <span class="text-sm font-medium opacity-60">Places limitées à 500 auditeurs</span>
+                <div class="flex flex-col sm:flex-row items-center gap-8">
+                    <button class="relative group px-12 py-5 bg-white text-slate-950 font-black rounded-2xl transition-all duration-300 transform hover:scale-105 hover:-rotate-1 active:scale-95 shadow-2xl">
+                        <span class="relative z-10 uppercase tracking-widest text-sm text-slate-950">Réserver mon pass</span>
+                        <div class="absolute inset-0 bg-blue-500 opacity-0 group-hover:opacity-10 stadium-border transition-opacity blur-xl"></div>
+                    </button>
+                    
+                    <div class="flex items-center gap-4">
+                      <div class="flex -space-x-3">
+                        <img class="w-8 h-8 rounded-full border-2 border-[#0f172a] bg-slate-800" src="https://i.pravatar.cc/150?u=tech1" alt="">
+                        <img class="w-8 h-8 rounded-full border-2 border-[#0f172a] bg-slate-800" src="https://i.pravatar.cc/150?u=tech2" alt="">
+                      </div>
+                      <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">500+ inscrits</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tech deco bar -->
-        <div class="absolute bottom-0 right-0 p-8 flex gap-2">
-            <div class="w-1 h-8 bg-blue-400"></div>
-            <div class="w-1 h-8 bg-blue-600"></div>
-            <div class="w-1 h-8 bg-indigo-800"></div>
+        <!-- Decorative Bottom Indicators -->
+        <div class="absolute bottom-8 left-16 flex items-center gap-2">
+            <div class="w-12 h-1 bg-blue-600"></div>
+            <div class="w-4 h-1 bg-white/20"></div>
+            <div class="w-4 h-1 bg-white/20"></div>
         </div>
     </div>
 </body>
