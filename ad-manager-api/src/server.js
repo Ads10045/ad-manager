@@ -106,6 +106,12 @@ app.get('/catalog-test', (req, res) => {
     }
   });
 });
+app.get('/api/banniere/*', (req, res) => {
+  req.params.path = req.params[0];
+  const renderController = require('./controllers/renderController');
+  return renderController.renderDynamicPreviewByPath(req, res);
+});
+
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
