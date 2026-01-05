@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const swaggerUi = require('swagger-ui-express');
@@ -17,7 +18,7 @@ const PORT = currentConfig.port || process.env.PORT || 3001;
 // Middleware
 app.use(cors({ origin: currentConfig.cors }));
 app.use(express.json());
-app.use(express.static('public')); // Serve static files (e.g. test pages)
+app.use(express.static(path.join(__dirname, '../public'))); // Serve static files (e.g. test pages)
 
 
 // Swagger Configuration
