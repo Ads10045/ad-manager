@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&display=swap" rel="stylesheet">
+    <title>Leaderboard 728x90 - Ads-AI</title>
+    <style>
+        body { font-family: 'Outfit', sans-serif; margin: 0; padding: 0; }
+        .promo-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+    </style>
+</head>
+<body class="bg-transparent m-0 p-0 overflow-hidden">
+    <div class="w-[728px] h-[90px] promo-gradient flex items-center justify-between px-6 relative overflow-hidden border border-white/10">
+        <!-- Background accent -->
+        <div class="absolute right-0 top-0 w-48 h-full bg-blue-600/20 skew-x-[-20deg] translate-x-12"></div>
+        
+        <!-- Image -->
+        <div class="h-[70px] w-[70px] bg-white rounded-lg p-1.5 flex-shrink-0 shadow-lg">
+            <img src="[imageUrl]" alt="[name]" class="w-full h-full object-contain">
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 px-6 text-white">
+            <h2 class="text-lg font-black uppercase tracking-tight leading-none truncate">[name]</h2>
+            <p class="text-[10px] text-blue-300 font-bold uppercase tracking-widest mt-1">[category] • Stock: [stock]</p>
+        </div>
+
+        <!-- Price & CTA -->
+        <div class="flex items-center gap-4 z-10">
+            <div class="text-right">
+                <span class="block text-white font-black text-2xl tracking-tight">[price]€</span>
+                <span class="block text-blue-400 text-[9px] font-bold line-through">[supplierPrice]€</span>
+            </div>
+            <button class="bg-blue-500 hover:bg-blue-400 text-white font-black px-6 py-2.5 rounded-lg text-[10px] uppercase tracking-widest transition-all shadow-lg">
+                Acheter
+            </button>
+        </div>
+    </div>
+</body>
+</html>

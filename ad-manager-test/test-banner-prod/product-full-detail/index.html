@@ -3,140 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads-AI Multi-Size Catalog Test</title>
+    <title>Ads-AI All Banner Sizes Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         .banner-preview-label {
             position: absolute;
-            top: -10px;
+            top: -12px;
             left: 20px;
             background: #0f172a;
             color: white;
-            padding: 4px 12px;
+            padding: 6px 16px;
             border-radius: 999px;
             font-size: 10px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             z-index: 50;
+            white-space: nowrap;
+        }
+        .size-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            margin-left: 8px;
         }
     </style>
 </head>
-<body class="bg-slate-50 p-8 flex flex-col items-center min-h-screen font-sans pb-20">
+<body class="bg-slate-100 p-8 flex flex-col items-center min-h-screen font-sans pb-20">
 
-    <div class="max-w-[1300px] w-full">
-        <header class="mb-12 text-center">
-            <h1 class="text-5xl font-black text-slate-900 mb-4 uppercase tracking-tighter italic">Multi-Size Catalog Engine</h1>
-            <p class="text-slate-500 font-medium">Test de rendu simultané sur différents formats (Premium, Vertical, Grid)</p>
+    <div class="max-w-[1400px] w-full">
+        <header class="mb-16 text-center">
+            <h1 class="text-5xl font-black text-slate-900 mb-4 uppercase tracking-tighter italic">🎨 All Banner Sizes</h1>
+            <p class="text-slate-500 font-medium mb-6">Test complet de tous les formats standards (Digital + Print)</p>
+            <div class="flex flex-wrap justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                <span>📱 Mobile</span>
+                <span>💻 Web</span>
+                <span>📘 Facebook</span>
+                <span>🖼️ Roll-Up</span>
+                <span>🏷️ Vinyl</span>
+            </div>
         </header>
 
-        <!-- MAIN LAYOUT GRID -->
-        <div class="space-y-16">
-            
-            <!-- 1. FULL PREMIUM BANNER (1200x600) -->
-            <section class="relative">
-                <div class="banner-preview-label">Format: Premium Wide (1200x600)</div>
-                <div class="bg-white p-4 rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
-                    <div id="banner-main" class="ads-ai-banner" data-path="catalog/product-full-detail.html">
-                        <div class="h-[600px] flex items-center justify-center bg-slate-50 rounded-[2rem] animate-pulse">
-                            <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading Main Banner...</span>
+        <div class="space-y-20">
+
+            <!-- ============================================ -->
+            <!-- SECTION 1: DIGITAL FORMATS -->
+            <!-- ============================================ -->
+            <div>
+                <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8 border-b-4 border-blue-500 pb-4 inline-block">📡 Formats Digitaux</h2>
+                
+                <div class="space-y-12">
+                    
+                    <!-- 1. FACEBOOK 1200x630 -->
+                    <section class="relative">
+                        <div class="banner-preview-label">Facebook / Open Graph<span class="size-badge">1200×630</span></div>
+                        <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-x-auto">
+                            <div id="banner-facebook" class="ads-ai-banner" data-path="catalog/facebook-1200x630.html">
+                                <div class="w-[1200px] h-[630px] flex items-center justify-center bg-slate-50 rounded-xl animate-pulse">
+                                    <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading...</span>
+                                </div>
+                            </div>
                         </div>
+                    </section>
+
+                    <!-- 2. LEADERBOARD 728x90 -->
+                    <section class="relative">
+                        <div class="banner-preview-label">Web Leaderboard<span class="size-badge">728×90</span></div>
+                        <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex justify-center">
+                            <div id="banner-leaderboard" class="ads-ai-banner" data-path="catalog/leaderboard-728x90.html">
+                                <div class="w-[728px] h-[90px] flex items-center justify-center bg-slate-50 rounded-lg animate-pulse">
+                                    <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 3. SIDE BY SIDE: MEDIUM RECT + MOBILE -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        
+                        <!-- Medium Rectangle 300x250 -->
+                        <section class="relative">
+                            <div class="banner-preview-label">Web Medium Rectangle<span class="size-badge">300×250</span></div>
+                            <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex justify-center">
+                                <div id="banner-medium" class="ads-ai-banner" data-path="catalog/medium-rect-300x250.html">
+                                    <div class="w-[300px] h-[250px] flex items-center justify-center bg-slate-50 rounded-lg animate-pulse">
+                                        <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Mobile 320x50 -->
+                        <section class="relative flex flex-col">
+                            <div class="banner-preview-label">Mobile Banner<span class="size-badge">320×50</span></div>
+                            <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex justify-center items-center flex-1">
+                                <div id="banner-mobile" class="ads-ai-banner" data-path="catalog/mobile-320x50.html">
+                                    <div class="w-[320px] h-[50px] flex items-center justify-center bg-slate-50 rounded-lg animate-pulse">
+                                        <span class="text-slate-300 font-black uppercase text-[8px] tracking-widest">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- 2. SIDE BY SIDE : VERTICAL & CYBERPUNK -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- ============================================ -->
+            <!-- SECTION 2: PRINT FORMATS -->
+            <!-- ============================================ -->
+            <div>
+                <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8 border-b-4 border-orange-500 pb-4 inline-block">🖨️ Formats Impression (Aperçu)</h2>
                 
-                <!-- Format Vertical -->
-                <section class="relative">
-                    <div class="banner-preview-label">Format: Vertical Card (400x600)</div>
-                    <div class="bg-white p-4 rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden flex justify-center">
-                        <div id="banner-vertical" class="ads-ai-banner" data-path="catalog/product-card-vertical.html">
-                            <div class="w-[400px] h-[600px] flex items-center justify-center bg-slate-50 rounded-[2rem] animate-pulse">
-                                <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading Card...</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    
+                    <!-- Roll-Up 85x200 -->
+                    <section class="relative">
+                        <div class="banner-preview-label">Roll-Up Stand<span class="size-badge">85×200 cm</span></div>
+                        <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex justify-center">
+                            <div id="banner-rollup" class="ads-ai-banner" data-path="print/rollup-85x200.html">
+                                <div class="w-[170px] h-[400px] flex items-center justify-center bg-slate-50 rounded-lg animate-pulse">
+                                    <span class="text-slate-300 font-black uppercase text-[8px] tracking-widest">Loading...</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- Format Promotion Flash -->
-                <section class="relative">
-                    <div class="banner-preview-label">Format: Pro Promotion (Landscape)</div>
-                    <div class="bg-white p-4 rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
-                        <div id="banner-flash" class="ads-ai-banner" data-path="promotions/flash-sale-banner.html">
-                            <div class="h-[600px] flex items-center justify-center bg-slate-50 rounded-[2rem] animate-pulse">
-                                <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading Promo...</span>
+                    <!-- Vinyl 90x180 -->
+                    <section class="relative">
+                        <div class="banner-preview-label">Vinyl Standard<span class="size-badge">90×180 cm</span></div>
+                        <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex justify-center">
+                            <div id="banner-vinyl" class="ads-ai-banner" data-path="print/vinyl-90x180.html">
+                                <div class="w-[180px] h-[360px] flex items-center justify-center bg-slate-50 rounded-lg animate-pulse">
+                                    <span class="text-slate-300 font-black uppercase text-[8px] tracking-widest">Loading...</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
+                    <!-- Full Detail (400x600) -->
+                    <section class="relative">
+                        <div class="banner-preview-label">Vertical Card<span class="size-badge">400×600</span></div>
+                        <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex justify-center">
+                            <div id="banner-vertical" class="ads-ai-banner" data-path="catalog/product-card-vertical.html">
+                                <div class="w-[400px] h-[600px] flex items-center justify-center bg-slate-50 rounded-lg animate-pulse">
+                                    <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
             </div>
 
         </div>
 
-        <footer class="mt-20 flex flex-col items-center gap-6">
-            <button onclick="window.location.reload()" class="bg-slate-900 text-white px-16 py-6 rounded-3xl font-black uppercase text-sm tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all">
-                🔄 ACTUALISER TOUT LE CATALOGUE
+        <footer class="mt-24 flex flex-col items-center gap-8">
+            <button onclick="window.location.reload()" class="bg-slate-900 text-white px-20 py-7 rounded-3xl font-black uppercase text-base tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                🔄 NOUVEAU PRODUIT ALÉATOIRE
             </button>
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Toutes les tailles sont synchronisées sur le même produit aléatoire</p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Toutes les bannières sont synchronisées sur le même produit</p>
         </footer>
     </div>
 
     <script>
         const sampleProducts = [
             {
-                id: "DISP-27-OLED",
-                name: "Monitor OLED 27\" Pro Art",
-                description: "Le summum de la précision couleur. Dalle OLED 4K, couverture Adobe RGB 100% et calibration usine pour les créatifs les plus exigeants.",
-                price: "1290.00",
-                supplierPrice: "850.00",
-                margin: "34",
-                imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=2070&auto=format&fit=crop",
-                category: "Hardware",
-                supplier: "VisionTech France",
-                stock: "12",
-                promoExpiry: "Dans 12 heures",
-                chantierTitle: "Monitor OLED 27\"",
-                discountValue: "40%"
+                id: "DISP-27-OLED", name: "Monitor OLED 27\" Pro Art",
+                description: "Le summum de la précision couleur. Dalle OLED 4K, couverture Adobe RGB 100% et calibration usine.",
+                price: "1290.00", supplierPrice: "850.00", margin: "34",
+                imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=600&auto=format&fit=crop",
+                category: "Hardware", supplier: "VisionTech France", stock: "12", promoExpiry: "Dans 12 heures", discountValue: "40%"
             },
             {
-                id: "LAP-ST-14",
-                name: "Station Travail Mobile 14\"",
-                description: "Puissance brute dans un format compact. Processeur 16 cœurs, 64Go de RAM et carte graphique professionnelle pour vos rendus nomades.",
-                price: "2499.00",
-                supplierPrice: "1800.00",
-                margin: "28",
-                imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=2071&auto=format&fit=crop",
-                category: "Laptops",
-                supplier: "NouveauMonde IT",
-                stock: "5",
-                promoExpiry: "Termine ce soir",
-                chantierTitle: "Workstation Mobile",
-                discountValue: "20%"
+                id: "LAP-ST-14", name: "Station Travail Mobile 14\"",
+                description: "Puissance brute dans un format compact. Processeur 16 cœurs, 64Go de RAM.",
+                price: "2499.00", supplierPrice: "1800.00", margin: "28",
+                imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=600&auto=format&fit=crop",
+                category: "Laptops", supplier: "NouveauMonde IT", stock: "5", promoExpiry: "Termine ce soir", discountValue: "20%"
             },
             {
-                id: "CAM-4K-LIVE",
-                name: "Caméra Studio 4K Stream",
-                description: "Qualité cinéma pour vos lives. Capteur plein format, autofocus ultra-rapide et sortie Clean HDMI pour une production sans compromis.",
-                price: "849.00",
-                supplierPrice: "610.00",
-                margin: "28",
-                imageUrl: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1964&auto=format&fit=crop",
-                category: "Video",
-                supplier: "OpticStream",
-                stock: "28",
-                promoExpiry: "Fin d'offre flash",
-                chantierTitle: "Studio Camera 4K",
-                discountValue: "50%"
+                id: "CAM-4K-LIVE", name: "Caméra Studio 4K Stream",
+                description: "Qualité cinéma pour vos lives. Capteur plein format, autofocus ultra-rapide.",
+                price: "849.00", supplierPrice: "610.00", margin: "28",
+                imageUrl: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=600&auto=format&fit=crop",
+                category: "Video", supplier: "OpticStream", stock: "28", promoExpiry: "Fin d'offre flash", discountValue: "50%"
             }
         ];
 
         const randomProduct = sampleProducts[Math.floor(Math.random() * sampleProducts.length)];
         
-        // On injecte les données dans TOUS les containers ads-ai-banner
         $('.ads-ai-banner').each(function() {
             const $banner = $(this);
             Object.keys(randomProduct).forEach(key => {
@@ -146,7 +206,6 @@
         });
     </script>
 
-    <!-- Injecteur Universel (Auto-mapping) -->
     <script src="./banner-injector.js"></script>
 </body>
 </html>
