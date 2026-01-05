@@ -19,6 +19,20 @@ const PORT = currentConfig.port || process.env.PORT || 3001;
 app.use(cors({ origin: currentConfig.cors }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public'))); // Serve static files (e.g. test pages)
+// Routes Prioritaires
+app.get('/catalog-test', (req, res) => {
+  const filePath = path.join(__dirname, '../public/catalog-test/index.html');
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      res.status(500).send(`Error loading test page: ${err.message} (Path: ${filePath})`);
+    }
+  });
+});
+app.get('/api/banniere/*', (req, res) => {
+  req.params.path = req.params[0];
+  const renderController = require('./controllers/renderController');
+  return renderController.renderDynamicPreviewByPath(req, res);
+});
 
 
 // Swagger Configuration
@@ -97,20 +111,6 @@ const bannerRoutes = require('./routes/bannerRoutes');
 const renderRoutes = require('./routes/renderRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 
-// Routes
-app.get('/catalog-test', (req, res) => {
-  const filePath = path.join(__dirname, '../public/catalog-test/index.html');
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      res.status(500).send(`Error loading test page: ${err.message} (Path: ${filePath})`);
-    }
-  });
-});
-app.get('/api/banniere/*', (req, res) => {
-  req.params.path = req.params[0];
-  const renderController = require('./controllers/renderController');
-  return renderController.renderDynamicPreviewByPath(req, res);
-});
 
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
@@ -123,7 +123,7 @@ app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send(`Welcome to Ad-Manager API (${env}). Visit /api-docs for documentation.`);
+  res.send(`Welcome to Ad-Manager API (${env}). Version: ${new Date().toISOString()}. Visit /api-docs for documentation.`);
 });
 
 // Launch Server
