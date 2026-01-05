@@ -35,6 +35,7 @@ L'API est déployée sur Vercel et accessible publiquement.
 *   **API Health** : `https://ad-manager-api.vercel.app/api/health`
 *   **Documentation (Swagger)** : `https://ad-manager-api.vercel.app/api-docs`
 *   **Données réelles (Produits)** : `https://ad-manager-api.vercel.app/api/products`
+*   **Tests Bannières (Prod)** : [Github Preview](https://github.com/Ads10045/ad-manager/tree/main/ad-manager-test/test-banner-prod)
 
 ---
 
