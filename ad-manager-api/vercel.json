@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "ad-manager-api",
   "builds": [
     {
       "src": "src/server.js",
@@ -8,14 +7,6 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api-docs(.*)",
-      "dest": "src/server.js"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "src/server.js"
-    },
     {
       "src": "/(.*)",
       "dest": "src/server.js"
