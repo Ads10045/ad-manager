@@ -1,6 +1,6 @@
 {
   "api": {
-    "base_url": "http://localhost:3001/api",
+    "base_url": "https://ad-manager-api.vercel.app/api",
     "timeout": 5000
   },
   "features": {

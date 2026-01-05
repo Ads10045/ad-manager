@@ -29,7 +29,7 @@ const swaggerOptions = {
     },
     servers: [
       { 
-        url: currentConfig.swagger_url || '/', 
+        url: env === 'prod' ? 'https://ad-manager-api.vercel.app' : (currentConfig.swagger_url || '/'), 
         description: `${env.toUpperCase()} Server` 
       },
     ],
