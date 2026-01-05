@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads-AI Product Full Detail Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body class="bg-slate-50 p-8 flex flex-col items-center justify-center min-h-screen font-sans">
+
+    <div class="max-w-6xl w-full">
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl font-black text-slate-900 mb-4 uppercase tracking-tighter">Product Catalog Engine</h1>
+            <p class="text-slate-500 font-medium">Test de rendu dynamique basé sur le schéma de base de données complet</p>
+        </header>
+
+        <main class="bg-white p-6 rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden">
+            <div class="ads-ai-banner" 
+                 data-path="catalog/product-full-detail.html"
+                 data-id="PROD-7829-X"
+                 data-name="Elite Performance Monitor 27\"
+                 data-description="Écran 4K Ultra HD avec technologie Quantum Dot, taux de rafraîchissement de 144Hz et support HDR1000. Idéal pour les professionnels du design et les joueurs exigeants. Connectique complète HDMI 2.1 et DisplayPort 1.4."
+                 data-price="599.90"
+                 data-supplier-price="420.00"
+                 data-margin="30"
+                 data-image-url="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=2070&auto=format&fit=crop"
+                 data-category="Hardware"
+                 data-supplier="TechGlobal Ltd"
+                 data-stock="42"
+                 data-is-active="true"
+                 data-is-promo="true"
+                 data-promo-expiry="Dans 48 heures"
+            >
+                <div class="h-[600px] flex items-center justify-center bg-slate-50 rounded-[2.5rem] animate-pulse">
+                    <span class="text-slate-400 font-black uppercase tracking-widest">Injection du catalogue...</span>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-16 flex flex-col items-center gap-6">
+            <button onclick="window.location.reload()" class="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all">
+                Randomize Product
+            </button>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">API Endpoint: https://ad-manager-api.vercel.app</p>
+        </footer>
+    </div>
+
+    <!-- Injecteur Universel (Auto-mapping) -->
+    <script src="./banner-injector.js"></script>
+</body>
+</html>
