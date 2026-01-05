@@ -123,7 +123,7 @@ app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send(`ADS-AI-v2.0-DEBUG (${env}) - ${new Date().toISOString()}`);
+  res.send(`V3-DEPLOY-SYNC [${new Date().toLocaleString()}] - Server is up and running.`);
 });
 
 // Launch Server
