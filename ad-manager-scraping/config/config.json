@@ -1,4 +1,9 @@
 {
+  "environments": {
+    "local": {
+      "port": 3001
+    }
+  },
   "rapidapi": {
     "key": "b87a875f68msh27a6a1de220c538p1c15a4jsn75a80b5b7eed",
     "hosts": {

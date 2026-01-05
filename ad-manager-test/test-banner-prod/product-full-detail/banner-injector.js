@@ -1,9 +1,10 @@
 (function($) {
     if (!$) return;
     $(document).ready(function() {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const config = {
             targetClass: '.ads-ai-banner',
-            apiUrl: "https://ad-manager-api.vercel.app/api/render-preview"
+            apiUrl: 'http://localhost:3001/api/render-preview'
         };
 
         const $containers = $(config.targetClass);

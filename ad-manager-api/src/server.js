@@ -1,7 +1,9 @@
-const express = require('express');
+// redeploy trigger
+
 const path = require('path');
-const cors = require('cors');
+const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const config = require('../config/config.json');
