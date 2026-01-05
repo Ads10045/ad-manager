@@ -1,0 +1,18 @@
+{
+  "rapidapi": {
+    "key": "b87a875f68msh27a6a1de220c538p1c15a4jsn75a80b5b7eed",
+    "hosts": {
+      "amazon": "real-time-amazon-data.p.rapidapi.com",
+      "aliexpress": "aliexpress-datahub.p.rapidapi.com",
+      "ebay": "ebay-data-api.p.rapidapi.com"
+    }
+  },
+  "settings": {
+    "default_limit": 5,
+    "margins": {
+      "amazon": 1.2,
+      "aliexpress": 1.5,
+      "ebay": 1.3
+    }
+  }
+}
