@@ -29,7 +29,30 @@ app.get('/catalog-test', (req, res) => {
   });
 });
 app.get('/ads-ai.js', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/ads-ai.js'));
+  const script = `
+(function($) {
+    if (!$) return;
+    const API_URL = "https://ad-manager-api.vercel.app/api/render-preview";
+    function loadBanners() {
+        $('.ads-ai-banner').each(function() {
+            const $container = $(this);
+            const data = $container.data();
+            if ($container.hasClass('ads-ai-loaded') || !data.path) return;
+            const queryParams = $.param(data);
+            $.ajax({
+                url: API_URL + "?" + queryParams,
+                method: 'GET',
+                success: function(html) {
+                    $container.hide().html(html).addClass('ads-ai-loaded').fadeIn(500);
+                }
+            });
+        });
+    }
+    $(document).ready(loadBanners);
+    window.AdsAI = { refresh: loadBanners };
+})(window.jQuery);`;
+  res.set('Content-Type', 'application/javascript');
+  res.send(script);
 });
 app.get('/api/banniere/*', (req, res) => {
   req.params.path = req.params[0];
@@ -126,7 +149,7 @@ app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send("VERIFICATION-FINAL-RENDER");
+  res.send("DEPLOYED_STABLE_V5");
 });
 
 // Launch Server
