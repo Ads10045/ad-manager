@@ -107,7 +107,12 @@ app.use('/api/render-preview', renderRoutes);
 app.use('/api/settings', settingRoutes);
 
 app.get('/catalog-test', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/catalog-test/index.html'));
+  const filePath = path.join(__dirname, '../public/catalog-test/index.html');
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      res.status(500).send(`Error loading test page: ${err.message} (Path: ${filePath})`);
+    }
+  });
 });
 
 // Root route
