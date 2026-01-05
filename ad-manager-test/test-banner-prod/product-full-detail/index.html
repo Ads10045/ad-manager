@@ -11,40 +11,81 @@
 
     <div class="max-w-6xl w-full">
         <header class="mb-12 text-center">
-            <h1 class="text-4xl font-black text-slate-900 mb-4 uppercase tracking-tighter">Product Catalog Engine</h1>
-            <p class="text-slate-500 font-medium">Test de rendu dynamique basé sur le schéma de base de données complet</p>
+            <h1 class="text-4xl font-black text-slate-900 mb-4 uppercase tracking-tighter italic">Product Catalog Engine</h1>
+            <p class="text-slate-500 font-medium">Test de rendu dynamique avec rotation aléatoire des produits</p>
         </header>
 
         <main class="bg-white p-6 rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden">
-            <div class="ads-ai-banner" 
-                 data-path="catalog/product-full-detail.html"
-                 data-id="PROD-7829-X"
-                 data-name="Elite Performance Monitor 27\"
-                 data-description="Écran 4K Ultra HD avec technologie Quantum Dot, taux de rafraîchissement de 144Hz et support HDR1000. Idéal pour les professionnels du design et les joueurs exigeants. Connectique complète HDMI 2.1 et DisplayPort 1.4."
-                 data-price="599.90"
-                 data-supplier-price="420.00"
-                 data-margin="30"
-                 data-image-url="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=2070&auto=format&fit=crop"
-                 data-category="Hardware"
-                 data-supplier="TechGlobal Ltd"
-                 data-stock="42"
-                 data-is-active="true"
-                 data-is-promo="true"
-                 data-promo-expiry="Dans 48 heures"
-            >
+            <!-- Le div est initialement vide de data (sauf le path), ils seront injectés par le script ci-dessous -->
+            <div id="dynamic-product-banner" class="ads-ai-banner" data-path="catalog/product-full-detail.html">
                 <div class="h-[600px] flex items-center justify-center bg-slate-50 rounded-[2.5rem] animate-pulse">
-                    <span class="text-slate-400 font-black uppercase tracking-widest">Injection du catalogue...</span>
+                    <span class="text-slate-400 font-black uppercase tracking-widest text-xs">Sélection du produit...</span>
                 </div>
             </div>
         </main>
 
         <footer class="mt-16 flex flex-col items-center gap-6">
             <button onclick="window.location.reload()" class="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all">
-                Randomize Product
+                Changer de Produit (Refresh)
             </button>
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">API Endpoint: https://ad-manager-api.vercel.app</p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Données simulées basées sur le schéma DB réel</p>
         </footer>
     </div>
+
+    <script>
+        const sampleProducts = [
+            {
+                id: "DISP-27-OLED",
+                name: "Monitor OLED 27\" Pro Art",
+                description: "Le summum de la précision couleur. Dalle OLED 4K, couverture Adobe RGB 100% et calibration usine pour les créatifs les plus exigeants.",
+                price: "1290.00",
+                supplierPrice: "850.00",
+                margin: "34",
+                imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=2070&auto=format&fit=crop",
+                category: "Écrans",
+                supplier: "VisionTech France",
+                stock: "12",
+                promoExpiry: "Dans 12 heures"
+            },
+            {
+                id: "LAP-ST-14",
+                name: "Station Travail Mobile 14\"",
+                description: "Puissance brute dans un format compact. Processeur 16 cœurs, 64Go de RAM et carte graphique professionnelle pour vos rendus nomades.",
+                price: "2499.00",
+                supplierPrice: "1800.00",
+                margin: "28",
+                imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=2071&auto=format&fit=crop",
+                category: "Workstations",
+                supplier: "NouveauMonde IT",
+                stock: "5",
+                promoExpiry: "Termine ce soir"
+            },
+            {
+                id: "CAM-4K-LIVE",
+                name: "Caméra Streaming Studio 4K",
+                description: "Qualité cinéma pour vos lives. Capteur plein format, autofocus ultra-rapide et sortie Clean HDMI pour une production sans compromis.",
+                price: "849.00",
+                supplierPrice: "610.00",
+                margin: "28",
+                imageUrl: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1964&auto=format&fit=crop",
+                category: "Vidéo Pro",
+                supplier: "OpticStream",
+                stock: "28",
+                promoExpiry: "Fin d'offre flash"
+            }
+        ];
+
+        // On choisit un produit au hasard
+        const randomProduct = sampleProducts[Math.floor(Math.random() * sampleProducts.length)];
+        
+        // On injecte les data-* dans le div avant que l'injecteur ne tourne
+        const $banner = $('#dynamic-product-banner');
+        Object.keys(randomProduct).forEach(key => {
+            $banner.attr(`data-${key.toLowerCase()}`, randomProduct[key]);
+            // On s'assure que jQuery .data() voit aussi le changement
+            $banner.data(key, randomProduct[key]);
+        });
+    </script>
 
     <!-- Injecteur Universel (Auto-mapping) -->
     <script src="./banner-injector.js"></script>
