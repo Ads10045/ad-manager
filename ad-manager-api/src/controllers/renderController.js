@@ -25,9 +25,14 @@ const renderDynamicPreview = async (req, res) => {
     
     const randomProduct = rows[Math.floor(Math.random() * rows.length)];
     
-    // 2. Load the HTML template (Generic GitHub Path or Local Fallback)
+    // 2. Load the HTML template
     let html = '';
     const baseDir = config.external?.template_base_url;
+
+    // Fusionner les données : Priorité aux paramètres d'URL (overrides)
+    // On ignore 'path' qui est réservé au template
+    const injectDataMap = { ...randomProduct, ...req.query };
+    delete injectDataMap.path;
 
     if (baseDir) {
       try {
@@ -50,8 +55,8 @@ const renderDynamicPreview = async (req, res) => {
     }
     
     // 3. Perform tag injection (Universal Mapping)
-    Object.keys(randomProduct).forEach(key => {
-      const value = randomProduct[key] !== null ? String(randomProduct[key]) : '';
+    Object.keys(injectDataMap).forEach(key => {
+      const value = injectDataMap[key] !== null ? String(injectDataMap[key]) : '';
       
       // On remplace [key] (ex: [id], [name], [margin])
       const regexExact = new RegExp(`\\[${key}\\]`, 'g');
@@ -63,17 +68,17 @@ const renderDynamicPreview = async (req, res) => {
     });
 
     // Compatibilité rétroactive pour certains tags spécifiques
-    html = html.replace(/\[imageURL\]/gi, randomProduct.imageUrl || '');
-    html = html.replace(/\[productName\]/gi, randomProduct.name || '');
-    html = html.replace(/\[productPrice\]/gi, randomProduct.price || '');
-    html = html.replace(/\[productID\]/gi, randomProduct.id || '');
-    html = html.replace(/\[productLink\]/gi, randomProduct.sourceUrl || '#');
+    html = html.replace(/\[imageURL\]/gi, injectDataMap.imageUrl || '');
+    html = html.replace(/\[productName\]/gi, injectDataMap.name || '');
+    html = html.replace(/\[productPrice\]/gi, injectDataMap.price || '');
+    html = html.replace(/\[productID\]/gi, injectDataMap.id || '');
+    html = html.replace(/\[productLink\]/gi, injectDataMap.sourceUrl || '#');
     
     // Injection spécifique pour JQuery (si le template utilise des IDs)
     // On ajoute un script de données globales pour le template
     const injectData = `
     <script>
-      window.ADS_AI_PRODUCT = ${JSON.stringify(randomProduct)};
+      window.ADS_AI_PRODUCT = ${JSON.stringify(injectDataMap)};
       $(document).ready(function() {
         if (window.ADS_AI_PRODUCT) {
           const p = window.ADS_AI_PRODUCT;
