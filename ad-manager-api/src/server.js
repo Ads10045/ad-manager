@@ -106,6 +106,10 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/render-preview', renderRoutes);
 app.use('/api/settings', settingRoutes);
 
+app.get('/catalog-test', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/catalog-test/index.html'));
+});
+
 // Root route
 app.get('/', (req, res) => {
   res.send(`Welcome to Ad-Manager API (${env}). Visit /api-docs for documentation.`);
