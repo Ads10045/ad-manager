@@ -38,13 +38,20 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css",
-  customJs: [
-    "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js",
-  ]
-}));
+
+// Swagger UI with fix for Vercel (using CDN assets)
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', (req, res) => {
+  res.send(swaggerUi.generateHTML(swaggerSpec, {
+    customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css",
+    customJs: [
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js",
+    ],
+    // Force absolute paths for Vercel
+    customCss: '.swagger-ui .topbar { display: none }'
+  }));
+});
 
 // Health Check
 app.get('/api/health', (req, res) => {
