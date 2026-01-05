@@ -123,7 +123,7 @@ app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send(`Welcome to Ad-Manager API (${env}). Version: ${new Date().toISOString()}. Visit /api-docs for documentation.`);
+  res.send(`ADS-AI-v2.0-DEBUG (${env}) - ${new Date().toISOString()}`);
 });
 
 // Launch Server
