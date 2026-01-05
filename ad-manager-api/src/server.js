@@ -28,6 +28,9 @@ app.get('/catalog-test', (req, res) => {
     }
   });
 });
+app.get('/ads-ai.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/ads-ai.js'));
+});
 app.get('/api/banniere/*', (req, res) => {
   req.params.path = req.params[0];
   const renderController = require('./controllers/renderController');
@@ -123,7 +126,7 @@ app.use('/api/settings', settingRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send("OK-READY-V4");
+  res.send("VERIFICATION-FINAL-RENDER");
 });
 
 // Launch Server
