@@ -39,18 +39,41 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-// Swagger UI with fix for Vercel (using CDN assets)
+// Swagger UI with fix for Vercel
+app.get('/api-docs/swagger-ui-init.js', (req, res) => {
+  res.set('Content-Type', 'application/javascript');
+  res.send(`
+    window.onload = function() {
+      const ui = SwaggerUIBundle({
+        spec: ${JSON.stringify(swaggerSpec)},
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      });
+      window.ui = ui;
+    };
+  `);
+});
+
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', (req, res) => {
-  res.send(swaggerUi.generateHTML(swaggerSpec, {
+  const html = swaggerUi.generateHTML(swaggerSpec, {
     customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css",
     customJs: [
       "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js",
       "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js",
+      "/api-docs/swagger-ui-init.js"
     ],
-    // Force absolute paths for Vercel
     customCss: '.swagger-ui .topbar { display: none }'
-  }));
+  });
+  res.send(html);
 });
 
 // Health Check

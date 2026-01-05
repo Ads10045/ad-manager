@@ -28,5 +28,15 @@ La base de données PostgreSQL hébergée sur Neon.
 
 ---
 
+## 🚀 4. Production (Vercel)
+L'API est déployée sur Vercel et accessible publiquement.
+
+*   **URL de base** : `https://ad-manager-api.vercel.app/`
+*   **API Health** : `https://ad-manager-api.vercel.app/api/health`
+*   **Documentation (Swagger)** : `https://ad-manager-api.vercel.app/api-docs`
+*   **Données réelles (Produits)** : `https://ad-manager-api.vercel.app/api/products`
+
+---
+
 > [!IMPORTANT]
 > **Sécurité** : Ne partagez jamais ces accès en public.
