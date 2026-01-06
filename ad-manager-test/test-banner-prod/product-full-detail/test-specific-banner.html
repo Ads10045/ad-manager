@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Specific Banner Loading</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .status { padding: 10px; margin-bottom: 20px; border-radius: 4px; font-weight: bold; }
+        .loading { background: #e3f2fd; color: #0d47a1; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e9; color: #2e7d32; }
+        #banner-display { margin-top: 20px; border: 1px dashed #ccc; padding: 10px; min-height: 100px; display: flex; justify-content: center; align-items: center; }
+        pre { background: #eee; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔍 Test Chargement Bannière via ID</h1>
+        <div id="status" class="status loading">Initialisation...</div>
+        
+        <div id="debug-info">
+            <h3>Banner Data:</h3>
+            <pre id="banner-data">Loading...</pre>
+            <h3>Products Data:</h3>
+            <pre id="products-data">Waiting...</pre>
+        </div>
+
+        <h3>Aperçu:</h3>
+        <div id="banner-display"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Configuration
+            const BANNER_ID = '0bedda17-8d77-4085-86b6-21a97569c0ff';
+            
+            // Determine API URL based on env flag
+            const urlParams = new URLSearchParams(window.location.search);
+            const isLocal = urlParams.get('env') === 'local';
+            const API_BASE = isLocal 
+                ? 'http://localhost:3001/api' 
+                : 'https://ad-manager-api.vercel.app/api';
+
+            const $status = $('#status');
+            const $bannerDisplay = $('#banner-display');
+            
+            log(`Mode: ${isLocal ? 'LOCAL' : 'PRODUCTION'} (${API_BASE})`);
+
+            // 1. Fetch Banner Data
+            $.ajax({
+                url: `${API_BASE}/banners/${BANNER_ID}`,
+                method: 'GET',
+                success: function(banner) {
+                    $('#banner-data').text(JSON.stringify(banner, null, 2));
+                    log('Banner data retrieved successfully');
+                    
+                    if (!banner.path) {
+                        error('Banner path not found in response');
+                        return;
+                    }
+
+                    // 2. Fetch Products
+                    const productPromises = [];
+                    const productFields = ['product1Id', 'product2Id', 'product3Id'];
+                    
+                    productFields.forEach((field, index) => {
+                        const productId = banner[field];
+                        if (productId) {
+                            productPromises.push(
+                                $.ajax({
+                                    url: `${API_BASE}/products/${productId}`,
+                                    method: 'GET'
+                                }).then(product => ({ index: index + 1, data: product }))
+                                  .catch(err => ({ index: index + 1, error: err }))
+                            );
+                        }
+                    });
+
+                    Promise.all(productPromises).then(results => {
+                        const productsMap = {};
+                        const displayData = {};
+
+                        results.forEach(res => {
+                            if (res.data) {
+                                productsMap[`Product ${res.index}`] = res.data;
+                                // Prepare data for injection
+                                const prefix = `product${res.index}`;
+                                displayData[`${prefix}Name`] = res.data.name;
+                                displayData[`${prefix}Price`] = res.data.price;
+                                displayData[`${prefix}SupplierPrice`] = res.data.supplierPrice || (res.data.price * 0.7).toFixed(2);
+                                displayData[`${prefix}ImageUrl`] = res.data.imageUrl;
+                                displayData[`${prefix}Discount`] = res.data.margin || "20";
+                            }
+                        });
+
+                        $('#products-data').text(JSON.stringify(productsMap, null, 2));
+                        log('Products data retrieved');
+
+                        // 3. Load Template
+                        loadTemplate(banner.path, displayData);
+                    });
+
+                },
+                error: function(xhr) {
+                    error(`Failed to fetch banner: ${xhr.status} ${xhr.statusText}`);
+                }
+            });
+
+            function loadTemplate(path, data) {
+                log(`Loading template: ${path}`);
+                $.ajax({
+                    url: `${API_BASE}/render-preview?path=${path}`,
+                    method: 'GET',
+                    success: function(html) {
+                        let finalHtml = html;
+                        
+                        // Inject Data
+                        Object.keys(data).forEach(key => {
+                            let value = data[key];
+                            if(value === undefined || value === null) value = "";
+                            // Replace [productXProperty]
+                            const regex = new RegExp(`\\[${key}\\]`, 'g');
+                            finalHtml = finalHtml.replace(regex, value);
+                        });
+
+                        $bannerDisplay.html(finalHtml);
+                        $status.removeClass('loading').addClass('success').text('Terminé avec succès !');
+                    },
+                    error: function(xhr) {
+                        error(`Failed to load template: ${xhr.status}`);
+                    }
+                });
+            }
+
+            function log(msg) {
+                console.log(msg);
+                if($status.hasClass('loading')) $status.text(msg);
+            }
+
+            function error(msg) {
+                console.error(msg);
+                $status.removeClass('loading success').addClass('error').text(msg);
+            }
+        });
+    </script>
+</body>
+</html>

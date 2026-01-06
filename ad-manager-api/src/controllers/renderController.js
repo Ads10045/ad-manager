@@ -54,24 +54,39 @@ const renderDynamicPreview = async (req, res) => {
 
     // 1. Load the HTML template (external GitHub or local fallback)
     let html = '';
-    const baseDir = config.external?.template_base_url;
-    if (baseDir) {
-      try {
-        const fullUrl = `${baseDir}${relativePath}`;
-        console.log(`Fetching template from GitHub: ${fullUrl}`);
-        const response = await axios.get(fullUrl);
-        html = response.data;
-      } catch (err) {
-        console.warn(`Failed to fetch external template (${relativePath}), falling back to local file.`);
-      }
-    }
-    if (!html) {
-      const templatePath = path.join(__dirname, '../../../ad-manager-banner', relativePath);
-      if (fs.existsSync(templatePath)) {
-        html = fs.readFileSync(templatePath, 'utf8');
-      } else {
-        return res.status(404).send(`Template not found: ${relativePath}`);
-      }
+    
+    // Check if relativePath is actually a full URL
+    const isFullUrl = relativePath.startsWith('http://') || relativePath.startsWith('https://');
+    
+    if (isFullUrl) {
+        try {
+            console.log(`Fetching banner directly from URL: ${relativePath}`);
+            const response = await axios.get(relativePath);
+            html = response.data;
+        } catch (err) {
+            console.warn(`Failed to fetch banner from full URL (${relativePath})`);
+            return res.status(404).send(`Failed to fetch template from URL: ${relativePath}`);
+        }
+    } else {
+        const baseDir = config.external?.template_base_url;
+        if (baseDir) {
+          try {
+            const fullUrl = `${baseDir}${relativePath}`;
+            console.log(`Fetching template from GitHub: ${fullUrl}`);
+            const response = await axios.get(fullUrl);
+            html = response.data;
+          } catch (err) {
+            console.warn(`Failed to fetch external template (${relativePath}), falling back to local file.`);
+          }
+        }
+        if (!html) {
+          const templatePath = path.join(__dirname, '../../../ad-manager-banner', relativePath);
+          if (fs.existsSync(templatePath)) {
+            html = fs.readFileSync(templatePath, 'utf8');
+          } else {
+            return res.status(404).send(`Template not found: ${relativePath}`);
+          }
+        }
     }
 
     // Aliases for backward compatibility
