@@ -18,7 +18,18 @@
 
     <script>
         $(function(){
-            const apiBase = 'http://localhost:3001/api/render-preview?path=';
+            const urlParams = new URLSearchParams(window.location.search);
+            const isLocal = urlParams.get('env') === 'local';
+            const apiBase = isLocal 
+                ? 'http://localhost:3001/api/render-preview?path='
+                : 'https://ad-manager-api.vercel.app/api/render-preview?path=';
+            
+            if (isLocal) {
+                console.log(' Using LOCAL API:', apiBase);
+                $('body').prepend('<div style="background:orange;color:white;text-align:center;padding:5px;font-weight:bold;">MODE LOCAL ACTIVÉ</div>');
+            } else {
+                console.log(' Using PROD API:', apiBase);
+            }
             const bannerFiles = [
                 'catalog/facebook-1200x630.html',
                 'catalog/leaderboard-728x90.html',
