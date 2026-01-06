@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Mobile 320x50 Banner (GitHub Raw)</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {font-family: Arial, sans-serif; background:#f0f4f8; display:flex; flex-direction:column; align-items:center; padding:2rem;}
+        .banner-wrapper {margin-top:2rem;}
+    </style>
+</head>
+<body>
+    <h1>📱 Test du banner mobile 320x50 (GitHub)</h1>
+    <div class="banner-wrapper">
+        <div id="banner-mobile" class="ads-ai-banner" data-path="catalog/mobile-320x50.html"></div>
+    </div>
+    <script>
+        $(function(){
+            const rawUrl = 'https://raw.githubusercontent.com/Ads10045/ad-manager/main/ad-manager-banner/catalog/mobile-320x50.html';
+            $('#banner-mobile').load(rawUrl, function(resp, status, xhr){
+                if(status==='error'){
+                    console.error('Failed to load banner from GitHub:', xhr.status, xhr.statusText);
+                    $('#banner-mobile').html('<p style="color:red;">Error loading banner</p>');
+                } else {
+                    console.log('Banner loaded from GitHub successfully');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

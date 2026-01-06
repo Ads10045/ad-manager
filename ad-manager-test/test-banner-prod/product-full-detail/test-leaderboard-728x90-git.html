@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Leaderboard 728x90 Banner (GitHub Raw)</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {font-family: Arial, sans-serif; background:#f0f4f8; display:flex; flex-direction:column; align-items:center; padding:2rem;}
+        .banner-wrapper {margin-top:2rem;}
+    </style>
+</head>
+<body>
+    <h1>📊 Test du banner Leaderboard 728×90 (GitHub)</h1>
+    <div class="banner-wrapper">
+        <div id="banner-leaderboard" class="ads-ai-banner" data-path="catalog/leaderboard-728x90.html"></div>
+    </div>
+    <script>
+        $(function(){
+            const rawUrl = 'https://raw.githubusercontent.com/Ads10045/ad-manager/main/ad-manager-banner/catalog/leaderboard-728x90.html';
+            $('#banner-leaderboard').load(rawUrl, function(resp, status, xhr){
+                if(status === 'error'){
+                    console.error('Failed to load leaderboard banner:', xhr.status, xhr.statusText);
+                    $('#banner-leaderboard').html('<p style="color:red;">Error loading banner</p>');
+                } else {
+                    console.log('Leaderboard banner loaded successfully');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
