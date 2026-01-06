@@ -7,62 +7,85 @@
     <title>Leaderboard Multi-Product 728x90 - Ads-AI</title>
     <style>
         body { font-family: 'Outfit', sans-serif; margin: 0; padding: 0; }
-        .promo-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        .product-col { transition: all 0.3s ease; }
-        .product-col:hover { background-color: rgba(255,255,255,0.05); }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .clip-slant {
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+        }
     </style>
 </head>
-<body class="bg-transparent m-0 p-0 overflow-hidden">
-    <div class="w-[728px] h-[90px] promo-gradient flex items-center justify-between relative overflow-hidden border border-white/10">
+<body class="bg-slate-900 m-0 p-0 overflow-hidden text-white">
+    <div class="w-[728px] h-[90px] flex relative overflow-hidden bg-slate-900">
         
-        <!-- Product 1 -->
-        <div class="product-col flex-1 h-full flex items-center px-3 gap-3 border-r border-white/10 relative group cursor-pointer">
-            <div class="h-[60px] w-[60px] bg-white rounded p-1 flex-shrink-0 shadow-md transform group-hover:scale-105 transition-transform">
-                <img src="[product1ImageUrl]" alt="[product1Name]" class="w-full h-full object-contain">
-            </div>
-            <div class="flex-1 min-w-0">
-                <h3 class="text-white text-xs font-bold leading-tight truncate mb-1">[product1Name]</h3>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-blue-400 text-sm font-black">[product1Price]€</span>
-                    <span class="text-slate-500 text-[9px] line-through decoration-slate-500">[product1SupplierPrice]€</span>
-                </div>
-            </div>
-            <!-- Hot Badge -->
-            <div class="absolute top-1 right-1 bg-red-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">
-                -[product1Discount]%
-            </div>
+        <!-- Background Effects -->
+        <div class="absolute top-0 right-0 w-[400px] h-full bg-blue-600/10 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-[300px] h-full bg-purple-600/10 blur-3xl"></div>
+
+        <!-- Left Brand / Title Section (Optional, takes small space) -->
+        <div class="w-[100px] flex-shrink-0 flex flex-col justify-center items-center bg-slate-950/50 border-r border-white/5 z-10">
+            <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400 rotate-180 writing-mode-vertical">Top Deals</span>
+            <div class="mt-1 w-8 h-0.5 bg-blue-500"></div>
         </div>
 
-        <!-- Product 2 -->
-        <div class="product-col flex-1 h-full flex items-center px-3 gap-3 border-r border-white/10 relative group cursor-pointer">
-            <div class="h-[60px] w-[60px] bg-white rounded p-1 flex-shrink-0 shadow-md transform group-hover:scale-105 transition-transform">
-                <img src="[product2ImageUrl]" alt="[product2Name]" class="w-full h-full object-contain">
-            </div>
-            <div class="flex-1 min-w-0">
-                <h3 class="text-white text-xs font-bold leading-tight truncate mb-1">[product2Name]</h3>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-blue-400 text-sm font-black">[product2Price]€</span>
-                    <span class="text-slate-500 text-[9px] line-through decoration-slate-500">[product2SupplierPrice]€</span>
+        <!-- Products Container -->
+        <div class="flex-1 flex divide-x divide-white/5 z-10">
+
+            <!-- Product 1 -->
+            <div class="flex-1 product-card flex items-center p-2 gap-3 group cursor-pointer relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-bl shadow-lg translate-y-[-100%] group-hover:translate-y-0 transition-transform">
+                    -[product1Discount]%
+                </div>
+                <div class="w-[60px] h-[60px] bg-white rounded-lg p-1 shadow-sm group-hover:scale-105 transition-transform">
+                    <img src="[product1ImageUrl]" class="w-full h-full object-contain">
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-[10px] text-slate-400 truncate mb-0.5">[product1Name]</p>
+                    <p class="text-sm font-black text-white leading-none">[product1Price]€</p>
+                    <p class="text-[9px] text-slate-500 line-through decoration-slate-500/50 mt-0.5">[product1SupplierPrice]€</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Product 3 -->
-        <div class="product-col flex-1 h-full flex items-center px-3 gap-3 relative group cursor-pointer">
-            <div class="h-[60px] w-[60px] bg-white rounded p-1 flex-shrink-0 shadow-md transform group-hover:scale-105 transition-transform">
-                <img src="[product3ImageUrl]" alt="[product3Name]" class="w-full h-full object-contain">
+            <!-- Product 2 -->
+            <div class="flex-1 product-card flex items-center p-2 gap-3 group cursor-pointer relative overflow-hidden">
+                 <div class="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-bl shadow-lg translate-y-[-100%] group-hover:translate-y-0 transition-transform">
+                    SALE
+                </div>
+                <div class="w-[60px] h-[60px] bg-white rounded-lg p-1 shadow-sm group-hover:scale-105 transition-transform">
+                    <img src="[product2ImageUrl]" class="w-full h-full object-contain">
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-[10px] text-slate-400 truncate mb-0.5">[product2Name]</p>
+                    <p class="text-sm font-black text-white leading-none">[product2Price]€</p>
+                    <p class="text-[9px] text-slate-500 line-through decoration-slate-500/50 mt-0.5">[product2SupplierPrice]€</p>
+                </div>
             </div>
-            <div class="flex-1 min-w-0">
-                <h3 class="text-white text-xs font-bold leading-tight truncate mb-1">[product3Name]</h3>
-                <div class="flex items-center justify-between">
-                    <span class="text-blue-400 text-sm font-black">[product3Price]€</span>
-                    <div class="bg-blue-600 text-[8px] font-bold text-white px-2 py-1 rounded uppercase group-hover:bg-blue-500">
-                        Voir
+
+            <!-- Product 3 -->
+            <div class="flex-1 product-card flex items-center p-2 gap-3 group cursor-pointer relative overflow-hidden">
+                <div class="w-[60px] h-[60px] bg-white rounded-lg p-1 shadow-sm group-hover:scale-105 transition-transform">
+                    <img src="[product3ImageUrl]" class="w-full h-full object-contain">
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-[10px] text-slate-400 truncate mb-0.5">[product3Name]</p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-black text-white leading-none">[product3Price]€</p>
+                        <button class="bg-blue-600 hover:bg-blue-500 text-white text-[8px] font-bold px-2 py-1 rounded transition-colors uppercase tracking-wider">
+                            Voir
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </body>
 </html>

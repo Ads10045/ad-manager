@@ -63,10 +63,11 @@
                         return;
                     }
 
-                    // 2. Fetch Products
-                    const productPromises = [];
+                    // 2. Fetch Products (Specific + Fallback)
                     const productFields = ['product1Id', 'product2Id', 'product3Id'];
-                    
+                    const productPromises = [];
+
+                    // a) Fetch linked products
                     productFields.forEach((field, index) => {
                         const productId = banner[field];
                         if (productId) {
@@ -74,31 +75,59 @@
                                 $.ajax({
                                     url: `${API_BASE}/products/${productId}`,
                                     method: 'GET'
-                                }).then(product => ({ index: index + 1, data: product }))
-                                  .catch(err => ({ index: index + 1, error: err }))
+                                }).then(p => ({ index: index + 1, data: p, source: 'linked' }))
+                                .catch(e => ({ index: index + 1, error: e }))
                             );
+                        } else {
+                            // Slot empty, mark for random fill
+                            productPromises.push(Promise.resolve({ index: index + 1, needsRandom: true }));
                         }
                     });
 
-                    Promise.all(productPromises).then(results => {
-                        const productsMap = {};
+                    Promise.all(productPromises).then(async (results) => {
                         const displayData = {};
+                        const productsMap = {};
 
+                        // Prepare list of empty slots
+                        const emptySlots = results.filter(r => r.needsRandom || r.error);
+                        
+                        let randomProducts = [];
+                        if (emptySlots.length > 0) {
+                            log(`Filling ${emptySlots.length} empty slots with random products...`);
+                            try {
+                                const allProducts = await $.ajax({ url: `${API_BASE}/products`, method: 'GET' });
+                                if (allProducts && allProducts.length > 0) {
+                                     // Shuffle array
+                                    randomProducts = allProducts.sort(() => 0.5 - Math.random());
+                                }
+                            } catch(e) { console.error("Failed to fetch random products", e); }
+                        }
+
+                        // Process results
+                        let randomIdx = 0;
                         results.forEach(res => {
-                            if (res.data) {
-                                productsMap[`Product ${res.index}`] = res.data;
-                                // Prepare data for injection
-                                const prefix = `product${res.index}`;
-                                displayData[`${prefix}Name`] = res.data.name;
-                                displayData[`${prefix}Price`] = res.data.price;
-                                displayData[`${prefix}SupplierPrice`] = res.data.supplierPrice || (res.data.price * 0.7).toFixed(2);
-                                displayData[`${prefix}ImageUrl`] = res.data.imageUrl;
-                                displayData[`${prefix}Discount`] = res.data.margin || "20";
+                            let product = res.data;
+                            let source = res.source;
+
+                            if ((res.needsRandom || res.error) && randomProducts.length > 0) {
+                                product = randomProducts[randomIdx++];
+                                source = 'random-fallback';
+                            }
+
+                            if (product) {
+                                const i = res.index;
+                                const prefix = `product${i}`;
+                                productsMap[`Slot ${i} (${source})`] = product.name;
+                                
+                                displayData[`${prefix}Name`] = product.name;
+                                displayData[`${prefix}Price`] = product.price;
+                                displayData[`${prefix}SupplierPrice`] = product.supplierPrice || (product.price * 0.7).toFixed(2);
+                                displayData[`${prefix}ImageUrl`] = product.imageUrl;
+                                displayData[`${prefix}Discount`] = product.margin || "20";
                             }
                         });
-
+                        
                         $('#products-data').text(JSON.stringify(productsMap, null, 2));
-                        log('Products data retrieved');
 
                         // 3. Load Template
                         loadTemplate(banner.path, displayData);
