@@ -82,6 +82,18 @@
                         </div>
                     </section>
 
+                    <!-- 2.1 MULTI-PRODUCT LEADERBOARD 728x90 -->
+                    <section class="relative">
+                        <div class="banner-preview-label">Web Leaderboard Multi<span class="size-badge">728×90</span></div>
+                        <div class="bg-white p-4 rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex justify-center">
+                            <div id="banner-leaderboard-multi" class="ads-ai-banner" data-path="catalog/leaderboard-multi-728x90.html">
+                                <div class="w-[728px] h-[90px] flex items-center justify-center bg-slate-50 rounded-lg animate-pulse">
+                                    <span class="text-slate-300 font-black uppercase text-xs tracking-widest">Loading Multi...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- 3. SIDE BY SIDE: MEDIUM RECT + MOBILE -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                         
@@ -203,12 +215,19 @@
                             return;
                         }
 
-                        // 2. PICK RANDOM PRODUCT
+                        // 2. PICK RANDOM PRODUCTS (1 Main + 3 for Multi)
                         const randomProduct = products[Math.floor(Math.random() * products.length)];
-                        console.log('Selected Product:', randomProduct);
+                        
+                        // Pick 3 random products for the multi-banner
+                        const productsForMulti = [];
+                        for(let i=0; i<3; i++) {
+                            productsForMulti.push(products[Math.floor(Math.random() * products.length)]);
+                        }
+
+                        console.log('Selected Main Product:', randomProduct);
 
                         // 3. MAP DATA & INJECT INTO DOM
-                        // Adapt API fields to Banner fields expectation
+                        // Base data for single product banners
                         const bannerData = {
                             id: randomProduct.id,
                             name: randomProduct.name,
@@ -218,11 +237,22 @@
                             margin: randomProduct.margin || "30",
                             imageUrl: randomProduct.imageUrl,
                             category: randomProduct.category,
-                            supplier: "Partner Supplier", // Generic fallback as not in DB
+                            supplier: "Partner Supplier", 
                             stock: randomProduct.stock,
                             promoExpiry: randomProduct.expiresAt ? new Date(randomProduct.expiresAt).toLocaleDateString() : "Offre Limitée",
                             discountValue: randomProduct.isPromo ? "PROMO" : ""
                         };
+
+                        // Add multi-products data (product1Name, product1Price, etc.)
+                        productsForMulti.forEach((prod, index) => {
+                            const i = index + 1;
+                            bannerData[`product${i}Id`] = prod.id;
+                            bannerData[`product${i}Name`] = prod.name;
+                            bannerData[`product${i}Price`] = prod.price;
+                            bannerData[`product${i}SupplierPrice`] = prod.supplierPrice || (prod.price * 0.7).toFixed(2);
+                            bannerData[`product${i}ImageUrl`] = prod.imageUrl;
+                            bannerData[`product${i}Discount`] = prod.margin || "20"; // Mocking discount usually based on margin
+                        });
 
                         $('.ads-ai-banner').each(function() {
                             const $banner = $(this);

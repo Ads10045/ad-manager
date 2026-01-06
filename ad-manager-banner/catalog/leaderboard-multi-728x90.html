@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+    <title>Leaderboard Multi-Product 728x90 - Ads-AI</title>
+    <style>
+        body { font-family: 'Outfit', sans-serif; margin: 0; padding: 0; }
+        .promo-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .product-col { transition: all 0.3s ease; }
+        .product-col:hover { background-color: rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body class="bg-transparent m-0 p-0 overflow-hidden">
+    <div class="w-[728px] h-[90px] promo-gradient flex items-center justify-between relative overflow-hidden border border-white/10">
+        
+        <!-- Product 1 -->
+        <div class="product-col flex-1 h-full flex items-center px-3 gap-3 border-r border-white/10 relative group cursor-pointer">
+            <div class="h-[60px] w-[60px] bg-white rounded p-1 flex-shrink-0 shadow-md transform group-hover:scale-105 transition-transform">
+                <img src="[product1ImageUrl]" alt="[product1Name]" class="w-full h-full object-contain">
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-white text-xs font-bold leading-tight truncate mb-1">[product1Name]</h3>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-blue-400 text-sm font-black">[product1Price]€</span>
+                    <span class="text-slate-500 text-[9px] line-through decoration-slate-500">[product1SupplierPrice]€</span>
+                </div>
+            </div>
+            <!-- Hot Badge -->
+            <div class="absolute top-1 right-1 bg-red-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">
+                -[product1Discount]%
+            </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-col flex-1 h-full flex items-center px-3 gap-3 border-r border-white/10 relative group cursor-pointer">
+            <div class="h-[60px] w-[60px] bg-white rounded p-1 flex-shrink-0 shadow-md transform group-hover:scale-105 transition-transform">
+                <img src="[product2ImageUrl]" alt="[product2Name]" class="w-full h-full object-contain">
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-white text-xs font-bold leading-tight truncate mb-1">[product2Name]</h3>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-blue-400 text-sm font-black">[product2Price]€</span>
+                    <span class="text-slate-500 text-[9px] line-through decoration-slate-500">[product2SupplierPrice]€</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-col flex-1 h-full flex items-center px-3 gap-3 relative group cursor-pointer">
+            <div class="h-[60px] w-[60px] bg-white rounded p-1 flex-shrink-0 shadow-md transform group-hover:scale-105 transition-transform">
+                <img src="[product3ImageUrl]" alt="[product3Name]" class="w-full h-full object-contain">
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-white text-xs font-bold leading-tight truncate mb-1">[product3Name]</h3>
+                <div class="flex items-center justify-between">
+                    <span class="text-blue-400 text-sm font-black">[product3Price]€</span>
+                    <div class="bg-blue-600 text-[8px] font-bold text-white px-2 py-1 rounded uppercase group-hover:bg-blue-500">
+                        Voir
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
