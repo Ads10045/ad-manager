@@ -111,9 +111,17 @@
             });
 
             function loadTemplate(path, data) {
-                log(`Loading template: ${path}`);
+                // Cleanup path: Remove GitHub base URL if present, relying on Server Config
+                const GITHUB_BASE = 'https://raw.githubusercontent.com/Ads10045/ad-manager/main/ad-manager-banner/';
+                let cleanPath = path.includes('raw.githubusercontent.com') 
+                    ? path.replace(GITHUB_BASE, '').replace(GITHUB_BASE.slice(0, -1), '') // Handle with and without trailing slash
+                    : path;
+                
+                if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
+
+                log(`Loading template: ${cleanPath} (Original: ${path})`);
                 $.ajax({
-                    url: `${API_BASE}/render-preview?path=${path}`,
+                    url: `${API_BASE}/render-preview?path=${encodeURIComponent(cleanPath)}`,
                     method: 'GET',
                     success: function(html) {
                         let finalHtml = html;
