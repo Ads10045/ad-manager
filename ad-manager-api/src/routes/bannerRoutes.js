@@ -26,6 +26,7 @@ const bannerController = require('../controllers/bannerController');
  *       200:
  *         description: List of active banners.
  */
+router.get('/local-templates', bannerController.getLocalTemplates);
 router.get('/', bannerController.getBanners);
 
 /**
@@ -84,6 +85,11 @@ router.get('/by-date', bannerController.getBannersByDate);
  *         description: Banner not found.
  */
 router.get('/:id', bannerController.getBannerById);
+router.get('/:id/template', bannerController.getBannerTemplate);
+router.get('/template/*', (req, res) => {
+    req.params.id = req.params[0];
+    return bannerController.getBannerTemplate(req, res);
+});
 
 /**
  * @swagger

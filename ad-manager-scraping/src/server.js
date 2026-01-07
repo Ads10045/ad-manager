@@ -81,6 +81,39 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
+app.get('/api/search/amazon', async (req, res) => {
+    const query = req.query.q || 'bestseller';
+    const limit = parseInt(req.query.limit, 10) || 10;
+    try {
+        const results = await scraperService.searchAmazon(query, limit);
+        res.json(results);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/search/aliexpress', async (req, res) => {
+    const query = req.query.q || 'gadget';
+    const limit = parseInt(req.query.limit, 10) || 10;
+    try {
+        const results = await scraperService.searchAliExpress(query, limit);
+        res.json(results);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/search/ebay', async (req, res) => {
+    const query = req.query.q || 'tech';
+    const limit = parseInt(req.query.limit, 10) || 10;
+    try {
+        const results = await scraperService.searchEbay(query, limit);
+        res.json(results);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // Simple health check
 app.get('/', (req, res) => res.send('Ad‑Manager Scraping API – Local dev')); 
 
