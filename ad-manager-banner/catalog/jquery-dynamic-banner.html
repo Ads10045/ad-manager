@@ -73,6 +73,7 @@
                         --ads-bg: #0f172a;       /* Slate 900 */
                         --ads-border: #334155;   /* Slate 700 */
                         --ads-highlight: #60a5fa;/* Blue 400 */
+                        --ads-text: #cbd5e1;     /* Slate 300 */
                         --ads-glow1: #2563eb;    /* Blue 600 */
                         --ads-glow2: #9333ea;    /* Purple 600 */
                         
@@ -83,6 +84,7 @@
                         --ads-bg: #450a0a;       /* Red 950 */
                         --ads-border: #991b1b;   /* Red 800 */
                         --ads-highlight: #f87171;/* Red 400 */
+                        --ads-text: #fecdd3;     /* Rose 200 */
                         --ads-glow1: #dc2626;    /* Red 600 */
                         --ads-glow2: #ea580c;    /* Orange 600 */
                     }
@@ -91,6 +93,7 @@
                         --ads-bg: #064e3b;       /* Emerald 900 */
                         --ads-border: #065f46;   /* Emerald 800 */
                         --ads-highlight: #34d399;/* Emerald 400 */
+                        --ads-text: #a7f3d0;     /* Emerald 200 */
                         --ads-glow1: #059669;    /* Emerald 600 */
                         --ads-glow2: #0d9488;    /* Teal 600 */
                     }
@@ -104,7 +107,7 @@
                         position: relative;
                         overflow: hidden;
                         border: 1px solid var(--ads-border);
-                        font-family: 'Inter', sans-serif;
+                        font-family: 'Inter', sans-serif; /* Font Fixe, seule la couleur change */
                         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                     }
 
@@ -202,15 +205,15 @@
                     }
                     .ads-title {
                         font-size: 10px;
-                        color: #d1d5db; /* Gray 300 */
-                        font-weight: 400; /* Regular */
+                        color: var(--ads-text); /* Couleur Dynamique */
+                        font-weight: 400; /* Regular Fixed */
                         line-height: 1.25;
                         margin-bottom: 4px;
                         display: -webkit-box;
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
                         overflow: hidden;
-                        transition: color 0.2s;
+                        transition: color 0.5s ease; /* Transition douce de couleur */
                     }
                     .ads-product-item:hover .ads-title { color: var(--ads-highlight); }
                     
