@@ -6,7 +6,10 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- jQuery -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Config -->
+    <script src="../../shared/config.js"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -32,51 +35,12 @@
             /**
              * Script jQuery pour générer une bannière 728x90
              * avec des VRAIS produits depuis l'API.
+             * Utilise: shared/config.js
              */
-            
-            // Configuration
-            const API_URL = 'https://ad-manager-api.vercel.app/api/products';
-            
-            // Configuration Affiliation (Depuis NutriPlusApp)
-            const AFFILIATE_IDS = {
-                amazon_us: 'nutriplusapp2-21',
-                amazon_es: 'nutriplusap07-21',
-                amazon_de: 'nutriplusap0f-21',
-                amazon_uk: 'nutriplusa0c7-21',
-                amazon_it: 'nutriplusap0e-21',
-                aliexpress: 'nutriplusap'
-            };
-
-            function getAffiliatedUrl(sourceUrl) {
-                if (!sourceUrl || sourceUrl === '#') return '#';
-                
-                try {
-                    const urlObj = new URL(sourceUrl);
-                    
-                    // Amazon Logic
-                    if (sourceUrl.includes('amazon')) {
-                        let tag = AFFILIATE_IDS.amazon_us; // Default
-                        if (sourceUrl.includes('.es')) tag = AFFILIATE_IDS.amazon_es;
-                        if (sourceUrl.includes('.de')) tag = AFFILIATE_IDS.amazon_de;
-                        if (sourceUrl.includes('.co.uk')) tag = AFFILIATE_IDS.amazon_uk;
-                        if (sourceUrl.includes('.it')) tag = AFFILIATE_IDS.amazon_it;
-                        
-                        if (tag) urlObj.searchParams.set('tag', tag);
-                    }
-                    // AliExpress Logic
-                    else if (sourceUrl.includes('aliexpress')) {
-                        urlObj.searchParams.set('aff_id', AFFILIATE_IDS.aliexpress);
-                    }
-                    
-                    return urlObj.toString();
-                } catch (e) {
-                    return sourceUrl;
-                }
-            }
 
             // 1. Appel AJAX pour récupérer les vrais produits
             $.ajax({
-                url: API_URL,
+                url: AdsAIConfig.api.getUrl(AdsAIConfig.api.endpoints.products),
                 method: 'GET',
                 success: function(products) {
                     if (!products || products.length === 0) {
@@ -126,8 +90,8 @@
                                 // Fallback image si vide
                                 const imgUrl = p.imageUrl || "https://placehold.co/100x100/333/FFF?text=No+Img";
 
-                                // Gestion Affiliation
-                                const targetUrl = getAffiliatedUrl(p.sourceUrl);
+                                // Gestion Affiliation via Config
+                                const targetUrl = AdsAIConfig.affiliation.getAffiliatedUrl(p.sourceUrl);
 
                                 return `
                                 <a href="${targetUrl}" target="_blank" class="flex-1 p-2 flex items-center gap-3 group cursor-pointer hover:bg-white/5 transition-all relative overflow-hidden text-decoration-none">
