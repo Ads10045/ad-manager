@@ -60,30 +60,58 @@
             // 3. Fonction de rendu (Vanilla CSS + Inline Styles)
             function renderBanner(products) {
                 
-                // Style Block (Scoped as much as possible with prefix)
+                // Style Block (CSS Variables for Theming)
                 const styleBlock = `
                 <style>
                     /* Reset partiel */
                     .ads-banner-root * { box-sizing: border-box; margin: 0; padding: 0; }
                     .ads-banner-root img { display: block; max-width: 100%; height: auto; }
                     
+                    /* Variables & Themes */
+                    .ads-banner-root {
+                        /* Default Theme (Blue/Slate) */
+                        --ads-bg: #0f172a;       /* Slate 900 */
+                        --ads-border: #334155;   /* Slate 700 */
+                        --ads-highlight: #60a5fa;/* Blue 400 */
+                        --ads-glow1: #2563eb;    /* Blue 600 */
+                        --ads-glow2: #9333ea;    /* Purple 600 */
+                        
+                        transition: all 0.5s ease;
+                    }
+
+                    .ads-banner-root.theme-rose {
+                        --ads-bg: #450a0a;       /* Red 950 */
+                        --ads-border: #991b1b;   /* Red 800 */
+                        --ads-highlight: #f87171;/* Red 400 */
+                        --ads-glow1: #dc2626;    /* Red 600 */
+                        --ads-glow2: #ea580c;    /* Orange 600 */
+                    }
+
+                    .ads-banner-root.theme-emerald {
+                        --ads-bg: #064e3b;       /* Emerald 900 */
+                        --ads-border: #065f46;   /* Emerald 800 */
+                        --ads-highlight: #34d399;/* Emerald 400 */
+                        --ads-glow1: #059669;    /* Emerald 600 */
+                        --ads-glow2: #0d9488;    /* Teal 600 */
+                    }
+
                     /* Container */
                     .ads-banner-root {
                         width: 728px;
                         height: 90px;
-                        background-color: #0f172a; /* Slate 900 */
+                        background-color: var(--ads-bg);
                         display: flex;
                         position: relative;
                         overflow: hidden;
-                        border: 1px solid #334155; /* Slate 700 */
+                        border: 1px solid var(--ads-border);
                         font-family: 'Inter', sans-serif;
                         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                     }
 
                     /* Background Effects */
-                    .ads-bg-glow { position: absolute; filter: blur(64px); width: 400px; height: 100%; opacity: 0.1; pointer-events: none; }
-                    .ads-glow-blue { top: 0; right: 0; background-color: #2563eb; }
-                    .ads-glow-purple { bottom: 0; left: 0; background-color: #9333ea; }
+                    .ads-bg-glow { position: absolute; filter: blur(64px); width: 400px; height: 100%; opacity: 0.15; pointer-events: none; transition: background-color 0.5s; }
+                    .ads-glow-1 { top: 0; right: 0; background-color: var(--ads-glow1); }
+                    .ads-glow-2 { bottom: 0; left: 0; background-color: var(--ads-glow2); }
                     .ads-pattern {
                         position: absolute; inset: 0;
                         background-image: url('https://grainy-gradients.vercel.app/noise.svg');
@@ -104,7 +132,7 @@
                         backdrop-filter: blur(4px);
                     }
                     .ads-brand-text {
-                        color: #60a5fa; /* Blue 400 */
+                        color: var(--ads-highlight);
                         font-size: 10px;
                         font-weight: 900;
                         text-transform: uppercase;
@@ -133,7 +161,7 @@
                         cursor: pointer;
                     }
                     .ads-product-item:last-child { border-right: none; }
-                    .ads-product-item:hover { background-color: rgba(255,255,255,0.05); }
+                    .ads-product-item:hover { background-color: rgba(255,255,255,0.1); }
 
                     /* Badge */
                     .ads-badge {
@@ -184,7 +212,7 @@
                         overflow: hidden;
                         transition: color 0.2s;
                     }
-                    .ads-product-item:hover .ads-title { color: #60a5fa; } /* Blue 400 */
+                    .ads-product-item:hover .ads-title { color: var(--ads-highlight); }
                     
                     .ads-price-row { display: flex; align-items: baseline; gap: 8px; }
                     .ads-price { font-size: 14px; font-weight: 900; color: white; }
@@ -193,7 +221,7 @@
                     /* Hover Line */
                     .ads-hover-line {
                         position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
-                        background: linear-gradient(to right, #3b82f6, #a855f7);
+                        background: linear-gradient(to right, var(--ads-glow1), var(--ads-glow2));
                         transform: scaleX(0); transform-origin: left;
                         transition: transform 0.2s;
                     }
@@ -206,13 +234,13 @@
                     <div class="ads-banner-root">
                         
                         <!-- Backgrounds -->
-                        <div class="ads-bg-glow ads-glow-blue"></div>
-                        <div class="ads-bg-glow ads-glow-purple"></div>
+                        <div class="ads-bg-glow ads-glow-1"></div>
+                        <div class="ads-bg-glow ads-glow-2"></div>
                         <div class="ads-pattern"></div>
 
                         <!-- Logo -->
                         <div class="ads-sidebar">
-                            <span class="ads-brand-text">Ads Manager</span>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="width: 60px; height: auto; filter: invert(1) brightness(2); opacity: 0.9;">
                         </div>
 
                         <!-- Products -->
@@ -251,6 +279,26 @@
                 // Injection
                 const $container = $('#banner-container');
                 $container.removeClass('loading-placeholder').html(bannerHTML).hide().fadeIn();
+
+                // Animation des Thèmes (Toutes les 2 secondes)
+                const themes = ['', 'theme-rose', 'theme-emerald'];
+                let currentThemeIndex = 0;
+                
+                // Clear existing interval if any (pour éviter les doublons au reload)
+                if (window.bannerThemeInterval) clearInterval(window.bannerThemeInterval);
+                
+                window.bannerThemeInterval = setInterval(() => {
+                    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                    const $root = $('.ads-banner-root');
+                    
+                    // Remove old themes
+                    $root.removeClass('theme-rose theme-emerald');
+                    
+                    // Add new theme
+                    const newTheme = themes[currentThemeIndex];
+                    if (newTheme) $root.addClass(newTheme);
+                    
+                }, 2000);
             }
         });
     </script>
