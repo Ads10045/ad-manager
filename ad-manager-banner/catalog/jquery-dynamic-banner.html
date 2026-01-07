@@ -34,8 +34,45 @@
              * avec des VRAIS produits depuis l'API.
              */
             
-            // Endpoint API
+            // Configuration
             const API_URL = 'https://ad-manager-api.vercel.app/api/products';
+            
+            // Configuration Affiliation (Depuis NutriPlusApp)
+            const AFFILIATE_IDS = {
+                amazon_us: 'nutriplusapp2-21',
+                amazon_es: 'nutriplusap07-21',
+                amazon_de: 'nutriplusap0f-21',
+                amazon_uk: 'nutriplusa0c7-21',
+                amazon_it: 'nutriplusap0e-21',
+                aliexpress: 'nutriplusap'
+            };
+
+            function getAffiliatedUrl(sourceUrl) {
+                if (!sourceUrl || sourceUrl === '#') return '#';
+                
+                try {
+                    const urlObj = new URL(sourceUrl);
+                    
+                    // Amazon Logic
+                    if (sourceUrl.includes('amazon')) {
+                        let tag = AFFILIATE_IDS.amazon_us; // Default
+                        if (sourceUrl.includes('.es')) tag = AFFILIATE_IDS.amazon_es;
+                        if (sourceUrl.includes('.de')) tag = AFFILIATE_IDS.amazon_de;
+                        if (sourceUrl.includes('.co.uk')) tag = AFFILIATE_IDS.amazon_uk;
+                        if (sourceUrl.includes('.it')) tag = AFFILIATE_IDS.amazon_it;
+                        
+                        if (tag) urlObj.searchParams.set('tag', tag);
+                    }
+                    // AliExpress Logic
+                    else if (sourceUrl.includes('aliexpress')) {
+                        urlObj.searchParams.set('aff_id', AFFILIATE_IDS.aliexpress);
+                    }
+                    
+                    return urlObj.toString();
+                } catch (e) {
+                    return sourceUrl;
+                }
+            }
 
             // 1. Appel AJAX pour récupérer les vrais produits
             $.ajax({
@@ -89,8 +126,11 @@
                                 // Fallback image si vide
                                 const imgUrl = p.imageUrl || "https://placehold.co/100x100/333/FFF?text=No+Img";
 
+                                // Gestion Affiliation
+                                const targetUrl = getAffiliatedUrl(p.sourceUrl);
+
                                 return `
-                                <a href="${p.sourceUrl || '#'}" target="_blank" class="flex-1 p-2 flex items-center gap-3 group cursor-pointer hover:bg-white/5 transition-all relative overflow-hidden text-decoration-none">
+                                <a href="${targetUrl}" target="_blank" class="flex-1 p-2 flex items-center gap-3 group cursor-pointer hover:bg-white/5 transition-all relative overflow-hidden text-decoration-none">
                                     
                                     <!-- Badge Promo -->
                                     <div class="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-bl shadow-sm transform translate-y-[-100%] group-hover:translate-y-0 transition-transform duration-300">
