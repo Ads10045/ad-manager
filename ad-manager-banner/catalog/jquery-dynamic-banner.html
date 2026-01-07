@@ -90,7 +90,7 @@
                                 const imgUrl = p.imageUrl || "https://placehold.co/100x100/333/FFF?text=No+Img";
 
                                 return `
-                                <div onclick="window.open('${p.sourceUrl || '#'}', '_blank')" class="flex-1 p-2 flex items-center gap-3 group cursor-pointer hover:bg-white/5 transition-all relative overflow-hidden">
+                                <a href="${p.sourceUrl || '#'}" target="_blank" class="flex-1 p-2 flex items-center gap-3 group cursor-pointer hover:bg-white/5 transition-all relative overflow-hidden text-decoration-none">
                                     
                                     <!-- Badge Promo -->
                                     <div class="absolute top-0 right-0 bg-gradient-to-l from-red-600 to-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-bl shadow-sm transform translate-y-[-100%] group-hover:translate-y-0 transition-transform duration-300">
@@ -104,13 +104,13 @@
 
                                     <!-- Info Produit -->
                                     <div class="min-w-0 flex flex-col justify-center h-full py-1">
-                                        <h3 class="text-[10px] text-gray-300 font-medium leading-tight mb-1 line-clamp-2 h-[24px] overflow-hidden">${p.name}</h3>
+                                        <h3 class="text-[10px] text-gray-300 font-medium leading-tight mb-1 line-clamp-2 h-[24px] overflow-hidden group-hover:text-blue-400 transition-colors">${p.name}</h3>
                                         <div class="flex items-baseline gap-2">
                                             <span class="text-sm font-black text-white">${currentPrice}€</span>
                                             <span class="text-[9px] text-gray-500 line-through decoration-gray-500/50">${oldPrice.toFixed(0)}€</span>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                                 `;
                             }).join('')}
                         </div>
