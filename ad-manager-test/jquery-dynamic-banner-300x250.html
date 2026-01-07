@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Banner 300x250 Real API</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Ads10045/ad-manager@main/shared/config.js?v=202601071234"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
+        .wrapper { max-width: 800px; margin: 0 auto; }
+        .loading-placeholder { width: 300px; height: 250px; background-color: #e2e8f0; border-radius: 4px; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="banner-container" class="loading-placeholder"></div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: AdsAIConfig.api.getUrl(AdsAIConfig.api.endpoints.products),
+                method: 'GET',
+                success: function(products) {
+                    if (!$('link[href*="fonts.googleapis.com/css2?family=Inter"]').length) {
+                        $('head').append('<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">');
+                    }
+                    if (!products || products.length === 0) {
+                        $('#banner-container').html('<p style="color:red; text-align:center;">Aucun produit trouvé.</p>');
+                        return;
+                    }
+                    // Select 2 products for 300x250
+                    const selectedProducts = products.sort(() => 0.5 - Math.random()).slice(0, 2);
+                    renderBanner(selectedProducts);
+                },
+                error: function(err) {
+                    console.error("Erreur API:", err);
+                    $('#banner-container').html('<p style="color:red; text-align:center;">Erreur de chargement API.</p>');
+                }
+            });
+
+            function renderBanner(products) {
+                const styleBlock = `
+                <style>
+                    .ads-banner-root * { box-sizing: border-box; margin: 0; padding: 0; }
+                    .ads-banner-root img { display: block; max-width: 100%; height: auto; }
+                    .ads-banner-root {
+                        /* Default Theme (Blue/Slate) */
+                        --ads-bg: #0f172a;       /* Slate 900 (Main Bg) */
+                        --ads-product-bg: #1e293b; /* Slate 800 (Item Bg) */
+                        --ads-border: #334155;   
+                        --ads-highlight: #60a5fa;
+                        --ads-text: #cbd5e1;     
+                        --ads-glow1: #2563eb;    
+                        --ads-glow2: #9333ea;    
+                        
+                        transition: all 0.5s ease;
+                        width: 300px; height: 250px;
+                        background-color: var(--ads-bg);
+                        display: flex; flex-direction: column; /* Vertical Layout */
+                        position: relative; overflow: visible; /* Allow Zoom Overflow */
+                        border: 1px solid var(--ads-border);
+                        font-family: 'Inter', sans-serif;
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                    }
+                    .ads-banner-root.theme-rose { 
+                        --ads-bg: #450a0a; 
+                        --ads-product-bg: #7f1d1d; /* Red 900 */
+                        --ads-border: #991b1b; --ads-highlight: #f87171; --ads-text: #fecdd3; --ads-glow1: #dc2626; --ads-glow2: #ea580c; 
+                    }
+                    .ads-banner-root.theme-emerald { 
+                        --ads-bg: #064e3b; 
+                        --ads-product-bg: #065f46; /* Emerald 800 */
+                        --ads-border: #065f46; --ads-highlight: #34d399; --ads-text: #a7f3d0; --ads-glow1: #059669; --ads-glow2: #0d9488; 
+                    }
+                    
+                    .ads-bg-glow { position: absolute; filter: blur(40px); width: 100%; height: 50%; opacity: 0.15; pointer-events: none; transition: background-color 0.5s; z-index: 0; }
+                    .ads-glow-1 { top: 0; right: 0; background-color: var(--ads-glow1); }
+                    .ads-glow-2 { bottom: 0; left: 0; background-color: var(--ads-glow2); }
+                    .ads-pattern { position: absolute; inset: 0; background-image: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.2; pointer-events: none; z-index: 0; }
+
+                    /* Sidebar becomes TopBar */
+                    .ads-sidebar {
+                        width: 100%; height: 40px; flex-shrink: 0;
+                        display: flex; justify-content: center; align-items: center; gap: 8px;
+                        background-color: rgba(0,0,0,0.2); z-index: 10;
+                        border-bottom: 1px solid rgba(255,255,255,0.05);
+                        backdrop-filter: blur(4px);
+                    }
+                    .ads-brand-text { color: var(--ads-highlight); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+
+                    /* Product List Vertical */
+                    .ads-products { flex: 1; display: flex; flex-direction: column; z-index: 10; padding: 4px; gap: 4px; overflow: hidden; }
+                    
+                    .ads-product-item {
+                        flex: 1; display: flex; align-items: center; padding: 8px; gap: 12px;
+                        position: relative; text-decoration: none;
+                        background-color: var(--ads-product-bg); /* Distinct Item Color */
+                        border-radius: 4px;
+                        border: 1px solid rgba(255,255,255,0.05);
+                        transition: all 0.2s; cursor: pointer;
+                    }
+
+                    .ads-product-item:hover { 
+                        background-color: rgba(255,255,255,0.15); 
+                        z-index: 20;
+                        border-color: var(--ads-highlight);
+                    }
+
+                    .ads-badge {
+                        position: absolute; top: 0; right: 0;
+                        background: linear-gradient(to left, #dc2626, #ef4444);
+                        color: white; font-size: 9px; font-weight: bold; padding: 2px 6px;
+                        border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                        transform: translateY(-100%); transition: transform 0.3s;
+                        z-index: 5;
+                    }
+                    .ads-product-item:hover .ads-badge { transform: translateY(0); }
+
+                    .ads-img-box {
+                        width: 50px; height: 50px; background: white; border-radius: 8px; padding: 2px;
+                        box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.1);
+                        flex-shrink: 0; 
+                        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                        display: flex; align-items: center; justify-content: center;
+                        z-index: 1;
+                    }
+                    
+                    /* BIG ZOOM Hover */
+                    .ads-product-item:hover .ads-img-box { 
+                        transform: scale(2.0); /* HUGE Zoom for 300x250 */
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+                        z-index: 10;
+                    }
+                    .ads-img-box img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+
+                    .ads-info { min-width: 0; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+                    .ads-title {
+                        font-size: 11px; color: var(--ads-text); font-weight: 400; line-height: 1.2;
+                        margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.5s ease;
+                    }
+                    .ads-product-item:hover .ads-title { color: var(--ads-highlight); }
+                    .ads-price-row { display: flex; align-items: baseline; gap: 8px; }
+                    .ads-price { font-size: 14px; font-weight: 900; color: white; }
+                    .ads-old-price { font-size: 9px; color: #6b7280; text-decoration: line-through; }
+                    
+                    .ads-hover-line { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, var(--ads-glow1), var(--ads-glow2)); transform: scaleX(0); transform-origin: left; transition: transform 0.2s; }
+                    .ads-banner-root:hover .ads-hover-line { transform: scaleX(1); }
+                </style>`;
+
+                const bannerHTML = `
+                    ${styleBlock}
+                    <div class="ads-banner-root">
+                        <div class="ads-bg-glow ads-glow-1"></div>
+                        <div class="ads-bg-glow ads-glow-2"></div>
+                        <div class="ads-pattern"></div>
+                        <div class="ads-sidebar">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="width: 50px; height: auto; filter: invert(1) brightness(2); opacity: 0.9;">
+                        </div>
+                        <div class="ads-products">
+                            ${products.map(p => {
+                                const currentPrice = parseFloat(p.price);
+                                const oldPrice = p.supplierPrice ? parseFloat(p.supplierPrice) * 1.4 : currentPrice * 1.3;
+                                const discount = Math.round(((oldPrice - currentPrice) / oldPrice) * 100);
+                                const imgUrl = p.imageUrl || "https://placehold.co/100x100/333/FFF?text=No+Img";
+                                const targetUrl = AdsAIConfig.affiliation.getAffiliatedUrl(p.sourceUrl);
+                                return `
+                                <a href="${targetUrl}" target="_blank" class="ads-product-item">
+                                    <div class="ads-badge">-${discount}%</div>
+                                    <div class="ads-img-box"><img src="${imgUrl}" alt="${p.name}"></div>
+                                    <div class="ads-info">
+                                        <h3 class="ads-title">${p.name}</h3>
+                                        <div class="ads-price-row"><span class="ads-price">${currentPrice}€</span><span class="ads-old-price">${oldPrice.toFixed(0)}€</span></div>
+                                    </div>
+                                </a>`;
+                            }).join('')}
+                        </div>
+                        <div class="ads-hover-line"></div>
+                    </div>`;
+                
+                const $container = $('#banner-container');
+                $container.removeClass('loading-placeholder').html(bannerHTML).hide().fadeIn();
+
+                const themes = ['', 'theme-rose', 'theme-emerald'];
+                let currentThemeIndex = 0;
+                if (window.bannerThemeInterval) clearInterval(window.bannerThemeInterval);
+                window.bannerThemeInterval = setInterval(() => {
+                    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                    const $root = $('.ads-banner-root');
+                    $root.removeClass('theme-rose theme-emerald');
+                    const newTheme = themes[currentThemeIndex];
+                    if (newTheme) $root.addClass(newTheme);
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
