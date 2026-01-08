@@ -136,7 +136,8 @@ app.get('/api/products/random-promo', async (req, res) => {
     const db = require('./utils/db');
     const now = new Date().toISOString();
     
-    const productsOrResult = await db.execute(
+    // First try to get promo products
+    let productsOrResult = await db.execute(
       () => db.prisma.product.findMany({
         where: {
           isActive: true,
@@ -150,10 +151,21 @@ app.get('/api/products/random-promo', async (req, res) => {
       `SELECT * FROM "Product" WHERE "isActive" = true AND "isPromo" = true AND ("expiresAt" IS NULL OR "expiresAt" > '${now}')`
     );
 
-    const products = productsOrResult.rows ? productsOrResult.rows : productsOrResult;
+    let products = productsOrResult.rows ? productsOrResult.rows : productsOrResult;
+
+    // Fallback: if no promo products, get any active product
+    if (!products || products.length === 0) {
+      productsOrResult = await db.execute(
+        () => db.prisma.product.findMany({
+          where: { isActive: true }
+        }),
+        `SELECT * FROM "Product" WHERE "isActive" = true LIMIT 20`
+      );
+      products = productsOrResult.rows ? productsOrResult.rows : productsOrResult;
+    }
 
     if (!products || products.length === 0) {
-      return res.status(404).json({ message: 'No active promo products found' });
+      return res.status(404).json({ message: 'No products found' });
     }
 
     const randomIndex = Math.floor(Math.random() * products.length);
