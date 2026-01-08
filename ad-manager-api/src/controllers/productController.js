@@ -94,10 +94,50 @@ const createProduct = async (req, res) => {
   }
 };
 
+/**
+ * @desc Get random active promo product that is not expired
+ */
+const getRandomPromoProduct = async (req, res) => {
+  try {
+    const now = new Date().toISOString();
+    
+    // Get all candidate products first
+    // Logic: isActive = true AND isPromo = true AND (expiresAt IS NULL OR expiresAt > now)
+    const productsOrResult = await db.execute(
+      () => db.prisma.product.findMany({
+        where: {
+          isActive: true,
+          isPromo: true,
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gt: new Date() } }
+          ]
+        }
+      }),
+      `SELECT * FROM "Product" WHERE "isActive" = true AND "isPromo" = true AND ("expiresAt" IS NULL OR "expiresAt" > '${now}')`
+    );
+
+    const products = productsOrResult.rows ? productsOrResult.rows : productsOrResult;
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No active promo products found' });
+    }
+
+    // Select random product
+    const randomIndex = Math.floor(Math.random() * products.length);
+    const randomProduct = products[randomIndex];
+
+    res.json(randomProduct);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = { 
   getProducts, 
   getProductById, 
   getProductsByDate, 
   getExpiredProducts, 
+  getRandomPromoProduct,
   createProduct 
 };

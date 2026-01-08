@@ -41,6 +41,20 @@ router.get('/expired', productController.getExpiredProducts);
 
 /**
  * @swagger
+ * /api/products/random-promo:
+ *   get:
+ *     summary: Retrieve a random active promo product (not expired)
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: Random promo product details.
+ *       404:
+ *         description: No active promo products found.
+ */
+router.get('/random-promo', productController.getRandomPromoProduct);
+
+/**
+ * @swagger
  * /api/products/by-date:
  *   get:
  *     summary: Retrieve products added within a date range
