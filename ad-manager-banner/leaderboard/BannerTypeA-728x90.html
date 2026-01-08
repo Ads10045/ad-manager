@@ -36,6 +36,17 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .banner-image:hover img {
+            transform: scale(1.5);
+            z-index: 10;
+        }
+        
+        .banner-image:hover {
+            overflow: visible;
+            z-index: 100;
         }
         
         .banner-content {
@@ -145,6 +156,21 @@
             <div class="banner-price" data-field="price">[price]€</div>
             <a href="[sourceUrl]" class="banner-cta" target="_blank" data-field="sourceUrl">Voir →</a>
         </div>
-    </div>
+</div>
+    
+    <script>
+        // Round margin to integer
+        document.addEventListener('DOMContentLoaded', function() {
+            const marginEl = document.querySelector('.banner-margin');
+            if (marginEl) {
+                const text = marginEl.textContent;
+                const match = text.match(/([\d.]+)/);
+                if (match) {
+                    const rounded = Math.round(parseFloat(match[1]));
+                    marginEl.textContent = '+' + rounded + '%';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
