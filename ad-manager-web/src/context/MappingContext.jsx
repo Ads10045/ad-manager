@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { Layout, Smartphone, Monitor, LayoutGrid, Layers, Sparkles } from 'lucide-react';
 
 // Liste des colonnes disponibles dans la DB
 export const DB_COLUMNS = [
@@ -18,12 +19,9 @@ export const DB_COLUMNS = [
 ];
 
 // Clé localStorage pour persister les mappings
-// Clé localStorage pour persister les mappings
 const STORAGE_KEY = 'ads-ai-banner-mappings';
 const CONFIG_KEY = 'ads-ai-banner-config'; // New key for templates
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-
-import { Layout, Smartphone, Monitor, LayoutGrid, Layers, Sparkles } from 'lucide-react';
 
 const INITIAL_CONFIG = {
     categories: {
@@ -438,7 +436,6 @@ export const MappingProvider = ({ children }) => {
         savedBanners,
         previewData,
         isSaving,
-        isSaving,
         saveError,
         isCodeEditorOpen,
         editorCode,
@@ -447,7 +444,6 @@ export const MappingProvider = ({ children }) => {
         // Setters
         setSelectedTemplate,
         setActiveZone,
-        setEditMode,
         setEditMode,
         setPreviewData,
         setIsCodeEditorOpen,
