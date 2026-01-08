@@ -1,0 +1,129 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-08",
+    "categories": {
+        "leaderboard": {
+            "name": "Leaderboard",
+            "description": "Bannières horizontales larges (728px+)",
+            "templates": [
+                {
+                    "id": "banner-type-a-728x90",
+                    "name": "Épuré - Leaderboard",
+                    "file": "leaderboard/BannerTypeA-728x90.html",
+                    "size": "728x90",
+                    "description": "Design minimaliste avec focus sur l'image",
+                    "fields": ["imageUrl", "name", "category", "price", "sourceUrl", "promoBadge"]
+                },
+                {
+                    "id": "billboard-premium-970x90",
+                    "name": "Billboard Premium",
+                    "file": "leaderboard/billboard-premium-970x90.html",
+                    "size": "970x90",
+                    "description": "Format large avec branding et statistiques",
+                    "fields": ["imageUrl", "name", "category", "price", "supplierPrice", "stock", "margin", "sourceUrl", "promoBadge"]
+                }
+            ]
+        },
+        "rectangle": {
+            "name": "Rectangle",
+            "description": "Bannières moyennes format carré (300x250)",
+            "templates": [
+                {
+                    "id": "banner-type-b-300x250",
+                    "name": "Promotionnel - Rectangle",
+                    "file": "rectangle/BannerTypeB-300x250.html",
+                    "size": "300x250",
+                    "description": "Design promo avec focus sur le prix et les réductions",
+                    "fields": ["imageUrl", "name", "description", "price", "supplierPrice", "discount", "sourceUrl", "promoBadge"]
+                }
+            ]
+        },
+        "skyscraper": {
+            "name": "Skyscraper",
+            "description": "Bannières verticales étroites (160x600)",
+            "templates": [
+                {
+                    "id": "banner-type-c-160x600",
+                    "name": "Informatif - Skyscraper",
+                    "file": "skyscraper/BannerTypeC-160x600.html",
+                    "size": "160x600",
+                    "description": "Design vertical avec focus sur la description et les détails",
+                    "fields": ["imageUrl", "name", "description", "category", "supplier", "stock", "price", "margin", "sourceUrl", "promoBadge"]
+                }
+            ]
+        },
+        "halfpage": {
+            "name": "Half Page",
+            "description": "Bannières demi-page (300x600)",
+            "templates": [
+                {
+                    "id": "banner-type-d-300x600",
+                    "name": "Premium - Half Page",
+                    "file": "halfpage/BannerTypeD-300x600.html",
+                    "size": "300x600",
+                    "description": "Design premium avec stats et animations",
+                    "fields": ["imageUrl", "name", "description", "category", "stock", "margin", "price", "sourceUrl", "promoBadge"]
+                }
+            ]
+        },
+        "mobile": {
+            "name": "Mobile",
+            "description": "Bannières optimisées pour mobile",
+            "templates": [
+                {
+                    "id": "mobile-banner-320x100",
+                    "name": "Mobile Banner",
+                    "file": "mobile/mobile-banner-320x100.html",
+                    "size": "320x100",
+                    "description": "Format compact optimisé pour mobile",
+                    "fields": ["imageUrl", "name", "price", "sourceUrl", "promoBadge"]
+                },
+                {
+                    "id": "mobile-leaderboard-320x50",
+                    "name": "Mobile Leaderboard",
+                    "file": "mobile/mobile-leaderboard-320x50.html",
+                    "size": "320x50",
+                    "description": "Format ultra-compact pour mobile",
+                    "fields": ["imageUrl", "name", "price", "sourceUrl"]
+                }
+            ]
+        },
+        "multi-product": {
+            "name": "Multi-Produits",
+            "description": "Bannières affichant plusieurs produits",
+            "templates": [
+                {
+                    "id": "multi-product-leaderboard-728x90",
+                    "name": "Multi-Product Leaderboard",
+                    "file": "multi-product/multi-product-leaderboard-728x90.html",
+                    "size": "728x90",
+                    "description": "Affiche 3 produits côte à côte",
+                    "fields": ["product1ImageUrl", "product1Name", "product1Price", "product1SourceUrl", "product2ImageUrl", "product2Name", "product2Price", "product2SourceUrl", "product3ImageUrl", "product3Name", "product3Price", "product3SourceUrl", "storeUrl"]
+                },
+                {
+                    "id": "multi-product-grid-300x600",
+                    "name": "Multi-Product Grid",
+                    "file": "multi-product/multi-product-grid-300x600.html",
+                    "size": "300x600",
+                    "description": "Affiche 4 produits en liste verticale",
+                    "fields": ["product1ImageUrl", "product1Name", "product1Price", "product1SourceUrl", "product2ImageUrl", "product2Name", "product2Price", "product2SourceUrl", "product3ImageUrl", "product3Name", "product3Price", "product3SourceUrl", "product4ImageUrl", "product4Name", "product4Price", "product4SourceUrl", "storeUrl"]
+                }
+            ]
+        }
+    },
+    "dbColumns": [
+        { "key": "name", "label": "Nom du Produit", "type": "text" },
+        { "key": "description", "label": "Description", "type": "text" },
+        { "key": "category", "label": "Catégorie", "type": "text" },
+        { "key": "supplier", "label": "Fournisseur", "type": "text" },
+        { "key": "price", "label": "Prix (€)", "type": "value" },
+        { "key": "supplierPrice", "label": "Prix Fournisseur (€)", "type": "value" },
+        { "key": "margin", "label": "Marge (%)", "type": "value" },
+        { "key": "stock", "label": "Stock", "type": "value" },
+        { "key": "imageUrl", "label": "Image Principale", "type": "media" },
+        { "key": "images", "label": "Galerie Images", "type": "media" },
+        { "key": "isPromo", "label": "En Promotion", "type": "logic" },
+        { "key": "promoExpiry", "label": "Fin de Promo", "type": "logic" },
+        { "key": "sourceUrl", "label": "Lien Produit", "type": "link" }
+    ]
+}

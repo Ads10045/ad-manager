@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=300, height=600">
+    <title>Multi-Product Grid - 300x600</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .banner-container {
+            width: 300px;
+            height: 600px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f172a 0%, #4c1d95 50%, #0f172a 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+        
+        .banner-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .brand-logo {
+            background: linear-gradient(135deg, #9333ea, #db2777);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .header-title {
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .products-grid {
+            flex: 1;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+        }
+        
+        .product-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+        
+        .product-image {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .product-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .product-name {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+        
+        .product-price {
+            font-size: 16px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .product-arrow {
+            color: rgba(168, 85, 247, 0.6);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover .product-arrow {
+            color: #a855f7;
+            transform: translateX(4px);
+        }
+        
+        .banner-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .view-all-cta {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #9333ea, #db2777);
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(147, 51, 234, 0.4);
+        }
+        
+        .view-all-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(147, 51, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <div class="banner-header">
+            <div class="brand-logo">Ads-AI</div>
+            <div class="header-title">🔥 Meilleures Offres</div>
+        </div>
+        
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <a href="[product1SourceUrl]" class="product-card" target="_blank">
+                <div class="product-image">
+                    <img src="[product1ImageUrl]" alt="[product1Name]" data-field="product1ImageUrl">
+                </div>
+                <div class="product-info">
+                    <div class="product-name" data-field="product1Name">[product1Name]</div>
+                    <div class="product-price" data-field="product1Price">[product1Price]€</div>
+                </div>
+                <div class="product-arrow">→</div>
+            </a>
+            
+            <!-- Product 2 -->
+            <a href="[product2SourceUrl]" class="product-card" target="_blank">
+                <div class="product-image">
+                    <img src="[product2ImageUrl]" alt="[product2Name]" data-field="product2ImageUrl">
+                </div>
+                <div class="product-info">
+                    <div class="product-name" data-field="product2Name">[product2Name]</div>
+                    <div class="product-price" data-field="product2Price">[product2Price]€</div>
+                </div>
+                <div class="product-arrow">→</div>
+            </a>
+            
+            <!-- Product 3 -->
+            <a href="[product3SourceUrl]" class="product-card" target="_blank">
+                <div class="product-image">
+                    <img src="[product3ImageUrl]" alt="[product3Name]" data-field="product3ImageUrl">
+                </div>
+                <div class="product-info">
+                    <div class="product-name" data-field="product3Name">[product3Name]</div>
+                    <div class="product-price" data-field="product3Price">[product3Price]€</div>
+                </div>
+                <div class="product-arrow">→</div>
+            </a>
+            
+            <!-- Product 4 -->
+            <a href="[product4SourceUrl]" class="product-card" target="_blank">
+                <div class="product-image">
+                    <img src="[product4ImageUrl]" alt="[product4Name]" data-field="product4ImageUrl">
+                </div>
+                <div class="product-info">
+                    <div class="product-name" data-field="product4Name">[product4Name]</div>
+                    <div class="product-price" data-field="product4Price">[product4Price]€</div>
+                </div>
+                <div class="product-arrow">→</div>
+            </a>
+        </div>
+        
+        <div class="banner-footer">
+            <a href="[storeUrl]" class="view-all-cta" target="_blank" data-field="storeUrl">Voir Toutes les Offres →</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=728, height=90">
+    <title>Multi-Product Banner - 728x90</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .banner-container {
+            width: 728px;
+            height: 90px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #4c1d95 50%, #0f172a 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 0 16px;
+            gap: 8px;
+        }
+        
+        .brand-badge {
+            background: linear-gradient(135deg, #9333ea, #db2777);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+        
+        .products-container {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .product-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .product-image {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .product-info {
+            min-width: 0;
+        }
+        
+        .product-name {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+        
+        .product-price {
+            font-size: 14px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .view-all-cta {
+            background: linear-gradient(135deg, #9333ea, #db2777);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 12px;
+            text-decoration: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .view-all-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(147, 51, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <div class="brand-badge">Top Ventes</div>
+        
+        <div class="products-container">
+            <!-- Product 1 -->
+            <a href="[product1SourceUrl]" class="product-item" target="_blank">
+                <div class="product-image">
+                    <img src="[product1ImageUrl]" alt="[product1Name]" data-field="product1ImageUrl">
+                </div>
+                <div class="product-info">
+                    <div class="product-name" data-field="product1Name">[product1Name]</div>
+                    <div class="product-price" data-field="product1Price">[product1Price]€</div>
+                </div>
+            </a>
+            
+            <!-- Product 2 -->
+            <a href="[product2SourceUrl]" class="product-item" target="_blank">
+                <div class="product-image">
+                    <img src="[product2ImageUrl]" alt="[product2Name]" data-field="product2ImageUrl">
+                </div>
+                <div class="product-info">
+                    <div class="product-name" data-field="product2Name">[product2Name]</div>
+                    <div class="product-price" data-field="product2Price">[product2Price]€</div>
+                </div>
+            </a>
+            
+            <!-- Product 3 -->
+            <a href="[product3SourceUrl]" class="product-item" target="_blank">
+                <div class="product-image">
+                    <img src="[product3ImageUrl]" alt="[product3Name]" data-field="product3ImageUrl">
+                </div>
+                <div class="product-info">
+                    <div class="product-name" data-field="product3Name">[product3Name]</div>
+                    <div class="product-price" data-field="product3Price">[product3Price]€</div>
+                </div>
+            </a>
+        </div>
+        
+        <a href="[storeUrl]" class="view-all-cta" target="_blank" data-field="storeUrl">Voir Tout →</a>
+    </div>
+</body>
+</html>

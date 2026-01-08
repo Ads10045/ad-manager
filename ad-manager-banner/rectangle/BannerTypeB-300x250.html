@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=300, height=250">
+    <title>Banner Type B - Rectangle 300x250</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .banner-container {
+            width: 300px;
+            height: 250px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, #0f172a 0%, #581c87 40%, #0f172a 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+        
+        .banner-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            z-index: 10;
+        }
+        
+        .promo-badge {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .discount-badge {
+            background: linear-gradient(135deg, #10b981, #14b8a6);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        
+        .banner-image-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+        }
+        
+        .banner-image-section img {
+            max-height: 90px;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+        
+        .banner-content {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+        }
+        
+        .banner-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 6px;
+        }
+        
+        .banner-description {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 12px;
+            height: 32px;
+        }
+        
+        .banner-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .price-section {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        
+        .banner-price {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .banner-old-price {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            text-decoration: line-through;
+        }
+        
+        .banner-cta {
+            background: linear-gradient(135deg, #9333ea, #db2777);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+        }
+        
+        .banner-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(147, 51, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <!-- Header Badges -->
+        <div class="banner-header">
+            <div class="promo-badge" data-field="promoBadge">🔥 PROMO</div>
+            <div class="discount-badge" data-field="discount">-[discount]%</div>
+        </div>
+        
+        <!-- Image Section -->
+        <div class="banner-image-section">
+            <img src="[imageUrl]" alt="[name]" data-field="imageUrl">
+        </div>
+        
+        <!-- Content -->
+        <div class="banner-content">
+            <div class="banner-title" data-field="name">[name]</div>
+            <div class="banner-description" data-field="description">[description]</div>
+            
+            <div class="banner-footer">
+                <div class="price-section">
+                    <div class="banner-price" data-field="price">[price]€</div>
+                    <div class="banner-old-price" data-field="supplierPrice">[supplierPrice]€</div>
+                </div>
+                <a href="[sourceUrl]" class="banner-cta" target="_blank" data-field="sourceUrl">Acheter</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

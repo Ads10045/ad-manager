@@ -6,23 +6,81 @@
   color-scheme: dark;
 }
 
-body {
+* {
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #1a0a2e 0%, #4a0a4a 50%, #2d1a4a 100%);
+  min-height: 100vh;
 }
 
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.4);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.6);
+}
+
+/* Glass Card Effect */
 .glass-card {
-  @apply bg-white bg-opacity-5 backdrop-blur-lg border border-white border-opacity-10 rounded-2xl;
+  @apply bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl;
 }
 
-.nav-link {
-  @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-400 hover:text-white hover:bg-white hover:bg-opacity-5;
+/* Mappable Zone Highlight */
+.mappable-zone {
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.mappable-zone::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px dashed transparent;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.mappable-zone:hover::before {
+  border-color: rgba(168, 85, 247, 0.8);
+  background: rgba(168, 85, 247, 0.1);
+}
+.mappable-zone.active::before {
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.2);
+  animation: pulse-border 1.5s infinite;
 }
 
-.nav-link.active {
-  @apply text-primary-400 bg-primary-500 bg-opacity-10;
+@keyframes pulse-border {
+  0%, 100% { border-color: rgba(168, 85, 247, 0.8); }
+  50% { border-color: rgba(236, 72, 153, 0.8); }
+}
+
+/* Button Gradient */
+.btn-gradient {
+  @apply bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-purple-500/30 transition-all duration-300 hover:-translate-y-0.5 active:scale-95;
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
