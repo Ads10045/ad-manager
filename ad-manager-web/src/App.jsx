@@ -1,11 +1,5 @@
 import React from 'react';
-// TODO: Centralize config in Context or import it. For now, import from sidebar? 
-// Actually, circular dependency potential. Let's move config to context or just duplicate/prop.
-// Better: App doesn't know config. BannerEditor can fetch categories from context if we put them there.
-// BUT, TemplateSidebar has the config constant. 
-// Let's assume we import the config from sidebar (exporting it).
-
-import TemplateSidebar, { BANNER_CONFIG } from './components/TemplateSidebar';
+import TemplateSidebar from './components/TemplateSidebar';
 import BannerPreview from './components/BannerPreview';
 import BannerEditor from './components/BannerEditor';
 import MappingPanel from './components/MappingPanel';
@@ -18,7 +12,7 @@ import { Wand2, Eye, SlidersHorizontal, Code, Edit3 } from 'lucide-react';
  * Charge les templates depuis ad-manager-banner
  */
 const App = () => {
-    const { selectedTemplate, editMode, isCodeEditorOpen } = useMapping();
+    const { selectedTemplate, editMode, isCodeEditorOpen, bannerConfig } = useMapping();
     const [activePanel, setActivePanel] = React.useState('mapping');
 
     return (
@@ -76,7 +70,7 @@ const App = () => {
                     {/* Preview or Editor Section */}
                     <div className="flex-1 border-r border-white/10 relative">
                         {isCodeEditorOpen ? (
-                            <BannerEditor config={BANNER_CONFIG} />
+                            <BannerEditor config={bannerConfig} />
                         ) : (
                             <BannerPreview />
                         )}
