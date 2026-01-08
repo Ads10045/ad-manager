@@ -6,138 +6,9 @@ import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutG
 // TODO: Fetch this from API
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-export const BANNER_CONFIG = {
-    categories: {
-        leaderboard: {
-            name: "Leaderboard",
-            icon: Monitor,
-            description: "Bannières horizontales larges",
-            templates: [
-                {
-                    id: "banner-type-a-728x90",
-                    name: "Épuré - Leaderboard",
-                    file: "leaderboard/BannerTypeA-728x90.html",
-                    size: "728x90",
-                    description: "Design minimaliste avec focus sur l'image",
-                    fields: ["imageUrl", "name", "category", "price", "sourceUrl"]
-                },
-                {
-                    id: "billboard-premium-970x90",
-                    name: "Billboard Premium",
-                    file: "leaderboard/billboard-premium-970x90.html",
-                    size: "970x90",
-                    description: "Format large avec branding et statistiques",
-                    fields: ["imageUrl", "name", "category", "price", "supplierPrice", "stock", "margin", "sourceUrl"]
-                }
-            ]
-        },
-        rectangle: {
-            name: "Rectangle",
-            icon: LayoutGrid,
-            description: "Bannières moyennes format carré",
-            templates: [
-                {
-                    id: "banner-type-b-300x250",
-                    name: "Promotionnel",
-                    file: "rectangle/BannerTypeB-300x250.html",
-                    size: "300x250",
-                    description: "Design promo avec focus sur le prix",
-                    fields: ["imageUrl", "name", "description", "price", "supplierPrice", "sourceUrl"]
-                }
-            ]
-        },
-        skyscraper: {
-            name: "Skyscraper",
-            icon: Layout,
-            description: "Bannières verticales étroites",
-            templates: [
-                {
-                    id: "banner-type-c-160x600",
-                    name: "Informatif",
-                    file: "skyscraper/BannerTypeC-160x600.html",
-                    size: "160x600",
-                    description: "Design vertical avec détails",
-                    fields: ["imageUrl", "name", "description", "category", "supplier", "stock", "price", "margin", "sourceUrl"]
-                }
-            ]
-        },
-        halfpage: {
-            name: "Half Page",
-            icon: Layout,
-            description: "Bannières demi-page",
-            templates: [
-                {
-                    id: "banner-type-d-300x600",
-                    name: "Premium",
-                    file: "halfpage/BannerTypeD-300x600.html",
-                    size: "300x600",
-                    description: "Design premium avec stats",
-                    fields: ["imageUrl", "name", "description", "category", "stock", "margin", "price", "sourceUrl"]
-                }
-            ]
-        },
-        mobile: {
-            name: "Mobile",
-            icon: Smartphone,
-            description: "Optimisées pour mobile",
-            templates: [
-                {
-                    id: "mobile-banner-320x100",
-                    name: "Mobile Banner",
-                    file: "mobile/mobile-banner-320x100.html",
-                    size: "320x100",
-                    description: "Format compact pour mobile",
-                    fields: ["imageUrl", "name", "price", "sourceUrl"]
-                },
-                {
-                    id: "mobile-leaderboard-320x50",
-                    name: "Mobile Leaderboard",
-                    file: "mobile/mobile-leaderboard-320x50.html",
-                    size: "320x50",
-                    description: "Format ultra-compact",
-                    fields: ["imageUrl", "name", "price", "sourceUrl"]
-                }
-            ]
-        },
-        "multi-product": {
-            name: "Multi-Produits",
-            icon: Layers,
-            description: "Affichant plusieurs produits",
-            templates: [
-                {
-                    id: "multi-product-leaderboard-728x90",
-                    name: "Multi-Product Leaderboard",
-                    file: "multi-product/multi-product-leaderboard-728x90.html",
-                    size: "728x90",
-                    description: "3 produits côte à côte",
-                    fields: ["product1ImageUrl", "product1Name", "product1Price", "product2ImageUrl", "product2Name", "product2Price", "product3ImageUrl", "product3Name", "product3Price", "storeUrl"]
-                },
-                {
-                    id: "multi-product-grid-300x600",
-                    name: "Multi-Product Grid",
-                    file: "multi-product/multi-product-grid-300x600.html",
-                    size: "300x600",
-                    description: "4 produits en liste verticale",
-                    fields: ["product1ImageUrl", "product1Name", "product1Price", "product2ImageUrl", "product2Name", "product2Price", "product3ImageUrl", "product3Name", "product3Price", "product4ImageUrl", "product4Name", "product4Price", "storeUrl"]
-                }
-            ]
-        },
-        fashion: {
-            name: "Mode & Fashion",
-            icon: Sparkles,
-            description: "Collections et Soldes",
-            templates: [
-                {
-                    id: "fashion-black-friday-970x250",
-                    name: "Black Friday Collection",
-                    file: "fashion/black-friday-multi-970x250.html",
-                    size: "970x250",
-                    description: "Billboard élégant multi-produits (Style Mimi Chamois)",
-                    fields: ["product1Image", "product1Name", "product1Link", "product2Image", "product2Name", "product2Link", "product3Image", "product3Name", "product3Link", "product4Image", "product4Name", "product4Link"]
-                }
-            ]
-        }
-    }
+const FALLBACK_CONFIG = {
+    // Empty as fallback, but context should load INITIAL_CONFIG
+    categories: {}
 };
 
 /**
@@ -149,7 +20,9 @@ const TemplateSidebar = () => {
         setSelectedTemplate,
         resetMapping,
         setIsCodeEditorOpen,
-        setEditorCode
+        setEditorCode,
+        bannerConfig,
+        deleteTemplateFromConfig
     } = useMapping();
     const [expandedCategories, setExpandedCategories] = useState(['leaderboard', 'rectangle']);
 
@@ -162,10 +35,10 @@ const TemplateSidebar = () => {
     };
 
     const [searchTerm, setSearchTerm] = useState('');
-    const [localConfig, setLocalConfig] = useState(BANNER_CONFIG);
+    // const [localConfig, setLocalConfig] = useState(BANNER_CONFIG); // Use context config instead
 
     // Filter templates based on search
-    const filteredCategories = Object.entries(localConfig.categories).reduce((acc, [key, cat]) => {
+    const filteredCategories = Object.entries(bannerConfig.categories).reduce((acc, [key, cat]) => {
         const matchesCat = cat.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchedTemplates = cat.templates.filter(t =>
             t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -205,15 +78,9 @@ const TemplateSidebar = () => {
             });
 
             if (response.ok) {
-                // Update local state
-                setLocalConfig(prev => {
-                    const newConfig = { ...prev };
-                    Object.keys(newConfig.categories).forEach(catKey => {
-                        newConfig.categories[catKey].templates = newConfig.categories[catKey].templates.filter(t => t.id !== template.id);
-                    });
-                    // Remove empty categories?
-                    return newConfig;
-                });
+                // Update via separate method
+                deleteTemplateFromConfig(template.id);
+
                 alert("Template supprimé");
                 if (selectedTemplate?.id === template.id) setSelectedTemplate(null);
             } else {
@@ -274,7 +141,10 @@ const TemplateSidebar = () => {
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
                 {Object.entries(filteredCategories).map(([categoryKey, category]) => {
                     const isExpanded = expandedCategories.includes(categoryKey) || searchTerm.length > 0;
-                    const Icon = category.icon || Layout;
+
+                    // Simple icon mapping since we store icons as strings in context now
+                    const icons = { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 };
+                    const Icon = icons[category.icon] || Layout;
 
                     return (
                         <div key={categoryKey} className="rounded-xl overflow-hidden">

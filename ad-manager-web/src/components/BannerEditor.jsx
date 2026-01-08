@@ -11,7 +11,8 @@ const BannerEditor = ({ config }) => {
         setEditorCode,
         selectedTemplate,
         setSelectedTemplate,
-        setIsCodeEditorOpen
+        setIsCodeEditorOpen,
+        addTemplateToConfig
     } = useMapping();
 
     // Default config if not passed
@@ -47,18 +48,13 @@ const BannerEditor = ({ config }) => {
             if (response.ok) {
                 const newTemplate = await response.json();
                 setSaveStatus('success');
-                // Could refresh sidebar via context if we had a reload function, 
-                // but sidebar handles its own re-fetch or push? 
-                // Actually TemplateSidebar managed its own localConfig. 
-                // We should probably move banner list to context to share it.
-                // For now, simple alert.
+                // Add to context config
+                addTemplateToConfig(newTemplate);
+
                 alert(`Template créé: ${newTemplate.file}`);
                 // Close editor
                 setIsCodeEditorOpen(false);
                 setSelectedTemplate(newTemplate);
-                // We need to trigger Sidebar update. 
-                // Since we can't easily, we might rely on the user refreshing or simple hack:
-                window.location.reload();
             } else {
                 setSaveStatus('error');
                 alert("Erreur lors de la sauvegarde");

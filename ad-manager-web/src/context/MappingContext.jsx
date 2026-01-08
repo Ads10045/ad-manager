@@ -18,8 +18,146 @@ export const DB_COLUMNS = [
 ];
 
 // Clé localStorage pour persister les mappings
+// Clé localStorage pour persister les mappings
 const STORAGE_KEY = 'ads-ai-banner-mappings';
-const API_URL = 'http://localhost:3001/api';
+const CONFIG_KEY = 'ads-ai-banner-config'; // New key for templates
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
+import { Layout, Smartphone, Monitor, LayoutGrid, Layers, Sparkles } from 'lucide-react';
+
+const INITIAL_CONFIG = {
+    categories: {
+        leaderboard: {
+            name: "Leaderboard",
+            icon: "Monitor",
+            description: "Bannières horizontales larges",
+            templates: [
+                {
+                    id: "banner-type-a-728x90",
+                    name: "Épuré - Leaderboard",
+                    file: "leaderboard/BannerTypeA-728x90.html",
+                    size: "728x90",
+                    description: "Design minimaliste avec focus sur l'image",
+                    fields: ["imageUrl", "name", "category", "price", "sourceUrl"]
+                },
+                {
+                    id: "billboard-premium-970x90",
+                    name: "Billboard Premium",
+                    file: "leaderboard/billboard-premium-970x90.html",
+                    size: "970x90",
+                    description: "Format large avec branding et statistiques",
+                    fields: ["imageUrl", "name", "category", "price", "supplierPrice", "stock", "margin", "sourceUrl"]
+                }
+            ]
+        },
+        rectangle: {
+            name: "Rectangle",
+            icon: "LayoutGrid",
+            description: "Bannières moyennes format carré",
+            templates: [
+                {
+                    id: "banner-type-b-300x250",
+                    name: "Promotionnel",
+                    file: "rectangle/BannerTypeB-300x250.html",
+                    size: "300x250",
+                    description: "Design promo avec focus sur le prix",
+                    fields: ["imageUrl", "name", "description", "price", "supplierPrice", "sourceUrl"]
+                }
+            ]
+        },
+        skyscraper: {
+            name: "Skyscraper",
+            icon: "Layout",
+            description: "Bannières verticales étroites",
+            templates: [
+                {
+                    id: "banner-type-c-160x600",
+                    name: "Informatif",
+                    file: "skyscraper/BannerTypeC-160x600.html",
+                    size: "160x600",
+                    description: "Design vertical avec détails",
+                    fields: ["imageUrl", "name", "description", "category", "supplier", "stock", "price", "margin", "sourceUrl"]
+                }
+            ]
+        },
+        halfpage: {
+            name: "Half Page",
+            icon: "Layout",
+            description: "Bannières demi-page",
+            templates: [
+                {
+                    id: "banner-type-d-300x600",
+                    name: "Premium",
+                    file: "halfpage/BannerTypeD-300x600.html",
+                    size: "300x600",
+                    description: "Design premium avec stats",
+                    fields: ["imageUrl", "name", "description", "category", "stock", "margin", "price", "sourceUrl"]
+                }
+            ]
+        },
+        mobile: {
+            name: "Mobile",
+            icon: "Smartphone",
+            description: "Optimisées pour mobile",
+            templates: [
+                {
+                    id: "mobile-banner-320x100",
+                    name: "Mobile Banner",
+                    file: "mobile/mobile-banner-320x100.html",
+                    size: "320x100",
+                    description: "Format compact pour mobile",
+                    fields: ["imageUrl", "name", "price", "sourceUrl"]
+                },
+                {
+                    id: "mobile-leaderboard-320x50",
+                    name: "Mobile Leaderboard",
+                    file: "mobile/mobile-leaderboard-320x50.html",
+                    size: "320x50",
+                    description: "Format ultra-compact",
+                    fields: ["imageUrl", "name", "price", "sourceUrl"]
+                }
+            ]
+        },
+        "multi-product": {
+            name: "Multi-Produits",
+            icon: "Layers",
+            description: "Affichant plusieurs produits",
+            templates: [
+                {
+                    id: "multi-product-leaderboard-728x90",
+                    name: "Multi-Product Leaderboard",
+                    file: "multi-product/multi-product-leaderboard-728x90.html",
+                    size: "728x90",
+                    description: "3 produits côte à côte",
+                    fields: ["product1ImageUrl", "product1Name", "product1Price", "product2ImageUrl", "product2Name", "product2Price", "product3ImageUrl", "product3Name", "product3Price", "storeUrl"]
+                },
+                {
+                    id: "multi-product-grid-300x600",
+                    name: "Multi-Product Grid",
+                    file: "multi-product/multi-product-grid-300x600.html",
+                    size: "300x600",
+                    description: "4 produits en liste verticale",
+                    fields: ["product1ImageUrl", "product1Name", "product1Price", "product2ImageUrl", "product2Name", "product2Price", "product3ImageUrl", "product3Name", "product3Price", "product4ImageUrl", "product4Name", "product4Price", "storeUrl"]
+                }
+            ]
+        },
+        fashion: {
+            name: "Mode & Fashion",
+            icon: "Sparkles",
+            description: "Collections et Soldes",
+            templates: [
+                {
+                    id: "fashion-black-friday-970x250",
+                    name: "Black Friday Collection",
+                    file: "fashion/black-friday-multi-970x250.html",
+                    size: "970x250",
+                    description: "Billboard élégant multi-produits (Style Mimi Chamois)",
+                    fields: ["product1Image", "product1Name", "product1Link", "product2Image", "product2Name", "product2Link", "product3Image", "product3Name", "product3Link", "product4Image", "product4Name", "product4Link"]
+                }
+            ]
+        }
+    }
+};
 
 // Création du contexte
 const MappingContext = createContext(null);
@@ -27,6 +165,9 @@ const MappingContext = createContext(null);
 export const MappingProvider = ({ children }) => {
     // Template sélectionné
     const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+    // Banner Config (List of templates)
+    const [bannerConfig, setBannerConfig] = useState(INITIAL_CONFIG);
 
     // Mappings par template : { templateId: { zoneName: columnKey } }
     const [templateMappings, setTemplateMappings] = useState({});
@@ -66,9 +207,16 @@ export const MappingProvider = ({ children }) => {
         sourceUrl: 'https://amazon.fr/dp/B09XYZ123'
     });
 
-    // Charger les mappings depuis localStorage au démarrage
+    // Charger les mappings et config depuis localStorage au démarrage
     useEffect(() => {
         try {
+            const storedConfig = localStorage.getItem(CONFIG_KEY);
+            if (storedConfig) {
+                setBannerConfig(JSON.parse(storedConfig));
+            } else {
+                setBannerConfig(INITIAL_CONFIG);
+            }
+
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) {
                 const parsed = JSON.parse(stored);
@@ -240,6 +388,46 @@ export const MappingProvider = ({ children }) => {
         }
     }, []);
 
+    // Add Template to Config
+    const addTemplateToConfig = useCallback((newTemplate) => {
+        setBannerConfig(prev => {
+            const newConfig = { ...prev };
+            const category = newTemplate.category || 'Custom';
+
+            // Format category key (lowercase)
+            const catKey = category.toLowerCase();
+
+            // Map common icons back to names if needed, or default
+            // In INITIAL_CONFIG we used string names for icons to avoid serializing components
+
+            if (!newConfig.categories[catKey]) {
+                newConfig.categories[catKey] = {
+                    name: category.charAt(0).toUpperCase() + category.slice(1),
+                    icon: 'Layout',
+                    templates: []
+                };
+            }
+            newConfig.categories[catKey].templates.push(newTemplate);
+
+            // Save to LocalStorage
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(newConfig));
+
+            return newConfig;
+        });
+    }, []);
+
+    // Delete Template from Config
+    const deleteTemplateFromConfig = useCallback((templateId) => {
+        setBannerConfig(prev => {
+            const newConfig = { ...prev };
+            Object.keys(newConfig.categories).forEach(catKey => {
+                newConfig.categories[catKey].templates = newConfig.categories[catKey].templates.filter(t => t.id !== templateId);
+            });
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(newConfig));
+            return newConfig;
+        });
+    }, []);
+
     const value = {
         // State
         selectedTemplate,
@@ -254,6 +442,7 @@ export const MappingProvider = ({ children }) => {
         saveError,
         isCodeEditorOpen,
         editorCode,
+        bannerConfig, // Export config
 
         // Setters
         setSelectedTemplate,
@@ -274,6 +463,8 @@ export const MappingProvider = ({ children }) => {
         getTemplateMapping,
         exportAllConfigurations,
         importConfigurations,
+        addTemplateToConfig,
+        deleteTemplateFromConfig,
 
         // Constants
         DB_COLUMNS
