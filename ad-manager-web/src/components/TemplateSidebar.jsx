@@ -6,7 +6,7 @@ import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutG
 // TODO: Fetch this from API
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-const BANNER_CONFIG = {
+export const BANNER_CONFIG = {
     categories: {
         leaderboard: {
             name: "Leaderboard",

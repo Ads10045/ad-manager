@@ -4,7 +4,7 @@ import { Save, AlertCircle } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-const BannerEditor = () => {
+const BannerEditor = ({ config }) => {
     const {
         isCodeEditorOpen,
         editorCode,
@@ -13,6 +13,9 @@ const BannerEditor = () => {
         setSelectedTemplate,
         setIsCodeEditorOpen
     } = useMapping();
+
+    // Default config if not passed
+    const categories = config?.categories ? Object.keys(config.categories) : [];
 
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
@@ -80,11 +83,15 @@ const BannerEditor = () => {
                         onChange={e => setName(e.target.value)}
                     />
                     <input
+                        list="category-suggestions"
                         className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-xs w-32"
-                        placeholder="Catégorie (ex: fashion)"
+                        placeholder="Catégorie..."
                         value={category}
                         onChange={e => setCategory(e.target.value)}
                     />
+                    <datalist id="category-suggestions">
+                        {categories.map(cat => <option key={cat} value={cat} />)}
+                    </datalist>
                     <select
                         value={size}
                         onChange={e => setSize(e.target.value)}
