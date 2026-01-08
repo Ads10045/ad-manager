@@ -25,6 +25,8 @@ const productController = require('../controllers/productController');
  *       200:
  *         description: List of products.
  */
+// Specific routes first
+router.get('/random-promo', productController.getRandomPromoProduct);
 router.get('/', productController.getProducts);
 
 /**
@@ -51,7 +53,7 @@ router.get('/expired', productController.getExpiredProducts);
  *       404:
  *         description: No active promo products found.
  */
-router.get('/random-promo', productController.getRandomPromoProduct);
+
 
 /**
  * @swagger
