@@ -3,6 +3,9 @@ import { useMapping } from '../context/MappingContext';
 import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles } from 'lucide-react';
 
 // Configuration des templates depuis ad-manager-banner
+// TODO: Fetch this from API
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
 const BANNER_CONFIG = {
     categories: {
         leaderboard: {
@@ -151,6 +154,26 @@ const TemplateSidebar = () => {
         setSelectedTemplate(template);
     };
 
+    const [searchTerm, setSearchTerm] = useState('');
+    const [localConfig, setLocalConfig] = useState(BANNER_CONFIG);
+
+    // Filter templates based on search
+    const filteredCategories = Object.entries(localConfig.categories).reduce((acc, [key, cat]) => {
+        const matchesCat = cat.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchedTemplates = cat.templates.filter(t =>
+            t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            t.id.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        if (matchesCat || matchedTemplates.length > 0) {
+            acc[key] = {
+                ...cat,
+                templates: matchesCat ? cat.templates : matchedTemplates
+            };
+        }
+        return acc;
+    }, {});
+
     const toggleCategory = (categoryKey) => {
         setExpandedCategories(prev =>
             prev.includes(categoryKey)
@@ -159,7 +182,56 @@ const TemplateSidebar = () => {
         );
     };
 
-    const totalTemplates = Object.values(BANNER_CONFIG.categories)
+    const handleCreateTemplate = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const name = formData.get('name');
+        const category = formData.get('category');
+        const size = formData.get('size');
+        const htmlContent = formData.get('htmlContent');
+
+        try {
+            const response = await fetch(`${API_URL}/banners/template`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, category, size, htmlContent })
+            });
+
+            if (response.ok) {
+                const newTemplate = await response.json();
+
+                // Update local config state to show new template immediately
+                setLocalConfig(prev => {
+                    const newConfig = { ...prev };
+                    if (!newConfig.categories[category]) {
+                        // Create category if not exists (simplified fallback)
+                        newConfig.categories[category] = {
+                            name: category.charAt(0).toUpperCase() + category.slice(1),
+                            templates: []
+                        };
+                    }
+                    newConfig.categories[category].templates.push(newTemplate);
+                    return newConfig;
+                });
+
+                // Close modal
+                document.getElementById('new-template-modal').close();
+
+                // Show success link
+                alert(`Template créé avec succès !\nFichier : ${newTemplate.file}`);
+
+                // Select it
+                handleSelectTemplate(newTemplate);
+            } else {
+                alert("Erreur lors de la création");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Erreur réseau");
+        }
+    };
+
+    const totalTemplates = Object.values(filteredCategories)
         .reduce((acc, cat) => acc + cat.templates.length, 0);
 
     return (
@@ -242,8 +314,8 @@ const TemplateSidebar = () => {
 
             {/* Categories List */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
-                {Object.entries(BANNER_CONFIG.categories).map(([categoryKey, category]) => {
-                    const isExpanded = expandedCategories.includes(categoryKey);
+                {Object.entries(filteredCategories).map(([categoryKey, category]) => {
+                    const isExpanded = expandedCategories.includes(categoryKey) || searchTerm.length > 0;
                     const Icon = category.icon || Layout;
 
                     return (

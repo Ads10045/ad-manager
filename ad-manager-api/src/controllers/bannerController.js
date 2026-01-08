@@ -177,6 +177,45 @@ const createBanner = async (req, res) => {
 };
 
 /**
+ * @desc Create/Update a banner HTML template file
+ */
+const createBannerTemplate = async (req, res) => {
+  const { name, category, size, htmlContent } = req.body;
+  try {
+    const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+    const categoryDir = path.join(bannersDir, category);
+    
+    // Create category dir if not exists
+    if (!fs.existsSync(categoryDir)) {
+      fs.mkdirSync(categoryDir, { recursive: true });
+    }
+
+    // Generate filename from name + size
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const filename = `${slug}-${size}.html`;
+    const filePath = path.join(categoryDir, filename);
+    const relativePath = `${category}/${filename}`;
+
+    // Write file
+    fs.writeFileSync(filePath, htmlContent, 'utf8');
+
+    // Return metadata suitable for the frontend list
+    res.status(201).json({
+      id: `${category}/${filename}`, // Use relative path as ID
+      name: name,
+      category: category.charAt(0).toUpperCase() + category.slice(1),
+      file: relativePath,
+      size: size,
+      description: "Custom Template",
+      fields: [] // Assume basic fields or extract from HTML? Frontend can re-scan/parse or default.
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
  * @desc Get local templates from ad-manager-banner folder
  */
 const getLocalTemplates = async (req, res) => {
@@ -214,5 +253,6 @@ module.exports = {
   getLocalTemplates,
   getBannersByDate, 
   getExpiredBanners, 
-  createBanner 
+  createBanner,
+  createBannerTemplate 
 };

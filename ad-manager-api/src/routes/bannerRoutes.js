@@ -33,6 +33,9 @@ router.get('/template/*', (req, res) => {
     return bannerController.getBannerTemplate(req, res);
 });
 
+
+router.post('/template', bannerController.createBannerTemplate);
+
 router.get('/', bannerController.getBanners);
 
 /**
