@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "ad-manager-api/src/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "ad-manager-api/src/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "ad-manager-api/src/server.js"
+    }
+  ]
+}
