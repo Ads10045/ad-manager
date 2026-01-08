@@ -1,4 +1,4 @@
-// redeploy trigger 2026-01-08T15:26:00+01:00
+// Server main entry point - Last deployment updated: 2026-01-08T16:29:00+01:00
 
 const path = require('path');
 const express = require('express');

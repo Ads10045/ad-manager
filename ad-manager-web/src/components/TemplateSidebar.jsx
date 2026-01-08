@@ -246,8 +246,17 @@ const TemplateSidebar = () => {
                         Templates
                     </h1>
                 </div>
-                <p className="text-white/40 text-xs">
-                    {totalTemplates} modèles en {Object.keys(BANNER_CONFIG.categories).length} catégories
+                <div className="mt-2 relative">
+                    <input
+                        type="text"
+                        placeholder="Rechercher une bannière..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50"
+                    />
+                </div>
+                <p className="text-white/40 text-[10px] mt-2 flex justify-between">
+                    <span>{totalTemplates} modèles trouvés</span>
                 </p>
                 <button
                     onClick={() => document.getElementById('new-template-modal').showModal()}
@@ -258,56 +267,45 @@ const TemplateSidebar = () => {
                 </button>
             </div>
 
-            <dialog id="new-template-modal" className="bg-[#1a1a1a] text-white p-6 rounded-xl border border-white/10 backdrop-blur-xl shadow-2xl w-96">
+            <dialog id="new-template-modal" className="bg-[#1a1a1a] text-white p-6 rounded-xl border border-white/10 backdrop-blur-xl shadow-2xl w-[600px]">
                 <h3 className="text-lg font-bold mb-4">Créer un nouveau template</h3>
-                <form method="dialog" className="space-y-4" onSubmit={async (e) => {
-                    e.preventDefault();
-                    // Basic creation logic handled via context or prop would be better, but for now we dispatch an event or similar
-                    // Actually, we can't easily write files from browser to disk directly.
-                    // But we can prompt the agent to do it via tool call? No, the user wants the UI to do it.
-                    // Since this is a dev tool running locally, we CAN simply use an API endpoint to create the file if available.
-                    // Or more simply, since we are an Agent, we are adding the UI features.
-
-                    // Let's implement a 'createTemplate' function in MappingContext that calls the API.
-                    // For now, close modal.
-                    const formData = new FormData(e.target);
-                    const name = formData.get('name');
-                    const category = formData.get('category');
-                    const size = formData.get('size');
-
-                    try {
-                        // Assuming new API endpoint exists or logic is handled
-                        window.dispatchEvent(new CustomEvent('create-template', { detail: { name, category, size } }));
-                        e.target.closest('dialog').close();
-                    } catch (err) {
-                        console.error(err);
-                    }
-                }}>
-                    <div>
-                        <label className="block text-xs font-bold text-white/60 mb-1">Nom du template</label>
-                        <input name="name" required className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Ex: Promo Speciale" />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-bold text-white/60 mb-1">Catégorie</label>
-                        <select name="category" className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm">
-                            {Object.entries(BANNER_CONFIG.categories).map(([k, c]) => (
-                                <option key={k} value={k}>{c.name}</option>
-                            ))}
-                        </select>
+                <form method="dialog" className="space-y-4" onSubmit={handleCreateTemplate}>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-xs font-bold text-white/60 mb-1">Nom du template</label>
+                            <input name="name" required className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Ex: Promo Speciale" />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-white/60 mb-1">Catégorie</label>
+                            <input name="category" list="categories" required className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Selectionner ou creer" />
+                            <datalist id="categories">
+                                {Object.keys(localConfig.categories).map(k => <option key={k} value={k} />)}
+                            </datalist>
+                        </div>
                     </div>
                     <div>
                         <label className="block text-xs font-bold text-white/60 mb-1">Taille</label>
                         <select name="size" className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm">
                             <option value="300x250">Pavé (300x250)</option>
                             <option value="728x90">Leaderboard (728x90)</option>
+                            <option value="970x250">Billboard (970x250)</option>
                             <option value="160x600">Skyscraper (160x600)</option>
                             <option value="300x600">Half Page (300x600)</option>
                             <option value="320x50">Mobile (320x50)</option>
                         </select>
                     </div>
+                    <div>
+                        <label className="block text-xs font-bold text-white/60 mb-1">Code HTML</label>
+                        <textarea
+                            name="htmlContent"
+                            required
+                            className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm font-mono h-40 custom-scrollbar"
+                            placeholder="<div>Votre code HTML ici... Utilisez [productName], [price], etc.</div>"
+                        ></textarea>
+                    </div>
                     <div className="flex gap-2 justify-end pt-2">
                         <button type="button" onClick={() => document.getElementById('new-template-modal').close()} className="px-3 py-2 text-xs font-bold text-white/50 hover:text-white">Annuler</button>
-                        <button type="submit" className="px-4 py-2 bg-purple-500 rounded-lg text-xs font-bold">Créer</button>
+                        <button type="submit" className="px-4 py-2 bg-purple-500 rounded-lg text-xs font-bold">Créer & Sauvegarder</button>
                     </div>
                 </form>
             </dialog>
