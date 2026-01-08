@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Banner Studio Generation Test (Vercel Prod)</title>
+    <title>Banner Studio Test (Type B - 300x250)</title>
     <!-- jQuery requis pour le script généré -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
@@ -26,7 +26,7 @@
         -->
         
         <!-- Ads-AI Dynamic Banner Integration -->
-        <!-- Template: Billboard Premium (728x90) -->
+        <!-- Template: Rectangle (300x250) -->
         <div id="ads-ai-banner" data-product-id="random-promo"></div>
 
         <script>
@@ -36,8 +36,8 @@
             // Configuration validated from "ExportPanel.jsx" default + user selection
             const CONFIG = {
                 apiUrl: 'https://ad-manager-api.vercel.app',  // Vercel Prod
-                templateFile: 'leaderboard/BannerTypeA-728x90.html', // Fixed template path
-                templateSize: '728x90',
+                templateFile: 'rectangle/BannerTypeB-300x250.html', // Fixed template path
+                templateSize: '300x250',
                 mapping: {
                     // Standard implicit mapping
                     "product1Name": "name",
@@ -136,8 +136,8 @@
         <style>
         #ads-ai-banner {
             display: inline-block;
-            width: 728px;
-            height: 90px;
+            width: 300px;
+            height: 250px;
             /* Placeholder style before load */
             background: #eee url('https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif') no-repeat center center;
         }
