@@ -1,17 +1,18 @@
 import React from 'react';
 import TemplateSidebar from './components/TemplateSidebar';
 import BannerPreview from './components/BannerPreview';
+import BannerEditor from './components/BannerEditor';
 import MappingPanel from './components/MappingPanel';
 import ExportPanel from './components/ExportPanel';
 import { useMapping } from './context/MappingContext';
-import { Wand2, Eye, SlidersHorizontal, Code } from 'lucide-react';
+import { Wand2, Eye, SlidersHorizontal, Code, Edit3 } from 'lucide-react';
 
 /**
  * App - Application principale du générateur de bannières dynamiques
  * Charge les templates depuis ad-manager-banner
  */
 const App = () => {
-    const { selectedTemplate, editMode } = useMapping();
+    const { selectedTemplate, editMode, isCodeEditorOpen } = useMapping();
     const [activePanel, setActivePanel] = React.useState('mapping');
 
     return (
@@ -49,10 +50,16 @@ const App = () => {
                                 </span>
                             </div>
                         )}
-                        {editMode && (
+                        {editMode && !isCodeEditorOpen && (
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/20 rounded-full border border-purple-500/50">
                                 <Eye size={14} className="text-purple-400" />
                                 <span className="text-xs text-purple-300 font-bold">Mode Édition</span>
+                            </div>
+                        )}
+                        {isCodeEditorOpen && (
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 rounded-full border border-blue-500/50">
+                                <Edit3 size={14} className="text-blue-400" />
+                                <span className="text-xs text-blue-300 font-bold">Éditeur HTML</span>
                             </div>
                         )}
                     </div>
@@ -60,9 +67,13 @@ const App = () => {
 
                 {/* Content Grid */}
                 <div className="flex-1 flex overflow-hidden">
-                    {/* Preview Section */}
-                    <div className="flex-1 border-r border-white/10">
-                        <BannerPreview />
+                    {/* Preview or Editor Section */}
+                    <div className="flex-1 border-r border-white/10 relative">
+                        {isCodeEditorOpen ? (
+                            <BannerEditor />
+                        ) : (
+                            <BannerPreview />
+                        )}
                     </div>
                 </div>
             </main>
@@ -74,8 +85,8 @@ const App = () => {
                     <button
                         onClick={() => setActivePanel('mapping')}
                         className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'mapping'
-                                ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
-                                : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+                            ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
+                            : 'text-white/50 hover:text-white/80 hover:bg-white/5'
                             }`}
                     >
                         <SlidersHorizontal size={16} />
@@ -84,8 +95,8 @@ const App = () => {
                     <button
                         onClick={() => setActivePanel('export')}
                         className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'export'
-                                ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
-                                : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+                            ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
+                            : 'text-white/50 hover:text-white/80 hover:bg-white/5'
                             }`}
                     >
                         <Code size={16} />

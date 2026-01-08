@@ -44,6 +44,11 @@ export const MappingProvider = ({ children }) => {
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
 
+    // Mode Éditeur de Code (Tab dans App.jsx)
+    const [isCodeEditorOpen, setIsCodeEditorOpen] = useState(false);
+    // Contenu HTML en cours d'édition (si null, non chargé)
+    const [editorCode, setEditorCode] = useState('');
+
     // Données de prévisualisation (produit exemple)
     const [previewData, setPreviewData] = useState({
         name: 'Écouteurs Bluetooth Pro',
@@ -245,13 +250,19 @@ export const MappingProvider = ({ children }) => {
         savedBanners,
         previewData,
         isSaving,
+        isSaving,
         saveError,
+        isCodeEditorOpen,
+        editorCode,
 
         // Setters
         setSelectedTemplate,
         setActiveZone,
         setEditMode,
+        setEditMode,
         setPreviewData,
+        setIsCodeEditorOpen,
+        setEditorCode,
 
         // Actions
         updateMapping,

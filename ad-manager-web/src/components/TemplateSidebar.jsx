@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMapping } from '../context/MappingContext';
-import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles } from 'lucide-react';
+import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 } from 'lucide-react';
 
 // Configuration des templates depuis ad-manager-banner
 // TODO: Fetch this from API
@@ -144,7 +144,13 @@ const BANNER_CONFIG = {
  * TemplateSidebar - Liste des templates organisés par catégories
  */
 const TemplateSidebar = () => {
-    const { selectedTemplate, setSelectedTemplate, resetMapping } = useMapping();
+    const {
+        selectedTemplate,
+        setSelectedTemplate,
+        resetMapping,
+        setIsCodeEditorOpen,
+        setEditorCode
+    } = useMapping();
     const [expandedCategories, setExpandedCategories] = useState(['leaderboard', 'rectangle']);
 
     const handleSelectTemplate = (template) => {
@@ -152,6 +158,7 @@ const TemplateSidebar = () => {
             resetMapping();
         }
         setSelectedTemplate(template);
+        setIsCodeEditorOpen(false); // Switch back to preview
     };
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -182,53 +189,47 @@ const TemplateSidebar = () => {
         );
     };
 
-    const handleCreateTemplate = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const name = formData.get('name');
-        const category = formData.get('category');
-        const size = formData.get('size');
-        const htmlContent = formData.get('htmlContent');
+    const handleDeleteTemplate = async (template, e) => {
+        e.stopPropagation();
+        if (!confirm(`Voulez-vous vraiment supprimer le template "${template.name}" ?`)) return;
 
         try {
-            const response = await fetch(`${API_URL}/banners/template`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, category, size, htmlContent })
+            // Identifier is actually path or ID, but here ID is like 'banner-type-a...' which assumes a file?
+            // Actually config doesn't store file ID well for deletion unless we use the 'file' property.
+            // But API expects ID (filename without ext or relative path).
+            // Let's pass the relative path (file) which is unique.
+            const fileId = template.file; // e.g., "fashion/black-friday..."
+
+            const response = await fetch(`${API_URL}/banners/template/${fileId}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
-                const newTemplate = await response.json();
-
-                // Update local config state to show new template immediately
+                // Update local state
                 setLocalConfig(prev => {
                     const newConfig = { ...prev };
-                    if (!newConfig.categories[category]) {
-                        // Create category if not exists (simplified fallback)
-                        newConfig.categories[category] = {
-                            name: category.charAt(0).toUpperCase() + category.slice(1),
-                            templates: []
-                        };
-                    }
-                    newConfig.categories[category].templates.push(newTemplate);
+                    Object.keys(newConfig.categories).forEach(catKey => {
+                        newConfig.categories[catKey].templates = newConfig.categories[catKey].templates.filter(t => t.id !== template.id);
+                    });
+                    // Remove empty categories?
                     return newConfig;
                 });
-
-                // Close modal
-                document.getElementById('new-template-modal').close();
-
-                // Show success link
-                alert(`Template créé avec succès !\nFichier : ${newTemplate.file}`);
-
-                // Select it
-                handleSelectTemplate(newTemplate);
+                alert("Template supprimé");
+                if (selectedTemplate?.id === template.id) setSelectedTemplate(null);
             } else {
-                alert("Erreur lors de la création");
+                alert("Erreur lors de la suppression");
             }
         } catch (err) {
             console.error(err);
             alert("Erreur réseau");
         }
+    };
+
+    const handleNewTemplateClick = () => {
+        // Instead of modal, open Editor Mode with empty state
+        setSelectedTemplate(null); // Deselect current
+        setEditorCode(''); // Empty code
+        setIsCodeEditorOpen(true); // Open tab
     };
 
     const totalTemplates = Object.values(filteredCategories)
@@ -259,56 +260,15 @@ const TemplateSidebar = () => {
                     <span>{totalTemplates} modèles trouvés</span>
                 </p>
                 <button
-                    onClick={() => document.getElementById('new-template-modal').showModal()}
+                    onClick={handleNewTemplateClick}
                     className="mt-3 w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-xs font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
                 >
                     <Plus size={14} />
-                    Nouveau Template
+                    Nouveau Template (Éditeur)
                 </button>
             </div>
 
-            <dialog id="new-template-modal" className="bg-[#1a1a1a] text-white p-6 rounded-xl border border-white/10 backdrop-blur-xl shadow-2xl w-[600px]">
-                <h3 className="text-lg font-bold mb-4">Créer un nouveau template</h3>
-                <form method="dialog" className="space-y-4" onSubmit={handleCreateTemplate}>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs font-bold text-white/60 mb-1">Nom du template</label>
-                            <input name="name" required className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Ex: Promo Speciale" />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-white/60 mb-1">Catégorie</label>
-                            <input name="category" list="categories" required className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Selectionner ou creer" />
-                            <datalist id="categories">
-                                {Object.keys(localConfig.categories).map(k => <option key={k} value={k} />)}
-                            </datalist>
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-xs font-bold text-white/60 mb-1">Taille</label>
-                        <select name="size" className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm">
-                            <option value="300x250">Pavé (300x250)</option>
-                            <option value="728x90">Leaderboard (728x90)</option>
-                            <option value="970x250">Billboard (970x250)</option>
-                            <option value="160x600">Skyscraper (160x600)</option>
-                            <option value="300x600">Half Page (300x600)</option>
-                            <option value="320x50">Mobile (320x50)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-xs font-bold text-white/60 mb-1">Code HTML</label>
-                        <textarea
-                            name="htmlContent"
-                            required
-                            className="w-full bg-black/40 border border-white/10 rounded px-3 py-2 text-sm font-mono h-40 custom-scrollbar"
-                            placeholder="<div>Votre code HTML ici... Utilisez [productName], [price], etc.</div>"
-                        ></textarea>
-                    </div>
-                    <div className="flex gap-2 justify-end pt-2">
-                        <button type="button" onClick={() => document.getElementById('new-template-modal').close()} className="px-3 py-2 text-xs font-bold text-white/50 hover:text-white">Annuler</button>
-                        <button type="submit" className="px-4 py-2 bg-purple-500 rounded-lg text-xs font-bold">Créer & Sauvegarder</button>
-                    </div>
-                </form>
-            </dialog>
+            {/* Modal removed - now using Editor Tab */}
 
             {/* Categories List */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
@@ -356,9 +316,18 @@ const TemplateSidebar = () => {
                                                     <span className={`font-bold text-xs ${isSelected ? 'text-white' : 'text-white/80'}`}>
                                                         {template.name}
                                                     </span>
-                                                    <span className="text-[10px] text-purple-400 font-mono bg-purple-500/20 px-2 py-0.5 rounded">
-                                                        {template.size}
-                                                    </span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[10px] text-purple-400 font-mono bg-purple-500/20 px-2 py-0.5 rounded">
+                                                            {template.size}
+                                                        </span>
+                                                        <button
+                                                            onClick={(e) => handleDeleteTemplate(template, e)}
+                                                            className="text-white/20 hover:text-red-500 transition-colors p-1"
+                                                            title="Supprimer"
+                                                        >
+                                                            <Trash2 size={12} />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <p className="text-white/40 text-[10px] leading-relaxed">
                                                     {template.description}

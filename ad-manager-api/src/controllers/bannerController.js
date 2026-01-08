@@ -246,6 +246,32 @@ const getLocalTemplates = async (req, res) => {
   }
 };
 
+/**
+ * @desc Delete a banner template file
+ */
+const deleteBannerTemplate = async (req, res) => {
+    let { id } = req.params;
+    // Handle wildcard capture if passed via route param
+    if (req.params[0]) id = req.params[0];
+
+    try {
+        const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+        
+        // Prevent directory traversal
+        const safeId = id.replace(/\.\./g, '');
+        const filePath = path.join(bannersDir, safeId);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            res.json({ message: 'Template deleted successfully', id });
+        } else {
+            res.status(404).json({ error: 'Template file not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = { 
   getBanners, 
   getBannerById, 
@@ -254,5 +280,6 @@ module.exports = {
   getBannersByDate, 
   getExpiredBanners, 
   createBanner,
-  createBannerTemplate 
+  createBannerTemplate,
+  deleteBannerTemplate
 };
