@@ -49,17 +49,28 @@
         .banner-title {
             color: #ffffff;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 14px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 350px;
+            max-width: 300px;
         }
         
         .banner-subtitle {
             color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+        
+        .banner-margin {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
             margin-top: 4px;
+            display: inline-block;
         }
         
         .banner-price-section {
@@ -71,7 +82,7 @@
         }
         
         .banner-price {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 900;
             background: linear-gradient(135deg, #a855f7, #ec4899);
             -webkit-background-clip: text;
@@ -126,6 +137,7 @@
         <div class="banner-content">
             <div class="banner-title" data-field="name">[name]</div>
             <div class="banner-subtitle" data-field="category">[category]</div>
+            <div class="banner-margin" data-field="margin">+[margin]%</div>
         </div>
         
         <!-- Price Section -->
