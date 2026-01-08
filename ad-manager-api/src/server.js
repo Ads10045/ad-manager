@@ -130,6 +130,39 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Direct route for random-promo to avoid /:id conflict
+app.get('/api/products/random-promo', async (req, res) => {
+  try {
+    const db = require('./utils/db');
+    const now = new Date().toISOString();
+    
+    const productsOrResult = await db.execute(
+      () => db.prisma.product.findMany({
+        where: {
+          isActive: true,
+          isPromo: true,
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gt: new Date() } }
+          ]
+        }
+      }),
+      `SELECT * FROM "Product" WHERE "isActive" = true AND "isPromo" = true AND ("expiresAt" IS NULL OR "expiresAt" > '${now}')`
+    );
+
+    const products = productsOrResult.rows ? productsOrResult.rows : productsOrResult;
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No active promo products found' });
+    }
+
+    const randomIndex = Math.floor(Math.random() * products.length);
+    res.json(products[randomIndex]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Routes Registration
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
