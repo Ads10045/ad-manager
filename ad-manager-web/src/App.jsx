@@ -4,6 +4,7 @@ import BannerPreview from './components/BannerPreview';
 import BannerEditor from './components/BannerEditor';
 import MappingPanel from './components/MappingPanel';
 import ExportPanel from './components/ExportPanel';
+import VisualEditor from './components/VisualEditor';
 import { useMapping } from './context/MappingContext';
 import { useTheme } from './context/ThemeContext';
 import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check } from 'lucide-react';
@@ -13,7 +14,7 @@ import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check } from 'lucide-re
  * Charge les templates depuis ad-manager-banner
  */
 const App = () => {
-    const { selectedTemplate, isCodeEditorOpen, bannerConfig } = useMapping();
+    const { selectedTemplate, isCodeEditorOpen, isVisualEditorOpen, setIsVisualEditorOpen, bannerConfig } = useMapping();
     const { theme, currentTheme, setTheme, themes } = useTheme();
     const [activePanel, setActivePanel] = React.useState('mapping');
     const [themeMenuOpen, setThemeMenuOpen] = React.useState(false);
@@ -91,6 +92,17 @@ const App = () => {
                                 <span className="text-xs text-blue-300 font-bold">Éditeur HTML</span>
                             </div>
                         )}
+                        {selectedTemplate && (
+                            <button
+                                onClick={() => setIsVisualEditorOpen(!isVisualEditorOpen)}
+                                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${isVisualEditorOpen
+                                    ? 'bg-purple-500/20 border-purple-500/50 text-purple-400'
+                                    : `${theme.input} ${theme.border} ${theme.text} opacity-60 hover:opacity-100`}`}
+                            >
+                                <Move size={14} />
+                                <span className="text-xs font-bold">Éditeur Visuel</span>
+                            </button>
+                        )}
                     </div>
                 </header>
 
@@ -101,7 +113,9 @@ const App = () => {
 
                     {/* Preview or Editor Section */}
                     <div className="flex-1 flex flex-col relative z-0">
-                        {isCodeEditorOpen ? (
+                        {isVisualEditorOpen ? (
+                            <VisualEditor />
+                        ) : isCodeEditorOpen ? (
                             <BannerEditor config={bannerConfig} />
                         ) : (
                             <BannerPreview />

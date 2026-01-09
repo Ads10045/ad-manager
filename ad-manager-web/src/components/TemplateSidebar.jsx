@@ -11,6 +11,7 @@ const TemplateSidebar = () => {
         setSelectedTemplate,
         resetMapping,
         setIsCodeEditorOpen,
+        setIsVisualEditorOpen,
         setEditorCode,
         bannerConfig,
         deleteTemplateFromConfig
@@ -25,6 +26,7 @@ const TemplateSidebar = () => {
         // Add categoryKey to template for editor
         setSelectedTemplate({ ...template, categoryKey });
         setIsCodeEditorOpen(false); // Switch back to preview
+        setIsVisualEditorOpen(false); // Close visual editor
     };
 
     const [searchTerm, setSearchTerm] = useState('');
