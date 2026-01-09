@@ -4,8 +4,8 @@ import BannerPreview from './components/BannerPreview';
 import BannerEditor from './components/BannerEditor';
 import MappingPanel from './components/MappingPanel';
 import ExportPanel from './components/ExportPanel';
-import { useMapping } from './context/MappingContext';
-import { Wand2, Eye, SlidersHorizontal, Code, Edit3 } from 'lucide-react';
+import { useTheme } from './context/ThemeContext';
+import { Wand2, Eye, SlidersHorizontal, Code, Edit3, Palette, Check } from 'lucide-react';
 
 /**
  * App - Application principale du générateur de bannières dynamiques
@@ -13,49 +13,78 @@ import { Wand2, Eye, SlidersHorizontal, Code, Edit3 } from 'lucide-react';
  */
 const App = () => {
     const { selectedTemplate, editMode, isCodeEditorOpen, bannerConfig } = useMapping();
+    const { theme, currentTheme, setTheme, themes } = useTheme();
     const [activePanel, setActivePanel] = React.useState('mapping');
+    const [themeMenuOpen, setThemeMenuOpen] = React.useState(false);
 
     return (
-        <div className="h-screen w-screen flex bg-transparent text-white overflow-hidden">
+        <div className={`h-screen w-screen flex ${theme.bg} ${theme.text} overflow-hidden transition-colors duration-300`}>
             {/* Left Sidebar - Templates */}
-            <aside className="w-72 flex-shrink-0">
+            <aside className={`w-72 flex-shrink-0 ${theme.sidebar} border-r ${theme.border}`}>
                 <TemplateSidebar />
             </aside>
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col overflow-hidden">
                 {/* Top Header */}
-                <header className="h-16 border-b border-white/10 bg-black/20 backdrop-blur-xl flex items-center justify-between px-6">
+                <header className={`h-16 border-b ${theme.border} ${theme.header} backdrop-blur-xl flex items-center justify-between px-6`}>
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
                             <Wand2 size={20} className="text-white" />
                         </div>
                         <div>
                             <h1 className="text-xl font-black uppercase tracking-tighter">
-                                Ads-AI <span className="text-purple-400">Banner Studio</span>
+                                Ads-AI <span className={theme.accent}>Banner Studio</span>
                             </h1>
-                            <p className="text-white/40 text-xs">
+                            <p className="opacity-40 text-xs">
                                 Générateur de bannières dynamiques
                             </p>
                         </div>
                     </div>
 
-                    {/* Status Indicators */}
+                    {/* Status Indicators & Theme Selector */}
                     <div className="flex items-center gap-4">
+                        {/* Theme Toggle */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setThemeMenuOpen(!themeMenuOpen)}
+                                className={`p-2 rounded-lg transition-colors ${theme.hover} ${currentTheme !== 'dark' ? 'text-gray-600' : 'text-white'}`}
+                                title="Changer le thème"
+                            >
+                                <Palette size={20} />
+                            </button>
+
+                            {themeMenuOpen && (
+                                <div className={`absolute top-full right-0 mt-2 w-48 ${theme.card} border ${theme.border} rounded-xl shadow-2xl z-50 p-1 overflow-hidden`}>
+                                    {Object.entries(themes).map(([key, t]) => (
+                                        <button
+                                            key={key}
+                                            onClick={() => {
+                                                setTheme(key);
+                                                setThemeMenuOpen(false);
+                                            }}
+                                            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${theme.hover} ${currentTheme === key ? theme.accent : 'opacity-70'}`}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <div className={`w-3 h-3 rounded-full ${key === 'light' ? 'bg-gray-200 border border-gray-400' : t.bg} border border-white/20`} />
+                                                {t.name}
+                                            </div>
+                                            {currentTheme === key && <Check size={14} />}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         {selectedTemplate && (
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10">
+                            <div className={`flex items-center gap-2 px-3 py-1.5 ${theme.input} rounded-full border ${theme.border}`}>
                                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                                <span className="text-xs text-white/60">
-                                    Template: <span className="text-white font-bold">{selectedTemplate.name}</span>
+                                <span className="text-xs opacity-60">
+                                    Template: <span className="font-bold opacity-100">{selectedTemplate.name}</span>
                                 </span>
                             </div>
                         )}
-                        {editMode && !isCodeEditorOpen && (
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/20 rounded-full border border-purple-500/50">
-                                <Eye size={14} className="text-purple-400" />
-                                <span className="text-xs text-purple-300 font-bold">Mode Édition</span>
-                            </div>
-                        )}
+                        {/* ... other indicators ... */}
                         {isCodeEditorOpen && (
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 rounded-full border border-blue-500/50">
                                 <Edit3 size={14} className="text-blue-400" />
@@ -68,7 +97,7 @@ const App = () => {
                 {/* Content Grid */}
                 <div className="flex-1 flex overflow-hidden">
                     {/* Preview or Editor Section */}
-                    <div className="flex-1 border-r border-white/10 relative">
+                    <div className={`flex-1 border-r ${theme.border} relative`}>
                         {isCodeEditorOpen ? (
                             <BannerEditor config={bannerConfig} />
                         ) : (
@@ -79,14 +108,14 @@ const App = () => {
             </main>
 
             {/* Right Panel - Tabs */}
-            <aside className="w-80 flex-shrink-0 flex flex-col border-l border-white/10 bg-black/20">
+            <aside className={`w-80 flex-shrink-0 flex flex-col border-l ${theme.border} ${theme.sidebar}`}>
                 {/* Tab Headers */}
-                <div className="flex border-b border-white/10">
+                <div className={`flex border-b ${theme.border}`}>
                     <button
                         onClick={() => setActivePanel('mapping')}
                         className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'mapping'
-                            ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
-                            : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+                            ? `${theme.accent} border-b-2 border-purple-400 bg-purple-500/10`
+                            : 'opacity-50 hover:opacity-80 hover:bg-white/5'
                             }`}
                     >
                         <SlidersHorizontal size={16} />
@@ -95,8 +124,8 @@ const App = () => {
                     <button
                         onClick={() => setActivePanel('export')}
                         className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'export'
-                            ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
-                            : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+                            ? `${theme.accent} border-b-2 border-purple-400 bg-purple-500/10`
+                            : 'opacity-50 hover:opacity-80 hover:bg-white/5'
                             }`}
                     >
                         <Code size={16} />

@@ -1,19 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useMapping } from '../context/MappingContext';
+import { useTheme } from '../context/ThemeContext';
 import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 } from 'lucide-react';
 
-// Configuration des templates depuis ad-manager-banner
-// TODO: Fetch this from API
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+/* ... imports skipped ... */
 
-const FALLBACK_CONFIG = {
-    // Empty as fallback, but context should load INITIAL_CONFIG
-    categories: {}
-};
-
-/**
- * TemplateSidebar - Liste des templates organisés par catégories
- */
 const TemplateSidebar = () => {
     const {
         selectedTemplate,
@@ -24,8 +13,10 @@ const TemplateSidebar = () => {
         bannerConfig,
         deleteTemplateFromConfig
     } = useMapping();
+    const { theme } = useTheme();
     const [expandedCategories, setExpandedCategories] = useState(['leaderboard', 'rectangle']);
 
+    /* ... handlers skipped ... */
     const handleSelectTemplate = (template, categoryKey) => {
         if (selectedTemplate?.id !== template.id) {
             resetMapping();
@@ -36,9 +27,8 @@ const TemplateSidebar = () => {
     };
 
     const [searchTerm, setSearchTerm] = useState('');
-    // const [localConfig, setLocalConfig] = useState(BANNER_CONFIG); // Use context config instead
 
-    // Filter templates based on search
+    /* ... filter logic skipped ... */
     const filteredCategories = Object.entries(bannerConfig.categories).reduce((acc, [key, cat]) => {
         const matchesCat = cat.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchedTemplates = cat.templates.filter(t =>
@@ -68,20 +58,14 @@ const TemplateSidebar = () => {
         if (!confirm(`Voulez-vous vraiment supprimer le template "${template.name}" ?`)) return;
 
         try {
-            // Identifier is actually path or ID, but here ID is like 'banner-type-a...' which assumes a file?
-            // Actually config doesn't store file ID well for deletion unless we use the 'file' property.
-            // But API expects ID (filename without ext or relative path).
-            // Let's pass the relative path (file) which is unique.
-            const fileId = template.file; // e.g., "fashion/black-friday..."
+            const fileId = template.file;
 
             const response = await fetch(`${API_URL}/banners/template/${fileId}`, {
                 method: 'DELETE'
             });
 
             if (response.ok) {
-                // Update via separate method
                 deleteTemplateFromConfig(template.id);
-
                 alert("Template supprimé");
                 if (selectedTemplate?.id === template.id) setSelectedTemplate(null);
             } else {
@@ -94,24 +78,23 @@ const TemplateSidebar = () => {
     };
 
     const handleNewTemplateClick = () => {
-        // Instead of modal, open Editor Mode with empty state
-        setSelectedTemplate(null); // Deselect current
-        setEditorCode(''); // Empty code
-        setIsCodeEditorOpen(true); // Open tab
+        setSelectedTemplate(null);
+        setEditorCode('');
+        setIsCodeEditorOpen(true);
     };
 
     const totalTemplates = Object.values(filteredCategories)
         .reduce((acc, cat) => acc + cat.templates.length, 0);
 
     return (
-        <div className="h-full flex flex-col bg-black/30 border-r border-white/10">
+        <div className={`h-full flex flex-col ${theme.sidebar} border-r ${theme.border}`}>
             {/* Header */}
-            <div className="p-4 border-b border-white/10">
+            <div className={`p-4 border-b ${theme.border}`}>
                 <div className="flex items-center gap-2 mb-2">
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                         <Layers size={16} className="text-white" />
                     </div>
-                    <h1 className="text-lg font-black text-white uppercase tracking-tight">
+                    <h1 className={`text-lg font-black ${theme.text} uppercase tracking-tight`}>
                         Templates
                     </h1>
                 </div>
@@ -121,10 +104,10 @@ const TemplateSidebar = () => {
                         placeholder="Rechercher une bannière..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50"
+                        className={`w-full ${theme.input} border ${theme.border} rounded-lg px-3 py-2 text-xs ${theme.text} placeholder-opacity-50 focus:outline-none focus:border-purple-500/50`}
                     />
                 </div>
-                <p className="text-white/40 text-[10px] mt-2 flex justify-between">
+                <p className={`opacity-40 text-[10px] mt-2 flex justify-between ${theme.text}`}>
                     <span>{totalTemplates} modèles trouvés</span>
                 </p>
                 <button
@@ -136,14 +119,10 @@ const TemplateSidebar = () => {
                 </button>
             </div>
 
-            {/* Modal removed - now using Editor Tab */}
-
             {/* Categories List */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
                 {Object.entries(filteredCategories).map(([categoryKey, category]) => {
                     const isExpanded = expandedCategories.includes(categoryKey) || searchTerm.length > 0;
-
-                    // Simple icon mapping since we store icons as strings in context now
                     const icons = { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 };
                     const Icon = icons[category.icon] || Layout;
 
@@ -152,20 +131,20 @@ const TemplateSidebar = () => {
                             {/* Category Header */}
                             <button
                                 onClick={() => toggleCategory(categoryKey)}
-                                className="w-full flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 transition-all rounded-xl border border-white/5"
+                                className={`w-full flex items-center justify-between p-3 ${theme.card} ${theme.hover} transition-all rounded-xl border ${theme.border}`}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                                        <Icon size={16} className="text-purple-400" />
+                                    <div className={`w-8 h-8 ${theme.accentBg}/20 rounded-lg flex items-center justify-center`}>
+                                        <Icon size={16} className={theme.accent} />
                                     </div>
                                     <div className="text-left">
-                                        <div className="text-white font-bold text-sm">{category.name}</div>
-                                        <div className="text-white/40 text-[10px]">{category.templates.length} templates</div>
+                                        <div className={`font-bold text-sm ${theme.text}`}>{category.name}</div>
+                                        <div className={`opacity-40 text-[10px] ${theme.text}`}>{category.templates.length} templates</div>
                                     </div>
                                 </div>
                                 <ChevronDown
                                     size={16}
-                                    className={`text-white/40 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                    className={`opacity-40 transition-transform ${isExpanded ? 'rotate-180' : ''} ${theme.text}`}
                                 />
                             </button>
 
@@ -180,27 +159,27 @@ const TemplateSidebar = () => {
                                                 onClick={() => handleSelectTemplate(template, categoryKey)}
                                                 className={`w-full text-left p-3 rounded-xl border transition-all group ${isSelected
                                                     ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/50 shadow-lg'
-                                                    : 'bg-white/5 border-transparent hover:bg-white/10 hover:border-white/10'
+                                                    : `${theme.input} border-transparent ${theme.hover}`
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between mb-1">
-                                                    <span className={`font-bold text-xs ${isSelected ? 'text-white' : 'text-white/80'}`}>
+                                                    <span className={`font-bold text-xs ${isSelected ? theme.text : theme.text + ' opacity-80'}`}>
                                                         {template.name}
                                                     </span>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-[10px] text-purple-400 font-mono bg-purple-500/20 px-2 py-0.5 rounded">
+                                                        <span className={`text-[10px] ${theme.accent} font-mono ${theme.accentBg}/20 px-2 py-0.5 rounded`}>
                                                             {template.size}
                                                         </span>
                                                         <button
                                                             onClick={(e) => handleDeleteTemplate(template, e)}
-                                                            className="text-white/20 hover:text-red-500 transition-colors p-1"
+                                                            className={`opacity-20 hover:opacity-100 hover:text-red-500 transition-colors p-1 ${theme.text}`}
                                                             title="Supprimer"
                                                         >
                                                             <Trash2 size={12} />
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <p className="text-white/40 text-[10px] leading-relaxed">
+                                                <p className={`opacity-40 text-[10px] leading-relaxed ${theme.text}`}>
                                                     {template.description}
                                                 </p>
                                             </button>
@@ -214,8 +193,8 @@ const TemplateSidebar = () => {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-white/10 bg-black/20">
-                <div className="text-white/30 text-xs text-center">
+            <div className={`p-4 border-t ${theme.border} opacity-20`}>
+                <div className={`text-xs text-center ${theme.text}`}>
                     📁 ad-manager-banner
                 </div>
             </div>

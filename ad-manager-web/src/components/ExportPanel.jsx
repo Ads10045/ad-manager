@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useMapping } from '../context/MappingContext';
+import { useTheme } from '../context/ThemeContext';
 import { Code, Copy, Check, Download, ExternalLink, Settings, Package } from 'lucide-react';
 import ProductPickerModal from './ProductPickerModal';
 
-/**
- * Génère le script jQuery d'intégration
- */
+/* ... generateIntegrationScript skipped ... */
 const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
     if (!template) return '// Sélectionnez un template pour générer le script';
 
@@ -139,6 +138,7 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
  */
 const ExportPanel = () => {
     const { selectedTemplate, mapping, saveConfiguration, savedBanners, isSaving } = useMapping();
+    const { theme } = useTheme();
     const [copied, setCopied] = useState(false);
     const [saved, setSaved] = useState(false);
     const [apiUrl, setApiUrl] = useState('https://ad-manager-api.vercel.app');
@@ -181,9 +181,9 @@ const ExportPanel = () => {
 
     if (!selectedTemplate) {
         return (
-            <div className="h-full flex flex-col items-center justify-center text-white/30 p-8">
+            <div className={`h-full flex flex-col items-center justify-center ${theme.text} opacity-30 p-8`}>
                 <Code size={48} className="mb-4 opacity-50" />
-                <h3 className="text-lg font-bold text-white/60 mb-2">Export</h3>
+                <h3 className="text-lg font-bold opacity-60 mb-2">Export</h3>
                 <p className="text-sm text-center">
                     Configurez un template pour générer le script.
                 </p>
@@ -194,66 +194,66 @@ const ExportPanel = () => {
     return (
         <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="p-4 border-b border-white/10">
-                <h2 className="text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
-                    <Code size={18} className="text-purple-400" />
+            <div className={`p-4 border-b ${theme.border}`}>
+                <h2 className={`text-lg font-black ${theme.text} uppercase tracking-wider flex items-center gap-2`}>
+                    <Code size={18} className={theme.accent} />
                     Export
                 </h2>
-                <p className="text-white/40 text-xs mt-1">
+                <p className={`opacity-40 text-xs mt-1 ${theme.text}`}>
                     Script jQuery prêt à l'emploi
                 </p>
             </div>
 
             {/* Settings */}
-            <div className="p-4 border-b border-white/10 bg-black/20 space-y-3">
+            <div className={`p-4 border-b ${theme.border} ${theme.card} space-y-3`}>
                 {/* API URL */}
                 <label className="block">
-                    <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 mb-2">
+                    <span className={`opacity-60 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 mb-2 ${theme.text}`}>
                         <Settings size={10} /> URL API
                     </span>
                     <input
                         type="text"
                         value={apiUrl}
                         onChange={(e) => setApiUrl(e.target.value)}
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-purple-500 outline-none font-mono"
+                        className={`w-full ${theme.input} border ${theme.border} rounded-lg px-3 py-2 ${theme.text} text-xs focus:border-purple-500 outline-none font-mono`}
                     />
                 </label>
 
                 {/* Product Selector */}
                 <div>
                     <div className="flex justify-between items-center mb-2">
-                        <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                        <span className={`opacity-60 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${theme.text}`}>
                             <Package size={10} /> Produit
                         </span>
                         <button
                             onClick={() => handleProductSelect({ id: 'random-promo', name: 'Produit Aléatoire (Promo)', imageUrl: 'https://placehold.co/100x100?text=RANDOM' })}
-                            className="text-[10px] text-purple-400 hover:text-purple-300 underline cursor-pointer"
+                            className={`text-[10px] ${theme.accent} hover:opacity-80 underline cursor-pointer`}
                         >
                             Aléatoire
                         </button>
                     </div>
                     <button
                         onClick={() => setShowProductPicker(true)}
-                        className="w-full flex items-center justify-between bg-black/40 border border-white/10 rounded-lg px-3 py-2.5 text-left hover:border-purple-500/50 transition-colors group"
+                        className={`w-full flex items-center justify-between ${theme.input} border ${theme.border} rounded-lg px-3 py-2.5 text-left hover:border-purple-500/50 transition-colors group`}
                     >
                         {selectedProduct ? (
                             <div className="flex items-center gap-3 min-w-0">
-                                <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                <div className={`w-8 h-8 ${theme.card} rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden`}>
                                     {selectedProduct.imageUrl ? (
                                         <img src={selectedProduct.imageUrl} alt="" className="w-full h-full object-contain" />
                                     ) : (
-                                        <Package size={14} className="text-white/40" />
+                                        <Package size={14} className="opacity-40" />
                                     )}
                                 </div>
                                 <div className="min-w-0">
-                                    <div className="text-white text-xs font-bold truncate">{selectedProduct.name}</div>
-                                    <div className="text-purple-400 text-[10px]">ID: {selectedProduct.id}</div>
+                                    <div className={`${theme.text} text-xs font-bold truncate`}>{selectedProduct.name}</div>
+                                    <div className={`${theme.accent} text-[10px]`}>ID: {selectedProduct.id}</div>
                                 </div>
                             </div>
                         ) : (
-                            <span className="text-white/40 text-xs">Cliquez pour sélectionner un produit...</span>
+                            <span className={`opacity-40 text-xs ${theme.text}`}>Cliquez pour sélectionner un produit...</span>
                         )}
-                        <span className="text-purple-400 text-xs font-bold group-hover:translate-x-1 transition-transform">
+                        <span className={`${theme.accent} text-xs font-bold group-hover:translate-x-1 transition-transform`}>
                             Choisir →
                         </span>
                     </button>
@@ -262,21 +262,21 @@ const ExportPanel = () => {
 
             {/* Code Preview */}
             <div className="flex-1 overflow-hidden flex flex-col">
-                <div className="flex-1 overflow-auto custom-scrollbar p-4 bg-black/40">
-                    <pre className="text-[10px] font-mono text-white/60 whitespace-pre-wrap break-all leading-relaxed">
+                <div className={`flex-1 overflow-auto custom-scrollbar p-4 ${theme.input}`}>
+                    <pre className={`text-[10px] font-mono ${theme.text} opacity-60 whitespace-pre-wrap break-all leading-relaxed`}>
                         {script}
                     </pre>
                 </div>
             </div>
 
             {/* Actions */}
-            <div className="p-4 border-t border-white/10 space-y-2">
+            <div className={`p-4 border-t ${theme.border} space-y-2`}>
                 <div className="grid grid-cols-2 gap-2">
                     <button
                         onClick={handleCopy}
                         className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs transition-all ${copied
                             ? 'bg-emerald-500 text-white'
-                            : 'bg-white/10 text-white hover:bg-white/20'
+                            : `${theme.input} ${theme.text} ${theme.hover}`
                             }`}
                     >
                         {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -284,7 +284,7 @@ const ExportPanel = () => {
                     </button>
                     <button
                         onClick={handleDownload}
-                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs bg-white/10 text-white hover:bg-white/20 transition-all"
+                        className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs ${theme.input} ${theme.text} ${theme.hover} transition-all`}
                     >
                         <Download size={14} />
                         Télécharger
@@ -320,7 +320,7 @@ const ExportPanel = () => {
                 </button>
 
                 {/* Storage info */}
-                <div className="text-center text-[10px] text-white/30 space-y-0.5">
+                <div className={`text-center text-[10px] ${theme.text} opacity-30 space-y-0.5`}>
                     <div>💾 Stockage: <span className="text-purple-300">localStorage</span> + <span className="text-pink-300">API</span></div>
                     {savedBanners.length > 0 && (
                         <div className="text-emerald-400">{savedBanners.length} config(s) sauvegardée(s)</div>

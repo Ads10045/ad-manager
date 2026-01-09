@@ -1,5 +1,6 @@
 import React from 'react';
 import { useMapping, DB_COLUMNS } from '../context/MappingContext';
+import { useTheme } from '../context/ThemeContext';
 import { ChevronRight, Link2, Unlink, Database, Sparkles } from 'lucide-react';
 
 /**
@@ -17,12 +18,13 @@ const MappingPanel = () => {
         editMode,
         setEditMode
     } = useMapping();
+    const { theme } = useTheme();
 
     if (!selectedTemplate) {
         return (
-            <div className="h-full flex flex-col items-center justify-center text-white/30 p-8 text-center">
+            <div className={`h-full flex flex-col items-center justify-center ${theme.text} opacity-30 p-8 text-center`}>
                 <Database size={48} className="mb-4 opacity-50" />
-                <h3 className="text-lg font-bold text-white/60 mb-2">Aucun template sélectionné</h3>
+                <h3 className="text-lg font-bold opacity-60 mb-2">Aucun template sélectionné</h3>
                 <p className="text-sm">Choisissez un template dans le panneau de gauche pour commencer le mapping.</p>
             </div>
         );
@@ -53,23 +55,23 @@ const MappingPanel = () => {
     return (
         <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="p-4 border-b border-white/10">
+            <div className={`p-4 border-b ${theme.border}`}>
                 <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-lg font-black text-white uppercase tracking-wider flex items-center gap-2">
-                        <Link2 size={18} className="text-purple-400" />
+                    <h2 className={`text-lg font-black ${theme.text} uppercase tracking-wider flex items-center gap-2`}>
+                        <Link2 size={18} className={theme.accent} />
                         Mapping
                     </h2>
                     <button
                         onClick={() => setEditMode(!editMode)}
                         className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all ${editMode
-                                ? 'bg-purple-500/20 text-purple-300 border-purple-500/50'
-                                : 'bg-white/5 text-white/50 border-white/10 hover:bg-white/10'
+                            ? `${theme.accentBg}/20 ${theme.accent} border-purple-500/50`
+                            : `${theme.input} opacity-50 border-transparent hover:opacity-100`
                             }`}
                     >
                         {editMode ? '✨ Actif' : 'Édition'}
                     </button>
                 </div>
-                <p className="text-white/40 text-xs">
+                <p className={`opacity-40 text-xs ${theme.text}`}>
                     {selectedTemplate.name} • {zones.length} zones
                 </p>
             </div>
@@ -85,8 +87,8 @@ const MappingPanel = () => {
                         <div
                             key={zone.name}
                             className={`p-3 rounded-xl border transition-all ${isActive
-                                    ? 'bg-purple-500/20 border-purple-500/50 shadow-lg shadow-purple-500/10'
-                                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                ? `${theme.accentBg}/20 border-purple-500/50 shadow-lg shadow-purple-500/10`
+                                : `${theme.card} ${theme.border} ${theme.hover}`
                                 }`}
                         >
                             {/* Zone Header */}
@@ -96,24 +98,24 @@ const MappingPanel = () => {
                             >
                                 <div className="flex items-center gap-2">
                                     <div className={`w-2 h-2 rounded-full ${mappedColumn ? 'bg-emerald-400' : 'bg-white/20'}`} />
-                                    <span className="text-white font-bold text-xs">{zone.label}</span>
+                                    <span className={`${theme.text} font-bold text-xs`}>{zone.label}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     {mappedColumn && (
-                                        <span className="text-purple-300 text-[10px] font-mono bg-purple-500/20 px-2 py-0.5 rounded">
+                                        <span className={`text-[10px] font-mono ${theme.accent} ${theme.accentBg}/20 px-2 py-0.5 rounded`}>
                                             {mappedColumn}
                                         </span>
                                     )}
                                     <ChevronRight
                                         size={14}
-                                        className={`text-white/40 transition-transform ${isActive ? 'rotate-90' : ''}`}
+                                        className={`opacity-40 transition-transform ${isActive ? 'rotate-90' : ''} ${theme.text}`}
                                     />
                                 </div>
                             </div>
 
                             {/* Column Selector (expanded) */}
                             {isActive && (
-                                <div className="mt-3 pt-3 border-t border-white/10 space-y-2 animate-fade-in">
+                                <div className={`mt-3 pt-3 border-t ${theme.border} space-y-2 animate-fade-in`}>
                                     {mappedColumn && (
                                         <button
                                             onClick={() => removeMapping(zone.name)}
@@ -126,7 +128,7 @@ const MappingPanel = () => {
 
                                     {Object.entries(groupedColumns).map(([type, columns]) => (
                                         <div key={type}>
-                                            <div className="text-white/30 text-[9px] uppercase tracking-widest mb-1 font-bold">
+                                            <div className={`text-[9px] uppercase tracking-widest mb-1 font-bold ${theme.text} opacity-30`}>
                                                 {typeLabels[type] || type}
                                             </div>
                                             <div className="flex flex-wrap gap-1">
@@ -138,8 +140,8 @@ const MappingPanel = () => {
                                                             setActiveZone(null);
                                                         }}
                                                         className={`px-2 py-1 rounded text-[10px] transition-all ${mappedColumn === col.key
-                                                                ? 'bg-purple-500 text-white font-bold'
-                                                                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                                                            ? `${theme.accentBg} text-white font-bold`
+                                                            : `${theme.input} opacity-60 hover:opacity-100 ${theme.text}`
                                                             }`}
                                                     >
                                                         {col.label}
@@ -156,12 +158,12 @@ const MappingPanel = () => {
             </div>
 
             {/* Footer Stats */}
-            <div className="p-4 border-t border-white/10 bg-black/20">
+            <div className={`p-4 border-t ${theme.border} opacity-20`}>
                 <div className="flex items-center justify-between text-xs">
-                    <span className="text-white/40">
+                    <span className={`${theme.text} opacity-40`}>
                         Liées: <span className="text-emerald-400 font-bold">{Object.keys(mapping).length}</span> / {zones.length}
                     </span>
-                    <div className="flex items-center gap-1 text-purple-300">
+                    <div className={`flex items-center gap-1 ${theme.accent}`}>
                         <Sparkles size={12} />
                         <span>Temps réel</span>
                     </div>
