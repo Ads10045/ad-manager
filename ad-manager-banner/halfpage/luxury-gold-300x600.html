@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=300, height=600">
+    <title>Luxury Gold - 300x600</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .banner-container {
+            width: 300px;
+            height: 600px;
+            font-family: 'Playfair Display', Georgia, serif;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+            border-radius: 0;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #d4af37;
+        }
+        
+        .gold-line {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        }
+        
+        .gold-line-bottom {
+            top: auto;
+            bottom: 20px;
+        }
+        
+        .header {
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+        
+        .brand-label {
+            color: #d4af37;
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .content {
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .product-name {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .category {
+            color: #d4af37;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        
+        .price {
+            font-size: 42px;
+            font-weight: 400;
+            color: #d4af37;
+            margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .margin-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            margin-bottom: 24px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: transparent;
+            color: #d4af37;
+            padding: 14px 40px;
+            border: 2px solid #d4af37;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .cta-button:hover {
+            background: #d4af37;
+            color: #0d0d0d;
+        }
+        
+        .corner-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+        }
+        
+        .corner-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+        .corner-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+        .corner-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+        .corner-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <div class="gold-line"></div>
+        <div class="gold-line gold-line-bottom"></div>
+        <div class="corner-decoration corner-tl"></div>
+        <div class="corner-decoration corner-tr"></div>
+        <div class="corner-decoration corner-bl"></div>
+        <div class="corner-decoration corner-br"></div>
+        
+        <div class="header">
+            <div class="brand-label">Collection Exclusive</div>
+        </div>
+        
+        <img src="[imageUrl]" alt="[name]" class="product-image" data-field="imageUrl">
+        
+        <div class="content">
+            <div class="product-name" data-field="name">[name]</div>
+            <div class="category" data-field="category">[category]</div>
+            <div class="price" data-field="price">[price]€</div>
+            <div class="margin-text" data-field="margin">Marge +[margin]%</div>
+            <a href="[sourceUrl]" class="cta-button" target="_blank" data-field="sourceUrl">Découvrir</a>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const marginEl = document.querySelector('.margin-text');
+            if (marginEl) {
+                const text = marginEl.textContent;
+                const match = text.match(/([\d.]+)/);
+                if (match) {
+                    marginEl.textContent = 'Marge +' + Math.round(parseFloat(match[1])) + '%';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
