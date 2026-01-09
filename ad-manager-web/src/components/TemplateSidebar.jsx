@@ -86,6 +86,16 @@ const TemplateSidebar = () => {
     const totalTemplates = Object.values(filteredCategories)
         .reduce((acc, cat) => acc + cat.templates.length, 0);
 
+    const categoryGradients = {
+        leaderboard: 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/20',
+        rectangle: 'bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-emerald-500/20',
+        skyscraper: 'bg-gradient-to-r from-orange-500/10 to-amber-500/10 border-orange-500/20',
+        halfpage: 'bg-gradient-to-r from-rose-500/10 to-pink-500/10 border-rose-500/20',
+        mobile: 'bg-gradient-to-r from-indigo-500/10 to-blue-500/10 border-indigo-500/20',
+        'multi-product': 'bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 border-purple-500/20',
+        fashion: 'bg-gradient-to-r from-pink-500/10 to-rose-500/10 border-pink-500/20',
+    };
+
     return (
         <div className={`h-full flex flex-col ${theme.sidebar} border-r ${theme.border}`}>
             {/* Header */}
@@ -125,13 +135,26 @@ const TemplateSidebar = () => {
                     const isExpanded = expandedCategories.includes(categoryKey) || searchTerm.length > 0;
                     const icons = { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 };
                     const Icon = icons[category.icon] || Layout;
+                    const gradientClass = categoryGradients[categoryKey] || 'bg-gradient-to-r from-gray-500/10 to-slate-500/10 border-gray-500/20';
+
+                    const selectedGradients = {
+                        leaderboard: 'from-blue-500/20 to-cyan-500/20 border-blue-500/50',
+                        rectangle: 'from-emerald-500/20 to-teal-500/20 border-emerald-500/50',
+                        skyscraper: 'from-orange-500/20 to-amber-500/20 border-orange-500/50',
+                        halfpage: 'from-rose-500/20 to-pink-500/20 border-rose-500/50',
+                        mobile: 'from-indigo-500/20 to-blue-500/20 border-indigo-500/50',
+                        'multi-product': 'from-purple-500/20 to-fuchsia-500/20 border-purple-500/50',
+                        fashion: 'from-pink-500/20 to-rose-500/20 border-pink-500/50',
+                    };
+
+                    const selectedClass = selectedGradients[categoryKey] || 'from-purple-500/20 to-pink-500/20 border-purple-500/50';
 
                     return (
                         <div key={categoryKey} className="rounded-xl overflow-hidden">
                             {/* Category Header */}
                             <button
                                 onClick={() => toggleCategory(categoryKey)}
-                                className={`w-full flex items-center justify-between p-3 ${theme.card} ${theme.hover} transition-all rounded-xl border ${theme.border}`}
+                                className={`w-full flex items-center justify-between p-3 ${theme.hover} transition-all rounded-xl border ${gradientClass}`}
                             >
                                 <div className="flex items-center gap-3">
                                     <div className={`w-8 h-8 ${theme.accentBg}/20 rounded-lg flex items-center justify-center`}>
@@ -158,7 +181,7 @@ const TemplateSidebar = () => {
                                                 key={template.id}
                                                 onClick={() => handleSelectTemplate(template, categoryKey)}
                                                 className={`w-full text-left p-3 rounded-xl border transition-all group ${isSelected
-                                                    ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/50 shadow-lg'
+                                                    ? `bg-gradient-to-r ${selectedClass} shadow-lg`
                                                     : `${theme.input} border-transparent ${theme.hover}`
                                                     }`}
                                             >
