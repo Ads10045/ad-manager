@@ -115,13 +115,67 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
         onInsert(svgCode);
     };
 
+    // Sites sources e-commerce avec logos
+    const SOURCE_SITES = [
+        {
+            name: 'Amazon',
+            key: 'amazon',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
+            color: '#FF9900'
+        },
+        {
+            name: 'AliExpress',
+            key: 'aliexpress',
+            logo: 'https://ae01.alicdn.com/kf/S9177d7f9251842339ba3c1ef19b1b990R.png',
+            color: '#E62E04'
+        },
+        {
+            name: 'eBay',
+            key: 'ebay',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg',
+            color: '#0064D2'
+        },
+        {
+            name: 'Cdiscount',
+            key: 'cdiscount',
+            logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/8/8e/Cdiscount_logo.svg/200px-Cdiscount_logo.svg.png',
+            color: '#00529B'
+        },
+        {
+            name: 'Fnac',
+            key: 'fnac',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/Fnac_Logo.svg',
+            color: '#E1A400'
+        },
+        {
+            name: 'Rakuten',
+            key: 'rakuten',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Rakuten_Global_Brand_Logo.svg',
+            color: '#BF0000'
+        }
+    ];
+
     const handleInsertGradient = (gradient) => {
         const code = `background: ${gradient};`;
         onInsert(code);
     };
 
+    const handleInsertSiteLogo = (site) => {
+        const code = `<img src="${site.logo}" alt="${site.name}" style="height: 20px; width: auto;" data-field="sourceLogo" />`;
+        onInsert(code);
+    };
+
+    const handleInsertSiteBadge = (site) => {
+        const code = `<div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: ${site.color}; border-radius: 4px;">
+    <img src="${site.logo}" alt="${site.name}" style="height: 16px; width: auto; filter: brightness(0) invert(1);" />
+    <span style="color: white; font-size: 11px; font-weight: bold;">${site.name}</span>
+</div>`;
+        onInsert(code);
+    };
+
     const tabs = [
         { id: 'images', label: 'Images', icon: Image },
+        { id: 'sites', label: 'Sites', icon: ShoppingCart },
         { id: 'colors', label: 'Couleurs', icon: Palette },
         { id: 'gradients', label: 'Dégradés', icon: Sparkles },
         { id: 'icons', label: 'Icônes', icon: Type },
@@ -151,8 +205,8 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold transition-all ${activeTab === tab.id
-                                    ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
-                                    : 'text-white/50 hover:text-white hover:bg-white/5'
+                                ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
+                                : 'text-white/50 hover:text-white hover:bg-white/5'
                                 }`}
                         >
                             <tab.icon size={16} />
@@ -193,6 +247,92 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
                                     </div>
                                 </button>
                             ))}
+                        </div>
+                    )}
+
+                    {activeTab === 'sites' && (
+                        <div className="space-y-6">
+                            {/* Sites E-commerce */}
+                            <div>
+                                <h3 className="text-sm font-bold text-white/60 mb-3">🛒 Sites E-commerce</h3>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {SOURCE_SITES.filter(site =>
+                                        site.name.toLowerCase().includes(searchTerm.toLowerCase())
+                                    ).map((site) => (
+                                        <div key={site.key} className="space-y-2">
+                                            <button
+                                                onClick={() => handleInsertSiteLogo(site)}
+                                                className="w-full p-4 rounded-xl border border-white/10 hover:border-purple-500 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center gap-2"
+                                                style={{ borderLeftColor: site.color, borderLeftWidth: '3px' }}
+                                            >
+                                                <img src={site.logo} alt={site.name} className="h-6 object-contain" />
+                                                <span className="text-[10px] text-white/60">{site.name}</span>
+                                            </button>
+                                            <button
+                                                onClick={() => handleInsertSiteBadge(site)}
+                                                className="w-full text-[9px] text-purple-400 hover:text-purple-300"
+                                            >
+                                                + Badge avec couleur
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Badges Promo */}
+                            <div>
+                                <h3 className="text-sm font-bold text-white/60 mb-3">🏷️ Badges Promo</h3>
+                                <div className="grid grid-cols-4 gap-3">
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #e53935; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">PROMO</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-red-500 bg-red-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-red-400">PROMO</span>
+                                    </button>
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #ff9800; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">-[margin]%</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-orange-500 bg-orange-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-orange-400">-XX%</span>
+                                    </button>
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #4caf50; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">OFFRE</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-green-500 bg-green-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-green-400">OFFRE</span>
+                                    </button>
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #9c27b0; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">NEW</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-purple-500 bg-purple-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-purple-400">NEW</span>
+                                    </button>
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #2196f3; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">⭐ TOP</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-blue-500 bg-blue-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-blue-400">⭐ TOP</span>
+                                    </button>
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #f44336; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; animation: pulse 1s infinite;">🔥 HOT</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-red-500 bg-red-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-red-400">🔥 HOT</span>
+                                    </button>
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #607d8b; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">STOCK LIMITÉ</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-gray-500 bg-gray-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-gray-400">STOCK</span>
+                                    </button>
+                                    <button
+                                        onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">EXCLUSIF</div>`)}
+                                        className="p-3 rounded-xl border border-white/10 hover:border-purple-500 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-center"
+                                    >
+                                        <span className="text-xs font-bold text-purple-400">EXCLUSIF</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     )}
 

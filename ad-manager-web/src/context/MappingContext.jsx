@@ -7,15 +7,57 @@ export const DB_COLUMNS = [
     { key: 'description', label: 'Description', type: 'text' },
     { key: 'category', label: 'Catégorie', type: 'text' },
     { key: 'supplier', label: 'Fournisseur', type: 'text' },
+    { key: 'source', label: 'Site Source', type: 'text' },
     { key: 'price', label: 'Prix (€)', type: 'value' },
     { key: 'supplierPrice', label: 'Prix Fournisseur (€)', type: 'value' },
     { key: 'margin', label: 'Marge (%)', type: 'value' },
     { key: 'stock', label: 'Stock', type: 'value' },
     { key: 'imageUrl', label: 'Image Principale', type: 'media' },
     { key: 'images', label: 'Galerie Images', type: 'media' },
+    { key: 'sourceLogo', label: 'Logo Site Source', type: 'media' },
     { key: 'isPromo', label: 'En Promotion', type: 'logic' },
     { key: 'promoExpiry', label: 'Fin de Promo', type: 'logic' },
     { key: 'sourceUrl', label: 'Lien Produit', type: 'link' }
+];
+
+// Sites sources disponibles avec leurs logos
+export const SOURCE_SITES = [
+    {
+        name: 'Amazon',
+        key: 'amazon',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
+        color: '#FF9900'
+    },
+    {
+        name: 'AliExpress',
+        key: 'aliexpress',
+        logo: 'https://ae01.alicdn.com/kf/S9177d7f9251842339ba3c1ef19b1b990R.png',
+        color: '#E62E04'
+    },
+    {
+        name: 'eBay',
+        key: 'ebay',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg',
+        color: '#0064D2'
+    },
+    {
+        name: 'Cdiscount',
+        key: 'cdiscount',
+        logo: 'https://www.cdiscount.com/favicon.ico',
+        color: '#00529B'
+    },
+    {
+        name: 'Fnac',
+        key: 'fnac',
+        logo: 'https://www.fnac.com/favicon.ico',
+        color: '#E1A400'
+    },
+    {
+        name: 'Rakuten',
+        key: 'rakuten',
+        logo: 'https://www.rakuten.com/favicon.ico',
+        color: '#BF0000'
+    }
 ];
 
 // Clé localStorage pour persister les mappings
@@ -242,6 +284,8 @@ export const MappingProvider = ({ children }) => {
         description: 'Écouteurs sans fil avec réduction de bruit active et autonomie de 30h.',
         category: 'Tech',
         supplier: 'Amazon',
+        source: 'Amazon',
+        sourceLogo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
         price: 79.99,
         supplierPrice: 45.00,
         margin: 44,

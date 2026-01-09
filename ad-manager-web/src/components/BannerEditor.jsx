@@ -20,8 +20,11 @@ const PLACEHOLDERS = [
     { label: '[margin]', detail: 'Marge (%)' },
     { label: '[description]', detail: 'Description' },
     { label: '[sourceUrl]', detail: 'Lien vers le produit' },
+    { label: '[source]', detail: 'Site source (Amazon, AliExpress...)' },
+    { label: '[sourceLogo]', detail: 'Logo du site source' },
     { label: '[stock]', detail: 'Stock disponible' },
     { label: '[supplierPrice]', detail: 'Prix fournisseur' },
+    { label: '[isPromo]', detail: 'En promotion (true/false)' },
 ];
 
 // Templates par défaut pour chaque taille
@@ -124,7 +127,10 @@ const getDefaultTemplate = (size) => {
         <img src="[imageUrl]" alt="[name]" class="product-image" data-field="imageUrl">
         <div class="content">
             <div class="product-name" data-field="name">[name]</div>
-            <div class="product-category" data-field="category">[category]</div>
+            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                <img src="[sourceLogo]" class="source-logo" style="height: 12px; width: auto; display: none;" data-field="sourceLogo" onerror="this.style.display='none'">
+                <div class="product-category" data-field="category" style="margin-bottom: 0;">[category]</div>
+            </div>
             <div class="price-row">
                 <span class="price" data-field="price">[price]€</span>
                 <span class="margin-badge" data-field="margin">+[margin]%</span>
@@ -136,6 +142,12 @@ const getDefaultTemplate = (size) => {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Afficher le logo source s'il est valide
+            var sourceLogo = $('.source-logo');
+            if (sourceLogo.length && sourceLogo.attr('src') && !sourceLogo.attr('src').includes('[')) {
+                sourceLogo.show();
+            }
+
             // Arrondir la marge
             var marginEl = $('.margin-badge');
             if (marginEl.length) {
