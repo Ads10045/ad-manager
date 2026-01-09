@@ -438,31 +438,7 @@ const BannerEditor = ({ config }) => {
         }
     };
 
-    // Appliquer un thème CSS
-    const applyTheme = (theme) => {
-        let newCode = editorCode;
-        // Remplacer ou injecter les styles de .banner-container
-        if (newCode.includes('.banner-container {')) {
-            // Remplacer background et color
-            newCode = newCode.replace(
-                /\.banner-container\s*{([^}]+)}/,
-                (match) => {
-                    // Garder width/height/font/display etc, remplacer background/color
-                    // C'est une approche simplifiée, idéalement on ferait un parsing CSS plus robuste
-                    return match.replace(/background:[^;]+;/g, '').replace(/color:[^;]+;/g, '')
-                        .replace('{', `{\n            ${theme.css}\n            `);
-                }
-            );
-        } else {
-            // Ajouter styles si pas trouvé (peu probable avec le template par défaut)
-            newCode = newCode.replace('</style>', `
-        .banner-container { ${theme.css} }
-    </style>`);
-        }
 
-        setEditorCode(newCode);
-        setThemeSelectorOpen(false);
-    };
 
     // Reset for new template with default code
     const handleNewTemplate = (newSize = '300x250') => {
