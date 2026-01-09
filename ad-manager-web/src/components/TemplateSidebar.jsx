@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
+import { useMapping } from '../context/MappingContext';
 import { useTheme } from '../context/ThemeContext';
 import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 } from 'lucide-react';
 
-/* ... imports skipped ... */
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 const TemplateSidebar = () => {
     const {
@@ -16,7 +18,6 @@ const TemplateSidebar = () => {
     const { theme } = useTheme();
     const [expandedCategories, setExpandedCategories] = useState(['leaderboard', 'rectangle']);
 
-    /* ... handlers skipped ... */
     const handleSelectTemplate = (template, categoryKey) => {
         if (selectedTemplate?.id !== template.id) {
             resetMapping();
@@ -28,7 +29,6 @@ const TemplateSidebar = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
 
-    /* ... filter logic skipped ... */
     const filteredCategories = Object.entries(bannerConfig.categories).reduce((acc, [key, cat]) => {
         const matchesCat = cat.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchedTemplates = cat.templates.filter(t =>

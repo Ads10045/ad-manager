@@ -25,7 +25,30 @@ const productController = require('../controllers/productController');
  *       200:
  *         description: List of products.
  */
+/**
+ * @swagger
+ * /api/products/random:
+ *   get:
+ *     summary: Retrieve a specified number of random active products
+ *     tags: [Products]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 4
+ *         description: Number of products to return
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Category filter
+ *     responses:
+ *       200:
+ *         description: List of random products.
+ */
 // Specific routes first
+router.get('/random', productController.getRandomProducts);
 router.get('/random-promo', productController.getRandomPromoProduct);
 router.get('/', productController.getProducts);
 

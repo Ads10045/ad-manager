@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMapping } from '../context/MappingContext';
+import { useTheme } from '../context/ThemeContext';
 import { Edit3 } from 'lucide-react';
 
 // URL de base pour les templates (local ou GitHub)
@@ -18,6 +19,7 @@ const BannerPreview = () => {
         setActiveZone,
         setIsCodeEditorOpen
     } = useMapping();
+    const { theme } = useTheme();
 
     const [bannerHtml, setBannerHtml] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -120,11 +122,11 @@ const BannerPreview = () => {
 
     if (!selectedTemplate) {
         return (
-            <div className="h-full flex flex-col items-center justify-center text-white/30 p-8">
-                <div className="w-32 h-32 border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center mb-4">
+            <div className={`h-full flex flex-col items-center justify-center ${theme.text} opacity-30 p-8`}>
+                <div className={`w-32 h-32 border-2 border-dashed ${theme.border} rounded-2xl flex items-center justify-center mb-4`}>
                     <span className="text-4xl opacity-50">🖼️</span>
                 </div>
-                <h3 className="text-lg font-bold text-white/60 mb-2">Prévisualisation</h3>
+                <h3 className="text-lg font-bold opacity-60 mb-2">Prévisualisation</h3>
                 <p className="text-sm text-center max-w-xs">
                     Sélectionnez un template pour voir l'aperçu en temps réel avec vos données mappées.
                 </p>
@@ -137,24 +139,24 @@ const BannerPreview = () => {
     return (
         <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="p-4 border-b border-white/10 flex items-center justify-between">
+            <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
                 <div>
-                    <h2 className="text-lg font-black text-white uppercase tracking-wider">
+                    <h2 className={`text-lg font-black ${theme.text} uppercase tracking-wider`}>
                         Prévisualisation
                     </h2>
-                    <p className="text-white/40 text-xs mt-1">
+                    <p className={`opacity-40 text-xs mt-1 ${theme.text}`}>
                         {selectedTemplate.size} • {selectedTemplate.name}
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
                     {editMode && (
-                        <div className="px-3 py-1 bg-purple-500/20 border border-purple-500/50 rounded-full text-purple-300 text-xs font-bold animate-pulse">
+                        <div className={`px-3 py-1 ${theme.accentBg}/20 border border-purple-500/50 rounded-full ${theme.accent} text-xs font-bold animate-pulse`}>
                             Mode Édition Actif
                         </div>
                     )}
                     <button
                         onClick={() => setIsCodeEditorOpen(true)}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 rounded-lg text-xs font-bold text-white"
+                        className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 rounded-lg text-xs font-bold text-white shadow-lg shadow-purple-500/20"
                     >
                         <Edit3 size={14} />
                         Éditer
@@ -163,16 +165,16 @@ const BannerPreview = () => {
             </div>
 
             {/* Preview Area */}
-            <div className="flex-1 flex items-center justify-center p-8 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)] overflow-auto">
+            <div className="flex-1 flex items-center justify-center p-8 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.05)_0%,transparent_70%)] overflow-auto">
                 {loading ? (
-                    <div className="text-white/40 flex flex-col items-center gap-4">
+                    <div className={`${theme.text} opacity-40 flex flex-col items-center gap-4`}>
                         <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
                         <span className="text-sm">Chargement du template...</span>
                     </div>
                 ) : error ? (
                     <div className="text-center p-6 bg-red-500/10 border border-red-500/30 rounded-xl max-w-sm">
                         <div className="text-red-400 text-sm font-bold mb-2">⚠️ Erreur de chargement</div>
-                        <p className="text-white/50 text-xs">{error}</p>
+                        <p className={`${theme.text} opacity-50 text-xs`}>{error}</p>
                     </div>
                 ) : (
                     <div
@@ -187,6 +189,7 @@ const BannerPreview = () => {
                             style={{
                                 width: `${width}px`,
                                 height: `${height}px`,
+                                background: 'white' // Toujours blanc pour le template lui-même
                             }}
                         />
                     </div>
@@ -194,23 +197,23 @@ const BannerPreview = () => {
             </div>
 
             {/* Data Inspector */}
-            <div className="p-4 border-t border-white/10 bg-black/20">
-                <div className="text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold">
+            <div className={`p-4 border-t ${theme.border} ${theme.card} bg-opacity-50`}>
+                <div className={`text-[10px] uppercase tracking-widest opacity-40 mb-2 font-bold ${theme.text}`}>
                     Données mappées
                 </div>
                 <div className="flex flex-wrap gap-1">
                     {Object.entries(mapping).map(([zone, column]) => (
                         <div
                             key={zone}
-                            className="px-2 py-1 bg-white/5 rounded text-xs text-white/60"
+                            className={`px-2 py-1 ${theme.input} border ${theme.border} rounded text-xs opacity-80 ${theme.text}`}
                         >
-                            <span className="text-purple-300">{zone}</span>
-                            <span className="text-white/30 mx-1">→</span>
-                            <span className="text-emerald-300">{column}</span>
+                            <span className={theme.accent}>{zone}</span>
+                            <span className="opacity-30 mx-1">→</span>
+                            <span className="text-emerald-500 font-bold">{column}</span>
                         </div>
                     ))}
                     {Object.keys(mapping).length === 0 && (
-                        <span className="text-white/30 text-xs italic">Aucune liaison configurée</span>
+                        <span className={`opacity-30 text-xs italic ${theme.text}`}>Aucune liaison configurée</span>
                     )}
                 </div>
             </div>

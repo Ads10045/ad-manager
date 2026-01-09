@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMapping } from '../context/MappingContext';
+import { useTheme } from '../context/ThemeContext';
 import Editor from '@monaco-editor/react';
 import AssetLibrary from './AssetLibrary';
 import {
@@ -186,6 +187,7 @@ const BannerEditor = ({ config }) => {
         bannerConfig,
         previewData
     } = useMapping();
+    const { theme, currentTheme } = useTheme();
 
     // States
     const [name, setName] = useState('');
@@ -471,47 +473,47 @@ const BannerEditor = ({ config }) => {
     const canRedo = historyIndex < history.length - 1;
 
     return (
-        <div className={`${isFullscreen ? 'fixed inset-0 z-50' : 'h-full'} flex flex-col bg-[#0d0d0d] text-white`}>
+        <div className={`${isFullscreen ? 'fixed inset-0 z-50' : 'h-full'} flex flex-col ${theme.bg} ${theme.text}`}>
             {/* Top Toolbar */}
-            <div className="h-14 border-b border-white/10 flex items-center justify-between px-4 bg-black/40">
+            <div className={`h-14 border-b ${theme.border} flex items-center justify-between px-4 ${theme.header}`}>
                 {/* Left: Template Selector + Fields */}
                 <div className="flex items-center gap-3">
                     {/* Banner Selector Dropdown */}
                     <div className="relative">
                         <button
                             onClick={() => setBannerSelectorOpen(!bannerSelectorOpen)}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs hover:bg-white/10"
+                            className={`flex items-center gap-2 px-3 py-1.5 ${theme.input} border ${theme.border} rounded-lg text-xs ${theme.hover}`}
                         >
                             <Layout size={14} />
-                            <span className="font-bold text-purple-400 max-w-[120px] truncate">
+                            <span className={`font-bold ${theme.accent} max-w-[120px] truncate`}>
                                 {selectedTemplate?.name || 'Nouvelle'}
                             </span>
-                            <ChevronDown size={14} className="text-white/40" />
+                            <ChevronDown size={14} className="opacity-40" />
                         </button>
 
                         {bannerSelectorOpen && (
-                            <div className="absolute top-full left-0 mt-1 w-80 max-h-96 overflow-y-auto bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl z-50">
+                            <div className={`absolute top-full left-0 mt-1 w-80 max-h-96 overflow-y-auto ${theme.card} border ${theme.border} rounded-xl shadow-2xl z-50`}>
                                 <div
                                     onClick={handleNewTemplate}
-                                    className="p-3 border-b border-white/10 hover:bg-purple-500/20 cursor-pointer flex items-center gap-2"
+                                    className={`p-3 border-b ${theme.border} ${theme.hover} cursor-pointer flex items-center gap-2`}
                                 >
                                     <span className="text-lg">➕</span>
                                     <span className="text-sm font-bold">Nouvelle Bannière</span>
                                 </div>
                                 {Object.entries(bannerConfig?.categories || {}).map(([catKey, cat]) => (
                                     <div key={catKey}>
-                                        <div className="px-3 py-2 text-xs font-bold text-white/40 uppercase bg-black/20">
+                                        <div className={`px-3 py-2 text-xs font-bold opacity-40 uppercase ${theme.sidebar}`}>
                                             {cat.name}
                                         </div>
                                         {cat.templates.map(t => (
                                             <div
                                                 key={t.id}
                                                 onClick={() => handleSelectTemplate({ ...t, categoryKey: catKey })}
-                                                className={`p-3 hover:bg-white/5 cursor-pointer flex justify-between items-center ${selectedTemplate?.id === t.id ? 'bg-purple-500/20' : ''
+                                                className={`p-3 ${theme.hover} cursor-pointer flex justify-between items-center ${selectedTemplate?.id === t.id ? 'bg-purple-500/20' : ''
                                                     }`}
                                             >
                                                 <span className="text-sm">{t.name}</span>
-                                                <span className="text-xs text-purple-400 font-mono">{t.size}</span>
+                                                <span className={`text-xs ${theme.accent} font-mono`}>{t.size}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -520,10 +522,10 @@ const BannerEditor = ({ config }) => {
                         )}
                     </div>
 
-                    <div className="h-6 w-px bg-white/10" />
+                    <div className={`h-6 w-px ${theme.border}`} />
 
                     <input
-                        className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-sm font-bold w-32"
+                        className={`bg-transparent border-b ${theme.border} focus:border-purple-500 outline-none text-sm font-bold w-32 ${theme.text}`}
                         placeholder="Nom"
                         value={name}
                         onChange={e => setName(e.target.value)}
@@ -531,7 +533,7 @@ const BannerEditor = ({ config }) => {
                     <div className="relative flex items-center gap-1">
                         <input
                             list="category-suggestions"
-                            className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-xs w-24"
+                            className={`bg-transparent border-b ${theme.border} focus:border-purple-500 outline-none text-xs w-24 ${theme.text}`}
                             placeholder="Catégorie"
                             value={category}
                             onChange={e => setCategory(e.target.value)}
@@ -543,7 +545,7 @@ const BannerEditor = ({ config }) => {
                                     setCategory(newCat.trim().toLowerCase());
                                 }
                             }}
-                            className="p-1 hover:bg-white/10 rounded text-purple-400 hover:text-purple-300"
+                            className={`p-1 ${theme.hover} rounded ${theme.accent}`}
                             title="Ajouter une catégorie"
                         >
                             <FolderPlus size={14} />
@@ -555,7 +557,7 @@ const BannerEditor = ({ config }) => {
                     <select
                         value={size}
                         onChange={e => handleSizeChange(e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded text-xs px-2 py-1"
+                        className={`${theme.input} border ${theme.border} rounded text-xs px-2 py-1 ${theme.text}`}
                     >
                         <option value="300x250">300x250</option>
                         <option value="728x90">728x90</option>
@@ -570,11 +572,11 @@ const BannerEditor = ({ config }) => {
                 {/* Right: Actions */}
                 <div className="flex items-center gap-2">
                     {/* Undo/Redo */}
-                    <div className="flex bg-white/5 rounded-lg">
+                    <div className={`flex ${theme.input} rounded-lg`}>
                         <button
                             onClick={handleUndo}
                             disabled={!canUndo}
-                            className={`p-2 rounded-l-lg transition-all ${canUndo ? 'hover:bg-white/10 text-white' : 'text-white/20 cursor-not-allowed'}`}
+                            className={`p-2 rounded-l-lg transition-all ${canUndo ? `${theme.hover} ${theme.text}` : 'opacity-20 cursor-not-allowed'}`}
                             title="Annuler (Ctrl+Z)"
                         >
                             <Undo2 size={14} />
@@ -582,7 +584,7 @@ const BannerEditor = ({ config }) => {
                         <button
                             onClick={handleRedo}
                             disabled={!canRedo}
-                            className={`p-2 rounded-r-lg transition-all ${canRedo ? 'hover:bg-white/10 text-white' : 'text-white/20 cursor-not-allowed'}`}
+                            className={`p-2 rounded-r-lg transition-all ${canRedo ? `${theme.hover} ${theme.text}` : 'opacity-20 cursor-not-allowed'}`}
                             title="Rétablir (Ctrl+Y)"
                         >
                             <Redo2 size={14} />
@@ -590,10 +592,10 @@ const BannerEditor = ({ config }) => {
                     </div>
 
                     {/* View Tabs */}
-                    <div className="flex bg-white/5 rounded-lg p-1">
+                    <div className={`flex ${theme.input} rounded-lg p-1`}>
                         <button
                             onClick={() => setActiveTab('code')}
-                            className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-bold transition-all ${activeTab === 'code' ? 'bg-purple-500 text-white' : 'text-white/50 hover:text-white'
+                            className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-bold transition-all ${activeTab === 'code' ? 'bg-purple-500 text-white' : 'opacity-50 hover:opacity-100 hover:bg-white/5'
                                 }`}
                         >
                             <Code size={12} />
@@ -601,7 +603,7 @@ const BannerEditor = ({ config }) => {
                         </button>
                         <button
                             onClick={() => setActiveTab('preview')}
-                            className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-bold transition-all ${activeTab === 'preview' ? 'bg-purple-500 text-white' : 'text-white/50 hover:text-white'
+                            className={`flex items-center gap-1 px-3 py-1 rounded text-xs font-bold transition-all ${activeTab === 'preview' ? 'bg-purple-500 text-white' : 'opacity-50 hover:opacity-100 hover:bg-white/5'
                                 }`}
                         >
                             <Eye size={12} />
@@ -612,44 +614,44 @@ const BannerEditor = ({ config }) => {
                     {/* Tools */}
                     <button
                         onClick={() => setIsAssetLibraryOpen(true)}
-                        className="p-2 hover:bg-white/10 rounded-lg text-purple-400 hover:text-purple-300"
+                        className={`p-2 ${theme.hover} rounded-lg ${theme.accent}`}
                         title="Bibliothèque d'assets"
                     >
                         <Sparkles size={14} />
                     </button>
                     <button
                         onClick={handleCopyCode}
-                        className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
+                        className={`p-2 ${theme.hover} rounded-lg opacity-60 hover:opacity-100`}
                         title="Copier le code"
                     >
                         <Copy size={14} />
                     </button>
                     <button
                         onClick={handleDownload}
-                        className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
+                        className={`p-2 ${theme.hover} rounded-lg opacity-60 hover:opacity-100`}
                         title="Télécharger HTML"
                     >
                         <Download size={14} />
                     </button>
                     <button
                         onClick={() => setIsFullscreen(!isFullscreen)}
-                        className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
+                        className={`p-2 ${theme.hover} rounded-lg opacity-60 hover:opacity-100`}
                         title={isFullscreen ? "Quitter plein écran" : "Plein écran"}
                     >
                         {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
                     </button>
 
-                    <div className="h-6 w-px bg-white/10" />
+                    <div className={`h-6 w-px ${theme.border}`} />
 
                     <button
                         onClick={() => setIsCodeEditorOpen(false)}
-                        className="px-3 py-1.5 text-xs font-bold text-white/50 hover:text-white"
+                        className="px-3 py-1.5 text-xs font-bold opacity-50 hover:opacity-100"
                     >
                         Annuler
                     </button>
                     <button
                         onClick={handleSave}
-                        className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 rounded-lg text-xs font-bold"
+                        className="flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 rounded-lg text-xs font-bold shadow-lg shadow-purple-500/20"
                     >
                         <Save size={14} />
                         {isEditing ? 'Modifier' : 'Créer'}
@@ -658,13 +660,13 @@ const BannerEditor = ({ config }) => {
             </div>
 
             {/* Placeholders Quick Insert Bar */}
-            <div className="h-10 border-b border-white/5 bg-black/20 flex items-center px-4 gap-2 overflow-x-auto">
-                <span className="text-xs text-white/40 mr-2">Insérer:</span>
+            <div className={`h-10 border-b ${theme.border} ${theme.sidebar} flex items-center px-4 gap-2 overflow-x-auto bg-opacity-30`}>
+                <span className={`text-xs opacity-40 mr-2 ${theme.text}`}>Insérer:</span>
                 {PLACEHOLDERS.slice(0, 8).map(p => (
                     <button
                         key={p.label}
                         onClick={() => insertPlaceholder(p.label)}
-                        className="px-2 py-1 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded text-[10px] font-mono text-purple-300 whitespace-nowrap"
+                        className={`px-2 py-1 ${theme.accentBg}/10 hover:${theme.accentBg}/20 border border-purple-500/30 rounded text-[10px] font-mono ${theme.accent} whitespace-nowrap transition-colors`}
                         title={p.detail}
                     >
                         {p.label}
@@ -684,7 +686,7 @@ const BannerEditor = ({ config }) => {
                         <Editor
                             height="100%"
                             defaultLanguage="html"
-                            theme="vs-dark"
+                            theme={currentTheme === 'light' ? 'vs-light' : 'vs-dark'}
                             value={editorCode}
                             onChange={(value) => setEditorCode(value || '')}
                             onMount={handleEditorDidMount}
@@ -710,7 +712,7 @@ const BannerEditor = ({ config }) => {
                     </div>
                 ) : (
                     /* Preview */
-                    <div className="flex-1 flex items-center justify-center p-8 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)] overflow-auto">
+                    <div className="flex-1 flex items-center justify-center p-8 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.05)_0%,transparent_70%)] overflow-auto">
                         <div
                             className="relative"
                             style={{
@@ -722,6 +724,7 @@ const BannerEditor = ({ config }) => {
                                 style={{
                                     width: `${previewWidth}px`,
                                     height: `${previewHeight}px`,
+                                    background: 'white'
                                 }}
                             />
                         </div>
@@ -730,19 +733,19 @@ const BannerEditor = ({ config }) => {
             </div>
 
             {/* Status Bar */}
-            <div className="h-7 bg-black/40 border-t border-white/5 flex items-center justify-between px-4 text-[10px] text-white/40">
+            <div className={`h-7 ${theme.header} border-t ${theme.border} flex items-center justify-between px-4 text-[10px] opacity-40`}>
                 <div className="flex items-center gap-4">
                     <span>
                         {isEditing ? `📝 Édition: ${selectedTemplate?.file}` : '✨ Nouvelle bannière'}
                     </span>
-                    <span className="text-purple-400">
+                    <span className={theme.accent}>
                         Historique: {historyIndex + 1}/{history.length}
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
                     <span>{editorCode.length} caractères</span>
                     <span>{size}</span>
-                    <span className="text-green-400">Monaco Editor</span>
+                    <span className="text-green-500 font-bold">Monaco Editor</span>
                 </div>
             </div>
 

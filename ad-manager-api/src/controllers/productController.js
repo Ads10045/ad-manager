@@ -133,11 +133,48 @@ const getRandomPromoProduct = async (req, res) => {
   }
 };
 
+/**
+ * @desc Get multiple random active products
+ */
+const getRandomProducts = async (req, res) => {
+  const limit = parseInt(req.query.limit) || 4;
+  const { category } = req.query;
+  
+  try {
+    const productsOrResult = await db.execute(
+      () => db.prisma.product.findMany({
+        where: { 
+          isActive: true,
+          ...(category && { category })
+        },
+      }),
+      category 
+        ? `SELECT * FROM "Product" WHERE "isActive" = true AND category = '${category}'`
+        : 'SELECT * FROM "Product" WHERE "isActive" = true'
+    );
+
+    let products = productsOrResult.rows ? productsOrResult.rows : productsOrResult;
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No active products found' });
+    }
+
+    // Shuffle and limit
+    const shuffled = [...products].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, limit);
+
+    res.json(selected);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = { 
   getProducts, 
   getProductById, 
   getProductsByDate, 
   getExpiredProducts, 
   getRandomPromoProduct,
+  getRandomProducts,
   createProduct 
 };

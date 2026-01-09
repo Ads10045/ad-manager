@@ -4,30 +4,31 @@ import BannerPreview from './components/BannerPreview';
 import BannerEditor from './components/BannerEditor';
 import MappingPanel from './components/MappingPanel';
 import ExportPanel from './components/ExportPanel';
+import { useMapping } from './context/MappingContext';
 import { useTheme } from './context/ThemeContext';
-import { Wand2, Eye, SlidersHorizontal, Code, Edit3, Palette, Check } from 'lucide-react';
+import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check } from 'lucide-react';
 
 /**
  * App - Application principale du générateur de bannières dynamiques
  * Charge les templates depuis ad-manager-banner
  */
 const App = () => {
-    const { selectedTemplate, editMode, isCodeEditorOpen, bannerConfig } = useMapping();
+    const { selectedTemplate, isCodeEditorOpen, bannerConfig } = useMapping();
     const { theme, currentTheme, setTheme, themes } = useTheme();
     const [activePanel, setActivePanel] = React.useState('mapping');
     const [themeMenuOpen, setThemeMenuOpen] = React.useState(false);
 
     return (
-        <div className={`h-screen w-screen flex ${theme.bg} ${theme.text} overflow-hidden transition-colors duration-300`}>
+        <div className={`h-screen w-screen flex ${theme.bg} ${theme.text} overflow-hidden font-sans selection:bg-purple-500/30 transition-colors duration-300`}>
             {/* Left Sidebar - Templates */}
             <aside className={`w-72 flex-shrink-0 ${theme.sidebar} border-r ${theme.border}`}>
                 <TemplateSidebar />
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col overflow-hidden">
+            <main className="flex-1 flex flex-col overflow-hidden relative">
                 {/* Top Header */}
-                <header className={`h-16 border-b ${theme.border} ${theme.header} backdrop-blur-xl flex items-center justify-between px-6`}>
+                <header className={`h-16 border-b ${theme.border} ${theme.header} backdrop-blur-xl flex items-center justify-between px-6 z-10`}>
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
                             <Wand2 size={20} className="text-white" />
@@ -55,7 +56,7 @@ const App = () => {
                             </button>
 
                             {themeMenuOpen && (
-                                <div className={`absolute top-full right-0 mt-2 w-48 ${theme.card} border ${theme.border} rounded-xl shadow-2xl z-50 p-1 overflow-hidden`}>
+                                <div className={`absolute top-full right-0 mt-2 w-48 ${theme.card} border ${theme.border} rounded-xl shadow-2xl z-50 p-1 overflow-hidden font-sans`}>
                                     {Object.entries(themes).map(([key, t]) => (
                                         <button
                                             key={key}
@@ -67,7 +68,7 @@ const App = () => {
                                         >
                                             <div className="flex items-center gap-2">
                                                 <div className={`w-3 h-3 rounded-full ${key === 'light' ? 'bg-gray-200 border border-gray-400' : t.bg} border border-white/20`} />
-                                                {t.name}
+                                                <span className={theme.text}>{t.name}</span>
                                             </div>
                                             {currentTheme === key && <Check size={14} />}
                                         </button>
@@ -79,12 +80,11 @@ const App = () => {
                         {selectedTemplate && (
                             <div className={`flex items-center gap-2 px-3 py-1.5 ${theme.input} rounded-full border ${theme.border}`}>
                                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                                <span className="text-xs opacity-60">
+                                <span className={`text-xs ${theme.text} opacity-60`}>
                                     Template: <span className="font-bold opacity-100">{selectedTemplate.name}</span>
                                 </span>
                             </div>
                         )}
-                        {/* ... other indicators ... */}
                         {isCodeEditorOpen && (
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 rounded-full border border-blue-500/50">
                                 <Edit3 size={14} className="text-blue-400" />
@@ -95,9 +95,12 @@ const App = () => {
                 </header>
 
                 {/* Content Grid */}
-                <div className="flex-1 flex overflow-hidden">
+                <div className="flex-1 flex overflow-hidden relative">
+                    {/* Background Grid Effect - conditional opacity based on theme */}
+                    <div className={`absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none mix-blend-overlay ${currentTheme === 'light' ? 'opacity-5' : 'opacity-20'}`}></div>
+
                     {/* Preview or Editor Section */}
-                    <div className={`flex-1 border-r ${theme.border} relative`}>
+                    <div className="flex-1 flex flex-col relative z-0">
                         {isCodeEditorOpen ? (
                             <BannerEditor config={bannerConfig} />
                         ) : (
@@ -108,14 +111,14 @@ const App = () => {
             </main>
 
             {/* Right Panel - Tabs */}
-            <aside className={`w-80 flex-shrink-0 flex flex-col border-l ${theme.border} ${theme.sidebar}`}>
+            <aside className={`w-80 flex-shrink-0 flex flex-col border-l ${theme.border} ${theme.sidebar} z-10`}>
                 {/* Tab Headers */}
                 <div className={`flex border-b ${theme.border}`}>
                     <button
                         onClick={() => setActivePanel('mapping')}
                         className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'mapping'
-                            ? `${theme.accent} border-b-2 border-purple-400 bg-purple-500/10`
-                            : 'opacity-50 hover:opacity-80 hover:bg-white/5'
+                            ? `${theme.text} border-b-2 border-purple-500 ${theme.input}`
+                            : 'opacity-40 hover:opacity-100 hover:bg-white/5'
                             }`}
                     >
                         <SlidersHorizontal size={16} />
@@ -124,8 +127,8 @@ const App = () => {
                     <button
                         onClick={() => setActivePanel('export')}
                         className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'export'
-                            ? `${theme.accent} border-b-2 border-purple-400 bg-purple-500/10`
-                            : 'opacity-50 hover:opacity-80 hover:bg-white/5'
+                            ? `${theme.text} border-b-2 border-purple-500 ${theme.input}`
+                            : 'opacity-40 hover:opacity-100 hover:bg-white/5'
                             }`}
                     >
                         <Code size={16} />
@@ -134,7 +137,7 @@ const App = () => {
                 </div>
 
                 {/* Tab Content */}
-                <div className="flex-1 overflow-hidden">
+                <div className={`flex-1 overflow-hidden ${currentTheme === 'light' ? 'bg-gray-50' : 'bg-[#0a0a0a]'}`}>
                     {activePanel === 'mapping' ? <MappingPanel /> : <ExportPanel />}
                 </div>
             </aside>

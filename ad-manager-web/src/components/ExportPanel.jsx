@@ -4,12 +4,26 @@ import { useTheme } from '../context/ThemeContext';
 import { Code, Copy, Check, Download, ExternalLink, Settings, Package } from 'lucide-react';
 import ProductPickerModal from './ProductPickerModal';
 
-/* ... generateIntegrationScript skipped ... */
 const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
     if (!template) return '// Sélectionnez un template pour générer le script';
 
     const mappingJson = JSON.stringify(mapping, null, 4);
     const displayProductId = productId || 'YOUR_PRODUCT_ID_HERE';
+
+    // Déterminer s'il s'agit d'une bannière multi-produit
+    const isMultiProduct = template.categoryKey === 'multi-product' || template.category === 'Mode & Fashion' || Object.keys(mapping).some(k => k.startsWith('product'));
+
+    // Détecter le nombre de produits nécessaires
+    let productCount = 1;
+    if (isMultiProduct) {
+        const fields = template.fields || [];
+        const productIndices = fields
+            .map(f => {
+                const match = f.match(/product(\d+)/i);
+                return match ? parseInt(match[1]) : 1;
+            });
+        productCount = Math.max(1, ...productIndices);
+    }
 
     return `<!-- Ads-AI Dynamic Banner Integration -->
 <!-- Template: ${template.name} (${template.size}) -->
@@ -26,6 +40,8 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
         templateFile: '${template.file}',
         templateSize: '${template.size}',
         mapping: ${mappingJson},
+        isMulti: ${isMultiProduct},
+        productCount: ${productCount},
         affiliationTags: {
             amazon: {
                 fr: 'nutriplusap-21',
@@ -63,52 +79,82 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
         const $container = $('#ads-ai-banner');
         const productId = $container.data('product-id');
         
-        if (!productId) {
-            console.error('[Ads-AI] Missing data-product-id attribute');
-            return;
+        // Déterminer l'URL pour les données
+        let dataUrl = CONFIG.apiUrl + '/api/products/' + productId;
+        if (CONFIG.isMulti && (productId === 'random-promo' || !productId || productId === 'YOUR_PRODUCT_ID_HERE')) {
+            dataUrl = CONFIG.apiUrl + '/api/products/random?limit=' + CONFIG.productCount;
+        } else if (productId === 'random-promo') {
+            dataUrl = CONFIG.apiUrl + '/api/products/random-promo';
         }
-        
-        // Récupération des données produit
+
+        // 1. Récupération des données (objet unique ou tableau)
         $.ajax({
-            url: CONFIG.apiUrl + '/api/products/' + productId,
+            url: dataUrl,
             method: 'GET',
-            success: function(product) {
-                // Récupération du template HTML
+            success: function(data) {
+                // 2. Récupération du template HTML
                 $.ajax({
                     url: CONFIG.apiUrl + '/api/banners/template/' + CONFIG.templateFile,
                     method: 'GET',
                     success: function(html) {
                         let renderedHtml = html;
+                        const products = Array.isArray(data) ? data : [data];
                         
-                        // Injection des données mappées
-                        Object.entries(CONFIG.mapping).forEach(function([zone, column]) {
-                            if (product[column] !== undefined) {
-                                let value = product[column];
-                                
-                                // Appliquer l'affiliation sur les URLs
-                                if (column === 'sourceUrl' || column.includes('Url')) {
+                        // Injection pour chaque produit si multi, ou juste le premier
+                        products.forEach(function(product, index) {
+                            const pIdx = index + 1;
+                            const prefix = CONFIG.isMulti ? 'product' + pIdx : '';
+                            
+                            // Parcourir les propriétés du produit
+                            Object.entries(product).forEach(function([key, value]) {
+                                if (key === 'sourceUrl' || key.toLowerCase().includes('url')) {
                                     value = applyAffiliation(value);
                                 }
                                 
-                                // Remplacer les placeholders
+                                // Remplacer avec préfixe (ex: [product1Name])
+                                if (CONFIG.isMulti) {
+                                    const pKey = prefix + key.charAt(0).toUpperCase() + key.slice(1);
+                                    const regex = new RegExp('\\\\[' + pKey + '\\\\]', 'gi');
+                                    renderedHtml = renderedHtml.replace(regex, String(value));
+                                    
+                                    // Cas spécifique pour compatibilité (ex: product1Image vs product1ImageUrl)
+                                    if (key === 'imageUrl') {
+                                        const imgRegex = new RegExp('\\\\[' + prefix + 'Image\\\\]', 'gi');
+                                        renderedHtml = renderedHtml.replace(imgRegex, String(value));
+                                    }
+                                    if (key === 'sourceUrl') {
+                                        const linkRegex = new RegExp('\\\\[' + prefix + 'Link\\\\]', 'gi');
+                                        renderedHtml = renderedHtml.replace(linkRegex, String(value));
+                                    }
+                                }
+                                
+                                // Remplacer sans préfixe pour le premier produit ou si non multi
+                                if (!CONFIG.isMulti || index === 0) {
+                                    const regex = new RegExp('\\\\[' + key + '\\\\]', 'gi');
+                                    renderedHtml = renderedHtml.replace(regex, String(value));
+                                }
+                            });
+                        });
+                        
+                        // Injection des mappings personnalisés
+                        Object.entries(CONFIG.mapping).forEach(function([zone, column]) {
+                            const mainProduct = products[0];
+                            if (mainProduct && mainProduct[column] !== undefined) {
+                                let value = mainProduct[column];
+                                if (column === 'sourceUrl' || column.toLowerCase().includes('url')) {
+                                    value = applyAffiliation(value);
+                                }
                                 const regex = new RegExp('\\\\[' + zone + '\\\\]', 'gi');
                                 renderedHtml = renderedHtml.replace(regex, value);
-                                
-                                const colRegex = new RegExp('\\\\[' + column + '\\\\]', 'gi');
-                                renderedHtml = renderedHtml.replace(colRegex, value);
                             }
                         });
                         
-                        // Remplacer les données directes
-                        Object.entries(product).forEach(function([key, value]) {
-                            if (key === 'sourceUrl') value = applyAffiliation(value);
-                            const regex = new RegExp('\\\\[' + key + '\\\\]', 'gi');
-                            renderedHtml = renderedHtml.replace(regex, String(value));
-                        });
-                        
+                        // Nettoyage des placeholders restants
+                        renderedHtml = renderedHtml.replace(/\\[.*?\\]/g, '');
+
                         // Injecter dans le container
                         $container.html(renderedHtml);
-                        console.log('[Ads-AI] Banner rendered: ${template.name}');
+                        console.log('[Ads-AI] Banner rendered: ' + CONFIG.templateFile);
                     },
                     error: function() {
                         console.error('[Ads-AI] Failed to load banner template');
@@ -116,7 +162,7 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
                 });
             },
             error: function() {
-                console.error('[Ads-AI] Failed to fetch product data');
+                console.error('[Ads-AI] Failed to fetch data');
             }
         });
     });
@@ -128,7 +174,7 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
     display: inline-block;
     width: ${template.size.split('x')[0]}px;
     height: ${template.size.split('x')[1]}px;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
 }
 </style>`;
 };
@@ -138,7 +184,7 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
  */
 const ExportPanel = () => {
     const { selectedTemplate, mapping, saveConfiguration, savedBanners, isSaving } = useMapping();
-    const { theme } = useTheme();
+    const { theme, currentTheme } = useTheme();
     const [copied, setCopied] = useState(false);
     const [saved, setSaved] = useState(false);
     const [apiUrl, setApiUrl] = useState('https://ad-manager-api.vercel.app');
@@ -262,7 +308,7 @@ const ExportPanel = () => {
 
             {/* Code Preview */}
             <div className="flex-1 overflow-hidden flex flex-col">
-                <div className={`flex-1 overflow-auto custom-scrollbar p-4 ${theme.input}`}>
+                <div className={`flex-1 overflow-auto custom-scrollbar p-4 ${currentTheme === 'light' ? 'bg-gray-100' : 'bg-black/40'}`}>
                     <pre className={`text-[10px] font-mono ${theme.text} opacity-60 whitespace-pre-wrap break-all leading-relaxed`}>
                         {script}
                     </pre>
@@ -276,7 +322,7 @@ const ExportPanel = () => {
                         onClick={handleCopy}
                         className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs transition-all ${copied
                             ? 'bg-emerald-500 text-white'
-                            : `${theme.input} ${theme.text} ${theme.hover}`
+                            : `${theme.input} ${theme.text} ${theme.hover} border ${theme.border}`
                             }`}
                     >
                         {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -284,7 +330,7 @@ const ExportPanel = () => {
                     </button>
                     <button
                         onClick={handleDownload}
-                        className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs ${theme.input} ${theme.text} ${theme.hover} transition-all`}
+                        className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs ${theme.input} ${theme.text} ${theme.hover} border ${theme.border} transition-all`}
                     >
                         <Download size={14} />
                         Télécharger
@@ -321,7 +367,7 @@ const ExportPanel = () => {
 
                 {/* Storage info */}
                 <div className={`text-center text-[10px] ${theme.text} opacity-30 space-y-0.5`}>
-                    <div>💾 Stockage: <span className="text-purple-300">localStorage</span> + <span className="text-pink-300">API</span></div>
+                    <div>💾 Stockage: <span className={theme.accent}>localStorage</span> + <span className="text-pink-300">API</span></div>
                     {savedBanners.length > 0 && (
                         <div className="text-emerald-400">{savedBanners.length} config(s) sauvegardée(s)</div>
                     )}

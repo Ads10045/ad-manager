@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import {
     Image, Palette, Type, Sparkles, X, Search,
     ShoppingCart, Tag, Percent, Star, Heart, Zap,
@@ -89,6 +90,7 @@ const GRADIENTS = [
  * AssetLibrary - Bibliothèque d'assets pour l'éditeur
  */
 const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
+    const { theme, currentTheme } = useTheme();
     const [activeTab, setActiveTab] = useState('images');
     const [searchTerm, setSearchTerm] = useState('');
     const [copiedItem, setCopiedItem] = useState(null);
@@ -182,68 +184,68 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
     ];
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-            <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl w-[700px] max-h-[80vh] flex flex-col shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+            <div className={`${theme.card} border ${theme.border} rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden font-sans`}>
                 {/* Header */}
-                <div className="p-4 border-b border-white/10 flex items-center justify-between">
-                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                        <Sparkles className="text-purple-400" size={20} />
+                <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
+                    <h2 className={`text-lg font-bold ${theme.text} flex items-center gap-2`}>
+                        <Sparkles className={theme.accent} size={20} />
                         Bibliothèque d'Assets
                     </h2>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
+                        className={`p-2 ${theme.hover} rounded-lg ${theme.text} opacity-60 hover:opacity-100 transition-all`}
                     >
                         <X size={20} />
                     </button>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex border-b border-white/10">
+                <div className={`flex border-b ${theme.border} ${theme.sidebar} bg-opacity-30`}>
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold transition-all ${activeTab === tab.id
-                                ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-500/10'
-                                : 'text-white/50 hover:text-white hover:bg-white/5'
+                                ? `${theme.accent} border-b-2 border-purple-500 ${theme.input}`
+                                : 'opacity-40 hover:opacity-100 hover:bg-white/5'
                                 }`}
                         >
                             <tab.icon size={16} />
-                            {tab.label}
+                            <span className="hidden sm:inline">{tab.label}</span>
                         </button>
                     ))}
                 </div>
 
                 {/* Search */}
-                <div className="p-4 border-b border-white/5">
+                <div className={`p-4 border-b ${theme.border}`}>
                     <div className="relative">
-                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
+                        <Search size={16} className={`absolute left-3 top-1/2 -translate-y-1/2 ${theme.text} opacity-40`} />
                         <input
                             type="text"
                             placeholder="Rechercher..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-purple-500"
+                            className={`w-full ${theme.input} border ${theme.border} rounded-lg pl-10 pr-4 py-2 text-sm ${theme.text} placeholder-opacity-40 focus:outline-none focus:border-purple-500`}
                         />
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-4">
+                <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
                     {activeTab === 'images' && (
-                        <div className="grid grid-cols-4 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             {STOCK_IMAGES.filter(img =>
                                 img.label.toLowerCase().includes(searchTerm.toLowerCase())
                             ).map((img, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => handleInsertImage(img.url)}
-                                    className="group relative aspect-square rounded-xl overflow-hidden border border-white/10 hover:border-purple-500 transition-all"
+                                    className={`group relative aspect-square rounded-xl overflow-hidden border ${theme.border} hover:border-purple-500 transition-all`}
                                 >
                                     <img src={img.url} alt={img.label} className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
-                                        <span className="text-xs font-bold text-white">{img.label}</span>
+                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center text-center p-2">
+                                        <span className="text-[10px] sm:text-xs font-bold text-white">{img.label}</span>
                                     </div>
                                 </button>
                             ))}
@@ -254,23 +256,23 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
                         <div className="space-y-6">
                             {/* Sites E-commerce */}
                             <div>
-                                <h3 className="text-sm font-bold text-white/60 mb-3">🛒 Sites E-commerce</h3>
-                                <div className="grid grid-cols-3 gap-3">
+                                <h3 className={`text-sm font-bold opacity-60 mb-3 ${theme.text}`}>🛒 Sites E-commerce</h3>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                     {SOURCE_SITES.filter(site =>
                                         site.name.toLowerCase().includes(searchTerm.toLowerCase())
                                     ).map((site) => (
                                         <div key={site.key} className="space-y-2">
                                             <button
                                                 onClick={() => handleInsertSiteLogo(site)}
-                                                className="w-full p-4 rounded-xl border border-white/10 hover:border-purple-500 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center gap-2"
+                                                className={`w-full p-4 rounded-xl border ${theme.border} hover:border-purple-500 ${theme.input} transition-all flex flex-col items-center gap-2`}
                                                 style={{ borderLeftColor: site.color, borderLeftWidth: '3px' }}
                                             >
                                                 <img src={site.logo} alt={site.name} className="h-6 object-contain" />
-                                                <span className="text-[10px] text-white/60">{site.name}</span>
+                                                <span className={`text-[10px] opacity-60 ${theme.text}`}>{site.name}</span>
                                             </button>
                                             <button
                                                 onClick={() => handleInsertSiteBadge(site)}
-                                                className="w-full text-[9px] text-purple-400 hover:text-purple-300"
+                                                className={`w-full text-[9px] ${theme.accent} hover:opacity-80`}
                                             >
                                                 + Badge avec couleur
                                             </button>
@@ -281,55 +283,55 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
 
                             {/* Badges Promo */}
                             <div>
-                                <h3 className="text-sm font-bold text-white/60 mb-3">🏷️ Badges Promo</h3>
-                                <div className="grid grid-cols-4 gap-3">
+                                <h3 className={`text-sm font-bold opacity-60 mb-3 ${theme.text}`}>🏷️ Badges Promo</h3>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #e53935; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">PROMO</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-red-500 bg-red-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-red-500 bg-red-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-red-400">PROMO</span>
+                                        <span className="text-xs font-bold text-red-500">PROMO</span>
                                     </button>
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #ff9800; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">-[margin]%</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-orange-500 bg-orange-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-orange-500 bg-orange-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-orange-400">-XX%</span>
+                                        <span className="text-xs font-bold text-orange-500">-XX%</span>
                                     </button>
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #4caf50; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">OFFRE</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-green-500 bg-green-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-green-500 bg-green-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-green-400">OFFRE</span>
+                                        <span className="text-xs font-bold text-green-500">OFFRE</span>
                                     </button>
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #9c27b0; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">NEW</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-purple-500 bg-purple-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-purple-500 bg-purple-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-purple-400">NEW</span>
+                                        <span className="text-xs font-bold text-purple-600">NEW</span>
                                     </button>
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #2196f3; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">⭐ TOP</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-blue-500 bg-blue-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-blue-500 bg-blue-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-blue-400">⭐ TOP</span>
+                                        <span className="text-xs font-bold text-blue-500">⭐ TOP</span>
                                     </button>
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #f44336; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; animation: pulse 1s infinite;">🔥 HOT</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-red-500 bg-red-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-red-500 bg-red-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-red-400">🔥 HOT</span>
+                                        <span className="text-xs font-bold text-red-500">🔥 HOT</span>
                                     </button>
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: #607d8b; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">STOCK LIMITÉ</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-gray-500 bg-gray-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-gray-500 bg-gray-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-gray-400">STOCK</span>
+                                        <span className="text-xs font-bold text-gray-500">STOCK</span>
                                     </button>
                                     <button
                                         onClick={() => onInsert(`<div style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold;">EXCLUSIF</div>`)}
-                                        className="p-3 rounded-xl border border-white/10 hover:border-purple-500 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-center"
+                                        className={`p-3 rounded-xl border ${theme.border} hover:border-purple-500 bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-center`}
                                     >
-                                        <span className="text-xs font-bold text-purple-400">EXCLUSIF</span>
+                                        <span className={`text-xs font-bold ${theme.accent}`}>EXCLUSIF</span>
                                     </button>
                                 </div>
                             </div>
@@ -342,13 +344,13 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
                                 p.name.toLowerCase().includes(searchTerm.toLowerCase())
                             ).map((palette) => (
                                 <div key={palette.name}>
-                                    <h3 className="text-sm font-bold text-white/60 mb-3">{palette.name}</h3>
-                                    <div className="flex gap-2">
+                                    <h3 className={`text-sm font-bold opacity-60 mb-3 ${theme.text}`}>{palette.name}</h3>
+                                    <div className="flex flex-wrap gap-2">
                                         {palette.colors.map((color, idx) => (
                                             <button
                                                 key={idx}
                                                 onClick={() => handleCopyColor(color)}
-                                                className={`relative w-12 h-12 rounded-xl border-2 transition-all hover:scale-110 ${copiedItem === color ? 'border-green-500' : 'border-white/20 hover:border-white/50'
+                                                className={`relative w-10 sm:w-12 h-10 sm:h-12 rounded-xl border-2 transition-all hover:scale-110 ${copiedItem === color ? 'border-green-500' : `${theme.border} hover:border-white/50`
                                                     }`}
                                                 style={{ backgroundColor: color }}
                                                 title={color}
@@ -367,17 +369,17 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
                     )}
 
                     {activeTab === 'gradients' && (
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {GRADIENTS.filter(g =>
                                 g.name.toLowerCase().includes(searchTerm.toLowerCase())
                             ).map((gradient) => (
                                 <button
                                     key={gradient.name}
                                     onClick={() => handleInsertGradient(gradient.value)}
-                                    className="h-24 rounded-xl border border-white/10 hover:border-purple-500 transition-all flex items-end p-3"
+                                    className={`h-20 sm:h-24 rounded-xl border ${theme.border} hover:border-purple-500 transition-all flex items-end p-3 shadow-lg`}
                                     style={{ background: gradient.value }}
                                 >
-                                    <span className="text-xs font-bold text-white bg-black/40 px-2 py-1 rounded">
+                                    <span className="text-[10px] sm:text-xs font-bold text-white bg-black/40 px-2 py-1 rounded-lg backdrop-blur-md">
                                         {gradient.name}
                                     </span>
                                 </button>
@@ -386,17 +388,17 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
                     )}
 
                     {activeTab === 'icons' && (
-                        <div className="grid grid-cols-6 gap-3">
+                        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                             {ICON_LIBRARY.filter(icon =>
                                 icon.label.toLowerCase().includes(searchTerm.toLowerCase())
                             ).map((item) => (
                                 <button
                                     key={item.name}
                                     onClick={() => handleInsertIcon(item.name)}
-                                    className="flex flex-col items-center gap-2 p-4 rounded-xl border border-white/10 hover:border-purple-500 hover:bg-purple-500/10 transition-all"
+                                    className={`flex flex-col items-center gap-2 p-4 rounded-xl border ${theme.border} hover:border-purple-500 ${theme.input} transition-all`}
                                 >
-                                    <item.icon size={24} className="text-purple-400" />
-                                    <span className="text-[10px] text-white/60">{item.label}</span>
+                                    <item.icon size={24} className={theme.accent} />
+                                    <span className={`text-[10px] opacity-60 ${theme.text}`}>{item.label}</span>
                                 </button>
                             ))}
                         </div>
@@ -404,8 +406,8 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-white/10 bg-black/20">
-                    <p className="text-xs text-white/40 text-center">
+                <div className={`p-4 border-t ${theme.border} ${theme.sidebar} bg-opacity-30`}>
+                    <p className={`text-[10px] sm:text-xs opacity-40 text-center ${theme.text}`}>
                         Cliquez sur un élément pour l'insérer dans l'éditeur
                     </p>
                 </div>

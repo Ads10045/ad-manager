@@ -13,7 +13,7 @@ export const THEMES = {
         input: 'bg-white/5',
         accent: 'text-purple-400',
         accentBg: 'bg-purple-500',
-        card: 'bg-[#1a1a1a]',
+        card: 'bg-[#1a1a1a]', // Plus sombre que base
         hover: 'hover:bg-white/5'
     },
     light: {
@@ -49,9 +49,13 @@ export const ThemeProvider = ({ children }) => {
 
     // Persistance du thème
     useEffect(() => {
-        const savedTheme = localStorage.getItem('ads-ai-app-theme');
-        if (savedTheme && THEMES[savedTheme]) {
-            setCurrentTheme(savedTheme);
+        try {
+            const savedTheme = localStorage.getItem('ads-ai-app-theme');
+            if (savedTheme && THEMES[savedTheme]) {
+                setCurrentTheme(savedTheme);
+            }
+        } catch (e) {
+            console.warn('Theme load failed', e);
         }
     }, []);
 
@@ -62,7 +66,8 @@ export const ThemeProvider = ({ children }) => {
         }
     };
 
-    const theme = THEMES[currentTheme];
+    // Fallback de sécurité : toujours retourner un thème valide
+    const theme = THEMES[currentTheme] || THEMES.dark;
 
     return (
         <ThemeContext.Provider value={{ theme, currentTheme, setTheme, themes: THEMES }}>
@@ -73,4 +78,16 @@ export const ThemeProvider = ({ children }) => {
     );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+    const context = useContext(ThemeContext);
+    if (!context) {
+        // Fallback si utilisé hors du provider (évite écran blanc)
+        return {
+            theme: THEMES.dark,
+            currentTheme: 'dark',
+            setTheme: () => { },
+            themes: THEMES
+        };
+    }
+    return context;
+};
