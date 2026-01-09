@@ -1,12 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMapping } from '../context/MappingContext';
-import { Save, AlertCircle, Eye, Code, RefreshCw, ChevronDown } from 'lucide-react';
+import Editor from '@monaco-editor/react';
+import {
+    Save, AlertCircle, Eye, Code, RefreshCw, ChevronDown,
+    Undo2, Redo2, Copy, Download, Maximize2, Minimize2,
+    Image, Type, Palette, Layout
+} from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 const TEMPLATE_BASE_URL = `${API_URL}/banners/template`;
 
+// Placeholders pour autocomplétion
+const PLACEHOLDERS = [
+    { label: '[name]', detail: 'Nom du produit' },
+    { label: '[price]', detail: 'Prix du produit' },
+    { label: '[imageUrl]', detail: 'URL de l\'image' },
+    { label: '[category]', detail: 'Catégorie' },
+    { label: '[margin]', detail: 'Marge (%)' },
+    { label: '[description]', detail: 'Description' },
+    { label: '[sourceUrl]', detail: 'Lien vers le produit' },
+    { label: '[stock]', detail: 'Stock disponible' },
+    { label: '[supplierPrice]', detail: 'Prix fournisseur' },
+];
+
 /**
- * BannerEditor - Éditeur et créateur de bannières avec prévisualisation
+ * BannerEditor - Éditeur avancé avec Monaco, historique, et prévisualisation
  */
 const BannerEditor = ({ config }) => {
     const {
@@ -26,10 +44,20 @@ const BannerEditor = ({ config }) => {
     const [category, setCategory] = useState('');
     const [size, setSize] = useState('300x250');
     const [saveStatus, setSaveStatus] = useState(null);
-    const [isEditing, setIsEditing] = useState(false); // true if editing existing banner
-    const [activeTab, setActiveTab] = useState('code'); // 'code' or 'preview'
+    const [isEditing, setIsEditing] = useState(false);
+    const [activeTab, setActiveTab] = useState('code');
     const [loading, setLoading] = useState(false);
     const [bannerSelectorOpen, setBannerSelectorOpen] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    // Historique pour Undo/Redo
+    const [history, setHistory] = useState([]);
+    const [historyIndex, setHistoryIndex] = useState(-1);
+    const [isUndoRedo, setIsUndoRedo] = useState(false);
+
+    // Ref pour Monaco Editor
+    const editorRef = useRef(null);
+    const monacoRef = useRef(null);
 
     // Get all templates for selector
     const allTemplates = React.useMemo(() => {
@@ -40,6 +68,21 @@ const BannerEditor = ({ config }) => {
     }, [bannerConfig]);
 
     const categories = config?.categories ? Object.keys(config.categories) : [];
+
+    // Initialiser l'historique
+    useEffect(() => {
+        if (editorCode && !isUndoRedo) {
+            setHistory(prev => {
+                const newHistory = prev.slice(0, historyIndex + 1);
+                newHistory.push(editorCode);
+                // Limiter à 50 entrées
+                if (newHistory.length > 50) newHistory.shift();
+                return newHistory;
+            });
+            setHistoryIndex(prev => Math.min(prev + 1, 49));
+        }
+        setIsUndoRedo(false);
+    }, [editorCode]);
 
     // Load template content when editing existing
     useEffect(() => {
@@ -62,6 +105,9 @@ const BannerEditor = ({ config }) => {
                 setCategory(template.categoryKey || template.category || '');
                 setSize(template.size || '300x250');
                 setIsEditing(true);
+                // Reset history
+                setHistory([html]);
+                setHistoryIndex(0);
             }
         } catch (err) {
             console.error('Error loading template:', err);
@@ -77,6 +123,40 @@ const BannerEditor = ({ config }) => {
         setBannerSelectorOpen(false);
     };
 
+    // Undo
+    const handleUndo = useCallback(() => {
+        if (historyIndex > 0) {
+            setIsUndoRedo(true);
+            setHistoryIndex(prev => prev - 1);
+            setEditorCode(history[historyIndex - 1]);
+        }
+    }, [history, historyIndex, setEditorCode]);
+
+    // Redo
+    const handleRedo = useCallback(() => {
+        if (historyIndex < history.length - 1) {
+            setIsUndoRedo(true);
+            setHistoryIndex(prev => prev + 1);
+            setEditorCode(history[historyIndex + 1]);
+        }
+    }, [history, historyIndex, setEditorCode]);
+
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                handleUndo();
+            }
+            if ((e.metaKey || e.ctrlKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) {
+                e.preventDefault();
+                handleRedo();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleUndo, handleRedo]);
+
     // Render preview HTML with data injection
     const getPreviewHtml = () => {
         if (!editorCode) return '';
@@ -90,6 +170,54 @@ const BannerEditor = ({ config }) => {
         });
 
         return html;
+    };
+
+    // Copy code to clipboard
+    const handleCopyCode = () => {
+        navigator.clipboard.writeText(editorCode);
+        alert('Code copié !');
+    };
+
+    // Download as HTML file
+    const handleDownload = () => {
+        const blob = new Blob([editorCode], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${name || 'banner'}-${size}.html`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    // Insert placeholder at cursor
+    const insertPlaceholder = (placeholder) => {
+        if (editorRef.current) {
+            const editor = editorRef.current;
+            const selection = editor.getSelection();
+            const id = { major: 1, minor: 1 };
+            const op = { identifier: id, range: selection, text: placeholder, forceMoveMarkers: true };
+            editor.executeEdits("insert-placeholder", [op]);
+            editor.focus();
+        }
+    };
+
+    // Monaco Editor mount handler
+    const handleEditorDidMount = (editor, monaco) => {
+        editorRef.current = editor;
+        monacoRef.current = monaco;
+
+        // Configure HTML autocomplete with placeholders
+        monaco.languages.registerCompletionItemProvider('html', {
+            provideCompletionItems: () => ({
+                suggestions: PLACEHOLDERS.map(p => ({
+                    label: p.label,
+                    kind: monaco.languages.CompletionItemKind.Variable,
+                    insertText: p.label,
+                    detail: p.detail,
+                    documentation: `Placeholder: ${p.detail}`
+                }))
+            })
+        });
     };
 
     // Save handler
@@ -116,22 +244,19 @@ const BannerEditor = ({ config }) => {
                 const savedTemplate = await response.json();
                 setSaveStatus('success');
 
-                // Extract fields from HTML code (placeholders like [name], [price], etc.)
+                // Extract fields from HTML code
                 const fieldMatches = editorCode.match(/\[([a-zA-Z0-9_]+)\]/g) || [];
                 const extractedFields = [...new Set(fieldMatches.map(f => f.replace(/[\[\]]/g, '')))];
 
-                // Add categoryKey and fields for proper sidebar display and mapping
                 const templateWithCategory = {
                     ...savedTemplate,
                     categoryKey: category.toLowerCase(),
                     fields: extractedFields.length > 0 ? extractedFields : ['name', 'price', 'imageUrl', 'sourceUrl']
                 };
 
-                // Always update config (for both create and edit)
                 addTemplateToConfig(templateWithCategory);
 
                 alert(`Template ${isEditing ? 'modifié' : 'créé'}: ${savedTemplate.file || name}`);
-                // Close editor and select the template to allow mapping
                 setIsCodeEditorOpen(false);
                 setSelectedTemplate(templateWithCategory);
             } else {
@@ -153,26 +278,30 @@ const BannerEditor = ({ config }) => {
         setSize('300x250');
         setIsEditing(false);
         setSelectedTemplate(null);
+        setHistory([]);
+        setHistoryIndex(-1);
     };
 
     if (!isCodeEditorOpen) return null;
 
     const [previewWidth, previewHeight] = size.split('x').map(Number);
+    const canUndo = historyIndex > 0;
+    const canRedo = historyIndex < history.length - 1;
 
     return (
-        <div className="h-full flex flex-col bg-[#0d0d0d] text-white">
+        <div className={`${isFullscreen ? 'fixed inset-0 z-50' : 'h-full'} flex flex-col bg-[#0d0d0d] text-white`}>
             {/* Top Toolbar */}
             <div className="h-14 border-b border-white/10 flex items-center justify-between px-4 bg-black/40">
                 {/* Left: Template Selector + Fields */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                     {/* Banner Selector Dropdown */}
                     <div className="relative">
                         <button
                             onClick={() => setBannerSelectorOpen(!bannerSelectorOpen)}
                             className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs hover:bg-white/10"
                         >
-                            <span className="text-white/60">Bannière:</span>
-                            <span className="font-bold text-purple-400">
+                            <Layout size={14} />
+                            <span className="font-bold text-purple-400 max-w-[120px] truncate">
                                 {selectedTemplate?.name || 'Nouvelle'}
                             </span>
                             <ChevronDown size={14} className="text-white/40" />
@@ -212,15 +341,15 @@ const BannerEditor = ({ config }) => {
                     <div className="h-6 w-px bg-white/10" />
 
                     <input
-                        className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-sm font-bold w-40"
-                        placeholder="Nom du Template"
+                        className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-sm font-bold w-32"
+                        placeholder="Nom"
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />
                     <input
                         list="category-suggestions"
-                        className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-xs w-28"
-                        placeholder="Catégorie..."
+                        className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-xs w-24"
+                        placeholder="Catégorie"
                         value={category}
                         onChange={e => setCategory(e.target.value)}
                     />
@@ -242,8 +371,28 @@ const BannerEditor = ({ config }) => {
                     </select>
                 </div>
 
-                {/* Right: Tabs + Actions */}
-                <div className="flex items-center gap-4">
+                {/* Right: Actions */}
+                <div className="flex items-center gap-2">
+                    {/* Undo/Redo */}
+                    <div className="flex bg-white/5 rounded-lg">
+                        <button
+                            onClick={handleUndo}
+                            disabled={!canUndo}
+                            className={`p-2 rounded-l-lg transition-all ${canUndo ? 'hover:bg-white/10 text-white' : 'text-white/20 cursor-not-allowed'}`}
+                            title="Annuler (Ctrl+Z)"
+                        >
+                            <Undo2 size={14} />
+                        </button>
+                        <button
+                            onClick={handleRedo}
+                            disabled={!canRedo}
+                            className={`p-2 rounded-r-lg transition-all ${canRedo ? 'hover:bg-white/10 text-white' : 'text-white/20 cursor-not-allowed'}`}
+                            title="Rétablir (Ctrl+Y)"
+                        >
+                            <Redo2 size={14} />
+                        </button>
+                    </div>
+
                     {/* View Tabs */}
                     <div className="flex bg-white/5 rounded-lg p-1">
                         <button
@@ -264,6 +413,29 @@ const BannerEditor = ({ config }) => {
                         </button>
                     </div>
 
+                    {/* Tools */}
+                    <button
+                        onClick={handleCopyCode}
+                        className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
+                        title="Copier le code"
+                    >
+                        <Copy size={14} />
+                    </button>
+                    <button
+                        onClick={handleDownload}
+                        className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
+                        title="Télécharger HTML"
+                    >
+                        <Download size={14} />
+                    </button>
+                    <button
+                        onClick={() => setIsFullscreen(!isFullscreen)}
+                        className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
+                        title={isFullscreen ? "Quitter plein écran" : "Plein écran"}
+                    >
+                        {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+                    </button>
+
                     <div className="h-6 w-px bg-white/10" />
 
                     <button
@@ -282,6 +454,21 @@ const BannerEditor = ({ config }) => {
                 </div>
             </div>
 
+            {/* Placeholders Quick Insert Bar */}
+            <div className="h-10 border-b border-white/5 bg-black/20 flex items-center px-4 gap-2 overflow-x-auto">
+                <span className="text-xs text-white/40 mr-2">Insérer:</span>
+                {PLACEHOLDERS.slice(0, 8).map(p => (
+                    <button
+                        key={p.label}
+                        onClick={() => insertPlaceholder(p.label)}
+                        className="px-2 py-1 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded text-[10px] font-mono text-purple-300 whitespace-nowrap"
+                        title={p.detail}
+                    >
+                        {p.label}
+                    </button>
+                ))}
+            </div>
+
             {/* Main Content */}
             <div className="flex-1 flex overflow-hidden">
                 {loading ? (
@@ -289,19 +476,34 @@ const BannerEditor = ({ config }) => {
                         <RefreshCw className="animate-spin text-purple-500" size={32} />
                     </div>
                 ) : activeTab === 'code' ? (
-                    /* Code Editor */
-                    <div className="flex-1 flex flex-col">
-                        <textarea
-                            className="flex-1 w-full bg-[#1e1e1e] text-white/80 font-mono text-xs p-4 resize-none focus:outline-none"
+                    /* Monaco Code Editor */
+                    <div className="flex-1">
+                        <Editor
+                            height="100%"
+                            defaultLanguage="html"
+                            theme="vs-dark"
                             value={editorCode}
-                            onChange={e => setEditorCode(e.target.value)}
-                            placeholder="<!-- Collez votre code HTML ici -->"
-                            spellCheck="false"
+                            onChange={(value) => setEditorCode(value || '')}
+                            onMount={handleEditorDidMount}
+                            options={{
+                                minimap: { enabled: true },
+                                fontSize: 13,
+                                fontFamily: "'Fira Code', 'Monaco', monospace",
+                                lineNumbers: 'on',
+                                wordWrap: 'on',
+                                automaticLayout: true,
+                                scrollBeyondLastLine: false,
+                                folding: true,
+                                formatOnPaste: true,
+                                formatOnType: true,
+                                tabSize: 2,
+                                bracketPairColorization: { enabled: true },
+                                suggest: {
+                                    showKeywords: true,
+                                    showSnippets: true,
+                                }
+                            }}
                         />
-                        <div className="h-8 bg-purple-500/10 text-purple-300 text-[10px] flex items-center px-4 gap-2">
-                            <AlertCircle size={10} />
-                            Placeholders: [name], [price], [imageUrl], [category], [margin], [sourceUrl]
-                        </div>
                     </div>
                 ) : (
                     /* Preview */
@@ -325,13 +527,20 @@ const BannerEditor = ({ config }) => {
             </div>
 
             {/* Status Bar */}
-            <div className="h-6 bg-black/40 border-t border-white/5 flex items-center justify-between px-4 text-[10px] text-white/40">
-                <span>
-                    {isEditing ? `📝 Édition: ${selectedTemplate?.file}` : '✨ Nouvelle bannière'}
-                </span>
-                <span>
-                    {editorCode.length} caractères • {size}
-                </span>
+            <div className="h-7 bg-black/40 border-t border-white/5 flex items-center justify-between px-4 text-[10px] text-white/40">
+                <div className="flex items-center gap-4">
+                    <span>
+                        {isEditing ? `📝 Édition: ${selectedTemplate?.file}` : '✨ Nouvelle bannière'}
+                    </span>
+                    <span className="text-purple-400">
+                        Historique: {historyIndex + 1}/{history.length}
+                    </span>
+                </div>
+                <div className="flex items-center gap-4">
+                    <span>{editorCode.length} caractères</span>
+                    <span>{size}</span>
+                    <span className="text-green-400">Monaco Editor</span>
+                </div>
             </div>
         </div>
     );
