@@ -163,6 +163,61 @@
             transform: rotate(45deg);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
+        /* Modal Preview */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            transform: scale(0.9);
+            animation: scaleUp 0.3s ease forwards;
+        }
+
+        @keyframes scaleUp {
+            to { transform: scale(1); }
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.3);
+            border: 2px solid rgba(168, 85, 247, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .banner-image-section {
+            cursor: zoom-in;
+        }
     </style>
 </head>
 <body>
@@ -176,7 +231,7 @@
         </div>
         
         <!-- Image Section -->
-        <div class="banner-image-section">
+        <div class="banner-image-section" onclick="window.showPreview('[imageUrl]')">
             <img src="[imageUrl]" alt="[name]" data-field="imageUrl">
         </div>
         
@@ -207,5 +262,26 @@
             <a href="[sourceUrl]" class="banner-cta" target="_blank" data-field="sourceUrl">Découvrir →</a>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal-overlay" onclick="this.style.display='none'">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <img id="modalImg" src="" class="modal-image">
+        </div>
+    </div>
+
+    <script>
+        // Preview Function
+        window.showPreview = function(url) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            if (!url || url.includes('[') || url.includes(']')) {
+                return;
+            }
+            modalImg.src = url;
+            modal.style.display = 'flex';
+        };
+    </script>
 </body>
 </html>

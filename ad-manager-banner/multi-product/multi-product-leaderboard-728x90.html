@@ -117,6 +117,61 @@
         .view-all-cta:hover {
             background: #ffb347;
         }
+        /* Modal Preview */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            transform: scale(0.9);
+            animation: scaleUp 0.3s ease forwards;
+        }
+
+        @keyframes scaleUp {
+            to { transform: scale(1); }
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(255, 153, 0, 0.3);
+            border: 2px solid rgba(255, 153, 0, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .product-image {
+            cursor: zoom-in;
+        }
     </style>
 </head>
 <body>
@@ -127,7 +182,9 @@
         
         <div class="products-container">
             <a href="[product1SourceUrl]" class="product-item" target="_blank" title="[product1Name]">
-                <div class="product-image"><img src="[product1ImageUrl]" alt="Item"></div>
+                <div class="product-image" onclick="event.preventDefault(); event.stopPropagation(); window.showPreview('[product1ImageUrl]')">
+                    <img src="[product1ImageUrl]" alt="Item">
+                </div>
                 <div class="product-info">
                     <div class="product-name" data-truncate="20">[product1Name]</div>
                     <div class="product-price">[product1Price]€</div>
@@ -135,7 +192,9 @@
             </a>
             
             <a href="[product2SourceUrl]" class="product-item" target="_blank" title="[product2Name]">
-                <div class="product-image"><img src="[product2ImageUrl]" alt="Item"></div>
+                <div class="product-image" onclick="event.preventDefault(); event.stopPropagation(); window.showPreview('[product2ImageUrl]')">
+                    <img src="[product2ImageUrl]" alt="Item">
+                </div>
                 <div class="product-info">
                     <div class="product-name" data-truncate="20">[product2Name]</div>
                     <div class="product-price">[product2Price]€</div>
@@ -143,7 +202,9 @@
             </a>
             
             <a href="[product3SourceUrl]" class="product-item" target="_blank" title="[product3Name]">
-                <div class="product-image"><img src="[product3ImageUrl]" alt="Item"></div>
+                <div class="product-image" onclick="event.preventDefault(); event.stopPropagation(); window.showPreview('[product3ImageUrl]')">
+                    <img src="[product3ImageUrl]" alt="Item">
+                </div>
                 <div class="product-info">
                     <div class="product-name" data-truncate="20">[product3Name]</div>
                     <div class="product-price">[product3Price]€</div>
@@ -154,7 +215,16 @@
         <a href="[storeUrl]" class="view-all-cta" target="_blank">Profiter →</a>
     </div>
 
+    <!-- Modal -->
+    <div id="imageModal" class="modal-overlay" onclick="this.style.display='none'">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <img id="modalImg" src="" class="modal-image">
+        </div>
+    </div>
+
     <script>
+        // Troncature
         document.querySelectorAll('[data-truncate]').forEach(el => {
             const limit = parseInt(el.getAttribute('data-truncate'));
             const text = el.innerText.trim();
@@ -162,6 +232,18 @@
                 el.innerText = text.substring(0, limit) + '...';
             }
         });
+
+        // Preview Function
+        window.showPreview = function(url) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            if (!url || url.includes('[') || url.includes(']')) {
+                // Si c'est un placeholder non remplacé, on cherche la source de l'image
+                return;
+            }
+            modalImg.src = url;
+            modal.style.display = 'flex';
+        };
     </script>
 </body>
 </html>
