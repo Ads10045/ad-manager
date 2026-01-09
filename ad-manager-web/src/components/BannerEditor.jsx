@@ -5,7 +5,7 @@ import AssetLibrary from './AssetLibrary';
 import {
     Save, AlertCircle, Eye, Code, RefreshCw, ChevronDown,
     Undo2, Redo2, Copy, Download, Maximize2, Minimize2,
-    Image, Type, Palette, Layout, Sparkles
+    Image, Type, Palette, Layout, Sparkles, Plus, FolderPlus
 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
@@ -512,13 +512,27 @@ const BannerEditor = ({ config }) => {
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />
-                    <input
-                        list="category-suggestions"
-                        className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-xs w-24"
-                        placeholder="Catégorie"
-                        value={category}
-                        onChange={e => setCategory(e.target.value)}
-                    />
+                    <div className="relative flex items-center gap-1">
+                        <input
+                            list="category-suggestions"
+                            className="bg-transparent border-b border-white/20 focus:border-purple-500 outline-none text-xs w-24"
+                            placeholder="Catégorie"
+                            value={category}
+                            onChange={e => setCategory(e.target.value)}
+                        />
+                        <button
+                            onClick={() => {
+                                const newCat = prompt('Nom de la nouvelle catégorie:');
+                                if (newCat && newCat.trim()) {
+                                    setCategory(newCat.trim().toLowerCase());
+                                }
+                            }}
+                            className="p-1 hover:bg-white/10 rounded text-purple-400 hover:text-purple-300"
+                            title="Ajouter une catégorie"
+                        >
+                            <FolderPlus size={14} />
+                        </button>
+                    </div>
                     <datalist id="category-suggestions">
                         {categories.map(cat => <option key={cat} value={cat} />)}
                     </datalist>
