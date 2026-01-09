@@ -26,11 +26,12 @@ const TemplateSidebar = () => {
     } = useMapping();
     const [expandedCategories, setExpandedCategories] = useState(['leaderboard', 'rectangle']);
 
-    const handleSelectTemplate = (template) => {
+    const handleSelectTemplate = (template, categoryKey) => {
         if (selectedTemplate?.id !== template.id) {
             resetMapping();
         }
-        setSelectedTemplate(template);
+        // Add categoryKey to template for editor
+        setSelectedTemplate({ ...template, categoryKey });
         setIsCodeEditorOpen(false); // Switch back to preview
     };
 
@@ -176,7 +177,7 @@ const TemplateSidebar = () => {
                                         return (
                                             <button
                                                 key={template.id}
-                                                onClick={() => handleSelectTemplate(template)}
+                                                onClick={() => handleSelectTemplate(template, categoryKey)}
                                                 className={`w-full text-left p-3 rounded-xl border transition-all group ${isSelected
                                                     ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/50 shadow-lg'
                                                     : 'bg-white/5 border-transparent hover:bg-white/10 hover:border-white/10'

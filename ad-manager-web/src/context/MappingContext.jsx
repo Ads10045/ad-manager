@@ -256,9 +256,30 @@ export const MappingProvider = ({ children }) => {
     // Charger les mappings et config depuis localStorage au démarrage
     useEffect(() => {
         try {
+            // Always use INITIAL_CONFIG as base, then merge any custom templates from localStorage
             const storedConfig = localStorage.getItem(CONFIG_KEY);
             if (storedConfig) {
-                setBannerConfig(JSON.parse(storedConfig));
+                const parsed = JSON.parse(storedConfig);
+                // Merge: Start with INITIAL_CONFIG, add any custom templates from localStorage
+                const mergedConfig = { categories: { ...INITIAL_CONFIG.categories } };
+
+                // Add any custom templates that aren't in INITIAL_CONFIG
+                Object.entries(parsed.categories || {}).forEach(([catKey, cat]) => {
+                    if (!mergedConfig.categories[catKey]) {
+                        // New category from localStorage
+                        mergedConfig.categories[catKey] = cat;
+                    } else {
+                        // Existing category - add custom templates
+                        const existingIds = mergedConfig.categories[catKey].templates.map(t => t.id);
+                        const customTemplates = cat.templates.filter(t => !existingIds.includes(t.id));
+                        mergedConfig.categories[catKey].templates = [
+                            ...mergedConfig.categories[catKey].templates,
+                            ...customTemplates
+                        ];
+                    }
+                });
+
+                setBannerConfig(mergedConfig);
             } else {
                 setBannerConfig(INITIAL_CONFIG);
             }
@@ -272,6 +293,7 @@ export const MappingProvider = ({ children }) => {
             }
         } catch (e) {
             console.warn('[Ads-AI] Erreur chargement localStorage:', e);
+            setBannerConfig(INITIAL_CONFIG);
         }
     }, []);
 
