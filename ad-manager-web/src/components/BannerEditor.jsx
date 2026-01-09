@@ -169,6 +169,40 @@ const getDefaultTemplate = (size) => {
 </html>`;
 };
 
+// Thèmes prédéfinis pour changer le style rapidement
+const THEMES = [
+    {
+        id: 'modern-purple',
+        name: 'Modern Purple',
+        css: `background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff;`
+    },
+    {
+        id: 'dark-neon',
+        name: 'Dark Neon',
+        css: `background: #1a1a1a; color: #00ff88; border: 2px solid #00ff88;`
+    },
+    {
+        id: 'minimal-white',
+        name: 'Minimal White',
+        css: `background: #ffffff; color: #333333; border: 1px solid #eeeeee;`
+    },
+    {
+        id: 'luxury-gold',
+        name: 'Luxury Gold',
+        css: `background: #0d0d0d; color: #d4af37; border: 1px solid #d4af37;`
+    },
+    {
+        id: 'ocean-blue',
+        name: 'Ocean Blue',
+        css: `background: linear-gradient(to right, #00c6ff, #0072ff); color: #ffffff;`
+    },
+    {
+        id: 'sunset-orange',
+        name: 'Sunset Orange',
+        css: `background: linear-gradient(to right, #ff512f, #dd2476); color: #ffffff;`
+    }
+];
+
 /**
  * BannerEditor - Éditeur avancé avec Monaco, historique, et prévisualisation
  */
@@ -196,6 +230,7 @@ const BannerEditor = ({ config }) => {
     const [bannerSelectorOpen, setBannerSelectorOpen] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isAssetLibraryOpen, setIsAssetLibraryOpen] = useState(false);
+    const [themeSelectorOpen, setThemeSelectorOpen] = useState(false);
 
     // Historique pour Undo/Redo
     const [history, setHistory] = useState([]);
@@ -436,6 +471,32 @@ const BannerEditor = ({ config }) => {
         }
     };
 
+    // Appliquer un thème CSS
+    const applyTheme = (theme) => {
+        let newCode = editorCode;
+        // Remplacer ou injecter les styles de .banner-container
+        if (newCode.includes('.banner-container {')) {
+            // Remplacer background et color
+            newCode = newCode.replace(
+                /\.banner-container\s*{([^}]+)}/,
+                (match) => {
+                    // Garder width/height/font/display etc, remplacer background/color
+                    // C'est une approche simplifiée, idéalement on ferait un parsing CSS plus robuste
+                    return match.replace(/background:[^;]+;/g, '').replace(/color:[^;]+;/g, '')
+                        .replace('{', `{\n            ${theme.css}\n            `);
+                }
+            );
+        } else {
+            // Ajouter styles si pas trouvé (peu probable avec le template par défaut)
+            newCode = newCode.replace('</style>', `
+        .banner-container { ${theme.css} }
+    </style>`);
+        }
+
+        setEditorCode(newCode);
+        setThemeSelectorOpen(false);
+    };
+
     // Reset for new template with default code
     const handleNewTemplate = (newSize = '300x250') => {
         const defaultCode = getDefaultTemplate(newSize);
@@ -561,6 +622,39 @@ const BannerEditor = ({ config }) => {
                         <option value="320x50">320x50</option>
                         <option value="320x100">320x100</option>
                     </select>
+
+                    {/* Theme Selector */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setThemeSelectorOpen(!themeSelectorOpen)}
+                            className="bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded px-2 py-1 flex items-center gap-1.5"
+                            title="Changer de thème"
+                        >
+                            <Palette size={12} className="text-purple-400" />
+                            <span className="text-xs font-bold text-purple-300">Thème</span>
+                        </button>
+
+                        {themeSelectorOpen && (
+                            <div className="absolute top-full left-0 mt-1 w-48 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl z-50 p-2">
+                                <div className="text-[10px] font-bold text-white/40 uppercase mb-2 px-2">Choisir un style</div>
+                                <div className="space-y-1">
+                                    {THEMES.map(theme => (
+                                        <button
+                                            key={theme.id}
+                                            onClick={() => applyTheme(theme)}
+                                            className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-xs text-white/80 hover:text-white flex items-center gap-2"
+                                        >
+                                            <div
+                                                className="w-3 h-3 rounded-full border border-white/20"
+                                                style={{ background: theme.css.match(/background:([^;]+)/)[1] }}
+                                            />
+                                            {theme.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Right: Actions */}

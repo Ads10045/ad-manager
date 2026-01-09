@@ -175,7 +175,7 @@ const AssetLibrary = ({ isOpen, onClose, onInsert }) => {
 
     const tabs = [
         { id: 'images', label: 'Images', icon: Image },
-        { id: 'sites', label: 'Sites', icon: ShoppingCart },
+        { id: 'sites', label: 'Boutiques', icon: ShoppingCart },
         { id: 'colors', label: 'Couleurs', icon: Palette },
         { id: 'gradients', label: 'Dégradés', icon: Sparkles },
         { id: 'icons', label: 'Icônes', icon: Type },
