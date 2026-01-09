@@ -47,9 +47,7 @@ const TemplateSidebar = () => {
 
     const toggleCategory = (categoryKey) => {
         setExpandedCategories(prev =>
-            prev.includes(categoryKey)
-                ? prev.filter(c => c !== categoryKey)
-                : [...prev, categoryKey]
+            prev.includes(categoryKey) ? [] : [categoryKey]
         );
     };
 
@@ -96,6 +94,16 @@ const TemplateSidebar = () => {
         fashion: 'bg-gradient-to-r from-pink-500/10 to-rose-500/10 border-pink-500/20',
     };
 
+    const categoryListGradients = {
+        leaderboard: 'bg-blue-500/5 border-blue-500/10',
+        rectangle: 'bg-emerald-500/5 border-emerald-500/10',
+        skyscraper: 'bg-orange-500/5 border-orange-500/10',
+        halfpage: 'bg-rose-500/5 border-rose-500/10',
+        mobile: 'bg-indigo-500/5 border-indigo-500/10',
+        'multi-product': 'bg-purple-500/5 border-purple-500/10',
+        fashion: 'bg-pink-500/5 border-pink-500/10',
+    };
+
     return (
         <div className={`h-full flex flex-col ${theme.sidebar} border-r ${theme.border}`}>
             {/* Header */}
@@ -136,6 +144,7 @@ const TemplateSidebar = () => {
                     const icons = { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 };
                     const Icon = icons[category.icon] || Layout;
                     const gradientClass = categoryGradients[categoryKey] || 'bg-gradient-to-r from-gray-500/10 to-slate-500/10 border-gray-500/20';
+                    const listGradientClass = categoryListGradients[categoryKey] || 'bg-gray-500/5 border-gray-500/10';
 
                     const selectedGradients = {
                         leaderboard: 'from-blue-500/20 to-cyan-500/20 border-blue-500/50',
@@ -173,7 +182,7 @@ const TemplateSidebar = () => {
 
                             {/* Templates List */}
                             {isExpanded && (
-                                <div className="mt-1 space-y-1 pl-4 animate-fade-in">
+                                <div className={`mt-1 py-1 space-y-1 pl-2 pr-1 animate-fade-in rounded-xl border ${listGradientClass}`}>
                                     {category.templates.map((template) => {
                                         const isSelected = selectedTemplate?.id === template.id;
                                         return (
@@ -182,7 +191,7 @@ const TemplateSidebar = () => {
                                                 onClick={() => handleSelectTemplate(template, categoryKey)}
                                                 className={`w-full text-left p-3 rounded-xl border transition-all group ${isSelected
                                                     ? `bg-gradient-to-r ${selectedClass} shadow-lg`
-                                                    : `${theme.input} border-transparent ${theme.hover}`
+                                                    : `bg-transparent border-transparent ${theme.hover}`
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between mb-1">
