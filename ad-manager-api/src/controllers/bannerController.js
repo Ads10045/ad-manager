@@ -272,6 +272,43 @@ const deleteBannerTemplate = async (req, res) => {
     }
 };
 
+/**
+ * @desc Update an existing banner template file
+ */
+const updateBannerTemplate = async (req, res) => {
+    let { id } = req.params;
+    // Handle wildcard capture if passed via route param
+    if (req.params[0]) id = req.params[0];
+    
+    const { name, category, size, htmlContent } = req.body;
+
+    try {
+        const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+        
+        // Prevent directory traversal
+        const safeId = id.replace(/\.\./g, '');
+        const filePath = path.join(bannersDir, safeId);
+
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: 'Template file not found' });
+        }
+
+        // Write updated content
+        fs.writeFileSync(filePath, htmlContent, 'utf8');
+
+        res.json({
+            id: safeId,
+            name: name || safeId.split('/').pop().replace('.html', ''),
+            category: category || safeId.split('/')[0],
+            file: safeId,
+            size: size || '300x250',
+            message: 'Template updated successfully'
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = { 
   getBanners, 
   getBannerById, 
@@ -281,5 +318,6 @@ module.exports = {
   getExpiredBanners, 
   createBanner,
   createBannerTemplate,
+  updateBannerTemplate,
   deleteBannerTemplate
 };

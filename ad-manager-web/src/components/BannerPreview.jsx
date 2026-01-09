@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMapping } from '../context/MappingContext';
+import { Edit3 } from 'lucide-react';
 
 // URL de base pour les templates (local ou GitHub)
 const TEMPLATE_BASE_URL = 'http://localhost:3001/api/banners/template';
@@ -14,7 +15,8 @@ const BannerPreview = () => {
         mapping,
         previewData,
         editMode,
-        setActiveZone
+        setActiveZone,
+        setIsCodeEditorOpen
     } = useMapping();
 
     const [bannerHtml, setBannerHtml] = useState(null);
@@ -144,11 +146,20 @@ const BannerPreview = () => {
                         {selectedTemplate.size} • {selectedTemplate.name}
                     </p>
                 </div>
-                {editMode && (
-                    <div className="px-3 py-1 bg-purple-500/20 border border-purple-500/50 rounded-full text-purple-300 text-xs font-bold animate-pulse">
-                        Mode Édition Actif
-                    </div>
-                )}
+                <div className="flex items-center gap-3">
+                    {editMode && (
+                        <div className="px-3 py-1 bg-purple-500/20 border border-purple-500/50 rounded-full text-purple-300 text-xs font-bold animate-pulse">
+                            Mode Édition Actif
+                        </div>
+                    )}
+                    <button
+                        onClick={() => setIsCodeEditorOpen(true)}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 rounded-lg text-xs font-bold text-white"
+                    >
+                        <Edit3 size={14} />
+                        Éditer
+                    </button>
+                </div>
             </div>
 
             {/* Preview Area */}

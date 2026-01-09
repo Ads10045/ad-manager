@@ -35,6 +35,10 @@ router.get('/template/*', (req, res) => {
 
 
 router.post('/template', bannerController.createBannerTemplate);
+router.put('/template/*', (req, res) => {
+    req.params.id = req.params[0];
+    return bannerController.updateBannerTemplate(req, res);
+});
 router.delete('/template/*', (req, res) => {
     req.params.id = req.params[0];
     return bannerController.deleteBannerTemplate(req, res);
