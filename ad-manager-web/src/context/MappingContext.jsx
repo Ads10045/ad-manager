@@ -45,6 +45,14 @@ const INITIAL_CONFIG = {
                     size: "970x90",
                     description: "Format large avec branding et statistiques",
                     fields: ["imageUrl", "name", "category", "price", "supplierPrice", "stock", "margin", "sourceUrl"]
+                },
+                {
+                    id: "minimal-white-728x90",
+                    name: "Minimal White",
+                    file: "leaderboard/minimal-white-728x90.html",
+                    size: "728x90",
+                    description: "Design épuré blanc et moderne",
+                    fields: ["imageUrl", "name", "category", "price", "margin", "sourceUrl"]
                 }
             ]
         },
@@ -60,6 +68,30 @@ const INITIAL_CONFIG = {
                     size: "300x250",
                     description: "Design promo avec focus sur le prix",
                     fields: ["imageUrl", "name", "description", "price", "supplierPrice", "sourceUrl"]
+                },
+                {
+                    id: "neon-glow-300x250",
+                    name: "Neon Glow",
+                    file: "rectangle/neon-glow-300x250.html",
+                    size: "300x250",
+                    description: "Design néon animé avec bordure RGB",
+                    fields: ["imageUrl", "name", "price", "margin", "sourceUrl"]
+                },
+                {
+                    id: "glassmorphism-300x250",
+                    name: "Glassmorphism",
+                    file: "rectangle/glassmorphism-300x250.html",
+                    size: "300x250",
+                    description: "Effet verre flou moderne",
+                    fields: ["imageUrl", "name", "category", "price", "margin", "sourceUrl"]
+                },
+                {
+                    id: "tech-dark-300x250",
+                    name: "Tech Dark",
+                    file: "rectangle/tech-dark-300x250.html",
+                    size: "300x250",
+                    description: "Thème développeur style GitHub",
+                    fields: ["imageUrl", "name", "category", "price", "margin", "sourceUrl"]
                 }
             ]
         },
@@ -90,6 +122,14 @@ const INITIAL_CONFIG = {
                     size: "300x600",
                     description: "Design premium avec stats",
                     fields: ["imageUrl", "name", "description", "category", "stock", "margin", "price", "sourceUrl"]
+                },
+                {
+                    id: "luxury-gold-300x600",
+                    name: "Luxury Gold",
+                    file: "halfpage/luxury-gold-300x600.html",
+                    size: "300x600",
+                    description: "Style luxe avec accents dorés",
+                    fields: ["imageUrl", "name", "category", "price", "margin", "sourceUrl"]
                 }
             ]
         },
@@ -113,6 +153,14 @@ const INITIAL_CONFIG = {
                     size: "320x50",
                     description: "Format ultra-compact",
                     fields: ["imageUrl", "name", "price", "sourceUrl"]
+                },
+                {
+                    id: "gradient-wave-320x100",
+                    name: "Gradient Wave",
+                    file: "mobile/gradient-wave-320x100.html",
+                    size: "320x100",
+                    description: "Dégradé coloré dynamique",
+                    fields: ["imageUrl", "name", "price", "margin", "sourceUrl"]
                 }
             ]
         },
