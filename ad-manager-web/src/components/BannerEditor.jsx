@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMapping } from '../context/MappingContext';
 import Editor from '@monaco-editor/react';
+import AssetLibrary from './AssetLibrary';
 import {
     Save, AlertCircle, Eye, Code, RefreshCw, ChevronDown,
     Undo2, Redo2, Copy, Download, Maximize2, Minimize2,
-    Image, Type, Palette, Layout
+    Image, Type, Palette, Layout, Sparkles
 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
@@ -49,6 +50,7 @@ const BannerEditor = ({ config }) => {
     const [loading, setLoading] = useState(false);
     const [bannerSelectorOpen, setBannerSelectorOpen] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isAssetLibraryOpen, setIsAssetLibraryOpen] = useState(false);
 
     // Historique pour Undo/Redo
     const [history, setHistory] = useState([]);
@@ -199,6 +201,19 @@ const BannerEditor = ({ config }) => {
             editor.executeEdits("insert-placeholder", [op]);
             editor.focus();
         }
+    };
+
+    // Insert asset from library
+    const insertAsset = (code) => {
+        if (editorRef.current) {
+            const editor = editorRef.current;
+            const selection = editor.getSelection();
+            const id = { major: 1, minor: 1 };
+            const op = { identifier: id, range: selection, text: code, forceMoveMarkers: true };
+            editor.executeEdits("insert-asset", [op]);
+            editor.focus();
+        }
+        setIsAssetLibraryOpen(false);
     };
 
     // Monaco Editor mount handler
@@ -415,6 +430,13 @@ const BannerEditor = ({ config }) => {
 
                     {/* Tools */}
                     <button
+                        onClick={() => setIsAssetLibraryOpen(true)}
+                        className="p-2 hover:bg-white/10 rounded-lg text-purple-400 hover:text-purple-300"
+                        title="Bibliothèque d'assets"
+                    >
+                        <Sparkles size={14} />
+                    </button>
+                    <button
                         onClick={handleCopyCode}
                         className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white"
                         title="Copier le code"
@@ -542,6 +564,13 @@ const BannerEditor = ({ config }) => {
                     <span className="text-green-400">Monaco Editor</span>
                 </div>
             </div>
+
+            {/* Asset Library Modal */}
+            <AssetLibrary
+                isOpen={isAssetLibraryOpen}
+                onClose={() => setIsAssetLibraryOpen(false)}
+                onInsert={insertAsset}
+            />
         </div>
     );
 };
