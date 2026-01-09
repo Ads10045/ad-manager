@@ -109,8 +109,15 @@
             color: #ffffff;
             font-weight: 500;
             font-size: 12px;
-            white-space: nowrap;
+            line-height: 1.2;
             overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            white-space: normal;
+            text-overflow: ellipsis;
+            max-height: 30px;
             margin-bottom: 4px;
         }
         
@@ -226,7 +233,7 @@
                     <img src="[product1ImageUrl]" alt="Item">
                 </div>
                 <div class="product-info">
-                    <div class="product-name" data-truncate="20">[product1Name]</div>
+                    <div class="product-name" data-truncate="50">[product1Name]</div>
                     <div class="product-price">[product1Price]€</div>
                 </div>
                 <div class="product-arrow">→</div>
@@ -237,7 +244,7 @@
                     <img src="[product2ImageUrl]" alt="Item">
                 </div>
                 <div class="product-info">
-                    <div class="product-name" data-truncate="20">[product2Name]</div>
+                    <div class="product-name" data-truncate="50">[product2Name]</div>
                     <div class="product-price">[product2Price]€</div>
                 </div>
                 <div class="product-arrow">→</div>
@@ -248,7 +255,7 @@
                     <img src="[product3ImageUrl]" alt="Item">
                 </div>
                 <div class="product-info">
-                    <div class="product-name" data-truncate="20">[product3Name]</div>
+                    <div class="product-name" data-truncate="50">[product3Name]</div>
                     <div class="product-price">[product3Price]€</div>
                 </div>
                 <div class="product-arrow">→</div>
@@ -259,7 +266,7 @@
                     <img src="[product4ImageUrl]" alt="Item">
                 </div>
                 <div class="product-info">
-                    <div class="product-name" data-truncate="20">[product4Name]</div>
+                    <div class="product-name" data-truncate="50">[product4Name]</div>
                     <div class="product-price">[product4Price]€</div>
                 </div>
                 <div class="product-arrow">→</div>
