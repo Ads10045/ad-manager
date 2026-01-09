@@ -169,7 +169,14 @@ app.get('/api/products/random-promo', async (req, res) => {
     }
 
     const randomIndex = Math.floor(Math.random() * products.length);
-    res.json(products[randomIndex]);
+    const product = products[randomIndex];
+    
+    // Round margin to integer
+    if (product.margin !== undefined) {
+      product.margin = Math.round(product.margin);
+    }
+    
+    res.json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

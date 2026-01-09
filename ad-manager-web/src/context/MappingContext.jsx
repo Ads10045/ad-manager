@@ -244,7 +244,7 @@ export const MappingProvider = ({ children }) => {
         supplier: 'Amazon',
         price: 79.99,
         supplierPrice: 45.00,
-        margin: 43.7,
+        margin: 44,
         stock: 150,
         imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
         images: [],
