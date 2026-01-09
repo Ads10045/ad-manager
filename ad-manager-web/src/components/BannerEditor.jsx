@@ -116,10 +116,15 @@ const BannerEditor = ({ config }) => {
                 const savedTemplate = await response.json();
                 setSaveStatus('success');
 
-                // Add categoryKey for proper sidebar display
+                // Extract fields from HTML code (placeholders like [name], [price], etc.)
+                const fieldMatches = editorCode.match(/\[([a-zA-Z0-9_]+)\]/g) || [];
+                const extractedFields = [...new Set(fieldMatches.map(f => f.replace(/[\[\]]/g, '')))];
+
+                // Add categoryKey and fields for proper sidebar display and mapping
                 const templateWithCategory = {
                     ...savedTemplate,
-                    categoryKey: category.toLowerCase()
+                    categoryKey: category.toLowerCase(),
+                    fields: extractedFields.length > 0 ? extractedFields : ['name', 'price', 'imageUrl', 'sourceUrl']
                 };
 
                 // Always update config (for both create and edit)
