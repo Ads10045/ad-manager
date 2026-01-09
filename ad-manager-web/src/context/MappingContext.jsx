@@ -465,9 +465,6 @@ export const MappingProvider = ({ children }) => {
             // Format category key (lowercase)
             const catKey = category.toLowerCase();
 
-            // Map common icons back to names if needed, or default
-            // In INITIAL_CONFIG we used string names for icons to avoid serializing components
-
             if (!newConfig.categories[catKey]) {
                 newConfig.categories[catKey] = {
                     name: category.charAt(0).toUpperCase() + category.slice(1),
@@ -475,7 +472,19 @@ export const MappingProvider = ({ children }) => {
                     templates: []
                 };
             }
-            newConfig.categories[catKey].templates.push(newTemplate);
+
+            // Check if template already exists (avoid duplicates)
+            const existingIndex = newConfig.categories[catKey].templates.findIndex(
+                t => t.id === newTemplate.id || t.file === newTemplate.file
+            );
+
+            if (existingIndex >= 0) {
+                // Update existing template
+                newConfig.categories[catKey].templates[existingIndex] = newTemplate;
+            } else {
+                // Add new template
+                newConfig.categories[catKey].templates.push(newTemplate);
+            }
 
             // Save to LocalStorage
             localStorage.setItem(CONFIG_KEY, JSON.stringify(newConfig));

@@ -116,13 +116,19 @@ const BannerEditor = ({ config }) => {
                 const savedTemplate = await response.json();
                 setSaveStatus('success');
 
-                if (!isEditing) {
-                    addTemplateToConfig(savedTemplate);
-                }
+                // Add categoryKey for proper sidebar display
+                const templateWithCategory = {
+                    ...savedTemplate,
+                    categoryKey: category.toLowerCase()
+                };
+
+                // Always update config (for both create and edit)
+                addTemplateToConfig(templateWithCategory);
 
                 alert(`Template ${isEditing ? 'modifié' : 'créé'}: ${savedTemplate.file || name}`);
+                // Close editor and select the template to allow mapping
                 setIsCodeEditorOpen(false);
-                setSelectedTemplate(savedTemplate);
+                setSelectedTemplate(templateWithCategory);
             } else {
                 setSaveStatus('error');
                 alert("Erreur lors de la sauvegarde");
