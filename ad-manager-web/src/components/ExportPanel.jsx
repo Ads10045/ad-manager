@@ -79,9 +79,30 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
         const $container = $('#ads-ai-banner');
         const productId = $container.data('product-id');
         
+        // Vérifier si l'ID est le placeholder
+        if (productId === 'YOUR_PRODUCT_ID_HERE') {
+            $container.css({
+                'display': 'flex',
+                'flex-direction': 'column',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'background': '#1a1a1a',
+                'color': '#fff',
+                'padding': '10px',
+                'text-align': 'center',
+                'border': '1px dashed #ff9900',
+                'font-size': '12px'
+            }).html(
+                '<div style="font-weight:bold;color:#ff9900;margin-bottom:5px;">⚠️ Configuration Requise</div>' +
+                'Veuillez remplacer <b>YOUR_PRODUCT_ID_HERE</b> par un ID produit réel ' +
+                'ou charger la bannière en <b>mode aléatoire</b>.'
+            );
+            return;
+        }
+
         // Déterminer l'URL pour les données
         let dataUrl = CONFIG.apiUrl + '/api/products/' + productId;
-        if (CONFIG.isMulti && (productId === 'random-promo' || !productId || productId === 'YOUR_PRODUCT_ID_HERE')) {
+        if (CONFIG.isMulti && (productId === 'random-promo' || !productId)) {
             dataUrl = CONFIG.apiUrl + '/api/products/random?limit=' + CONFIG.productCount;
         } else if (productId === 'random-promo') {
             dataUrl = CONFIG.apiUrl + '/api/products/random-promo';
@@ -190,10 +211,16 @@ const ExportPanel = () => {
     const [apiUrl, setApiUrl] = useState('https://ad-manager-api.vercel.app');
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showProductPicker, setShowProductPicker] = useState(false);
+    const [exportError, setExportError] = useState(null);
 
     const script = generateIntegrationScript(selectedTemplate, mapping, apiUrl, selectedProduct?.id);
 
     const handleCopy = async () => {
+        if (!selectedProduct) {
+            setExportError('Sélectionnez un produit pour continuer');
+            setTimeout(() => setExportError(null), 3000);
+            return;
+        }
         try {
             await navigator.clipboard.writeText(script);
             setCopied(true);
@@ -212,6 +239,11 @@ const ExportPanel = () => {
     };
 
     const handleDownload = () => {
+        if (!selectedProduct) {
+            setExportError('Sélectionnez un produit pour continuer');
+            setTimeout(() => setExportError(null), 3000);
+            return;
+        }
         const blob = new Blob([script], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -317,6 +349,11 @@ const ExportPanel = () => {
 
             {/* Actions */}
             <div className={`p-4 border-t ${theme.border} space-y-2`}>
+                {exportError && (
+                    <div className="bg-red-500/10 border border-red-400/20 text-red-400 text-[10px] py-2 px-3 rounded-lg text-center animate-pulse">
+                        ⚠️ {exportError}
+                    </div>
+                )}
                 <div className="grid grid-cols-2 gap-2">
                     <button
                         onClick={handleCopy}
