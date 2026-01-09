@@ -16,7 +16,7 @@ const TemplateSidebar = () => {
         deleteTemplateFromConfig
     } = useMapping();
     const { theme } = useTheme();
-    const [expandedCategories, setExpandedCategories] = useState(['leaderboard', 'rectangle']);
+    const [expandedCategories, setExpandedCategories] = useState([]);
 
     const handleSelectTemplate = (template, categoryKey) => {
         if (selectedTemplate?.id !== template.id) {
