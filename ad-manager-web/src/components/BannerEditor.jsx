@@ -24,6 +24,139 @@ const PLACEHOLDERS = [
     { label: '[supplierPrice]', detail: 'Prix fournisseur' },
 ];
 
+// Templates par défaut pour chaque taille
+const getDefaultTemplate = (size) => {
+    const [width, height] = size.split('x');
+
+    return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=${width}, height=${height}">
+    <title>Banner ${size}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .banner-container {
+            width: ${width}px;
+            height: ${height}px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            position: relative;
+        }
+        
+        .product-image {
+            width: ${parseInt(height) - 20}px;
+            height: ${parseInt(height) - 20}px;
+            min-width: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .content {
+            flex: 1;
+            padding: 0 16px;
+            color: #ffffff;
+        }
+        
+        .product-name {
+            font-size: ${parseInt(height) > 100 ? '16px' : '12px'};
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-category {
+            font-size: ${parseInt(height) > 100 ? '12px' : '10px'};
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .price {
+            font-size: ${parseInt(height) > 100 ? '24px' : '18px'};
+            font-weight: 900;
+        }
+        
+        .margin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        
+        .cta-button {
+            background: #ffffff;
+            color: #764ba2;
+            padding: ${parseInt(height) > 100 ? '12px 24px' : '8px 16px'};
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: ${parseInt(height) > 100 ? '14px' : '11px'};
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <img src="[imageUrl]" alt="[name]" class="product-image" data-field="imageUrl">
+        <div class="content">
+            <div class="product-name" data-field="name">[name]</div>
+            <div class="product-category" data-field="category">[category]</div>
+            <div class="price-row">
+                <span class="price" data-field="price">[price]€</span>
+                <span class="margin-badge" data-field="margin">+[margin]%</span>
+            </div>
+        </div>
+        <a href="[sourceUrl]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter</a>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Arrondir la marge
+            var marginEl = $('.margin-badge');
+            if (marginEl.length) {
+                var text = marginEl.text();
+                var match = text.match(/([\\d.]+)/);
+                if (match) {
+                    marginEl.text('+' + Math.round(parseFloat(match[1])) + '%');
+                }
+            }
+            
+            // Animation au survol
+            $('.banner-container').hover(
+                function() { $(this).css('transform', 'scale(1.02)'); },
+                function() { $(this).css('transform', 'scale(1)'); }
+            );
+        });
+    </script>
+</body>
+</html>`;
+};
+
 /**
  * BannerEditor - Éditeur avancé avec Monaco, historique, et prévisualisation
  */
@@ -90,6 +223,12 @@ const BannerEditor = ({ config }) => {
     useEffect(() => {
         if (selectedTemplate && isCodeEditorOpen) {
             loadTemplateContent(selectedTemplate);
+        } else if (!selectedTemplate && isCodeEditorOpen && !editorCode) {
+            // Load default template for new banner
+            const defaultCode = getDefaultTemplate(size);
+            setEditorCode(defaultCode);
+            setHistory([defaultCode]);
+            setHistoryIndex(0);
         }
     }, [selectedTemplate?.file, isCodeEditorOpen]);
 
@@ -285,16 +424,28 @@ const BannerEditor = ({ config }) => {
         }
     };
 
-    // Reset for new template
-    const handleNewTemplate = () => {
-        setEditorCode('');
+    // Reset for new template with default code
+    const handleNewTemplate = (newSize = '300x250') => {
+        const defaultCode = getDefaultTemplate(newSize);
+        setEditorCode(defaultCode);
         setName('');
         setCategory('');
-        setSize('300x250');
+        setSize(newSize);
         setIsEditing(false);
         setSelectedTemplate(null);
-        setHistory([]);
-        setHistoryIndex(-1);
+        setHistory([defaultCode]);
+        setHistoryIndex(0);
+    };
+
+    // Update template when size changes (for new templates only)
+    const handleSizeChange = (newSize) => {
+        setSize(newSize);
+        if (!isEditing) {
+            const defaultCode = getDefaultTemplate(newSize);
+            setEditorCode(defaultCode);
+            setHistory([defaultCode]);
+            setHistoryIndex(0);
+        }
     };
 
     if (!isCodeEditorOpen) return null;
@@ -373,7 +524,7 @@ const BannerEditor = ({ config }) => {
                     </datalist>
                     <select
                         value={size}
-                        onChange={e => setSize(e.target.value)}
+                        onChange={e => handleSizeChange(e.target.value)}
                         className="bg-white/5 border border-white/10 rounded text-xs px-2 py-1"
                     >
                         <option value="300x250">300x250</option>
