@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=320, height=50">
+    <title>User Mobile 320x50</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 320px;
+            height: 50px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #2d3748;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            overflow: hidden;
+        }
+        .left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: #4fd1c5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .info {
+            display: flex;
+            flex-direction: column;
+        }
+        .email {
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .role {
+            font-size: 8px;
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+        .btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 9px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="left">
+        <div class="avatar">👤</div>
+        <div class="info">
+            <span class="email">[email]</span>
+            <span class="role">[role]</span>
+        </div>
+    </div>
+    <a href="#" class="btn">Gérer</a>
+</body>
+</html>

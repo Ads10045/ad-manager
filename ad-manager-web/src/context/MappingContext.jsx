@@ -229,6 +229,53 @@ const INITIAL_CONFIG = {
                 }
             ]
         },
+        "dynamic-data": {
+            name: "Données Dynamiques",
+            icon: "Database",
+            description: "Exemples pour tables Users, Orders...",
+            templates: [
+                {
+                    id: "user-card-300x250",
+                    name: "User Profile Card",
+                    file: "dynamic/user-card-300x250.html",
+                    size: "300x250",
+                    description: "Carte profil utilisateur (id, email, role)",
+                    fields: ["id", "email", "role", "createdAt"]
+                },
+                {
+                    id: "user-row-728x90",
+                    name: "User Row Compact",
+                    file: "dynamic/user-row-728x90.html",
+                    size: "728x90",
+                    description: "Ligne utilisateur compacte",
+                    fields: ["id", "email", "role"]
+                },
+                {
+                    id: "user-sidebar-160x600",
+                    name: "User Sidebar Info",
+                    file: "dynamic/user-sidebar-160x600.html",
+                    size: "160x600",
+                    description: "Colonne info utilisateur détaillée",
+                    fields: ["id", "email", "role", "createdAt", "updatedAt"]
+                },
+                {
+                    id: "user-panel-300x600",
+                    name: "User Full Panel",
+                    file: "dynamic/user-panel-300x600.html",
+                    size: "300x600",
+                    description: "Grand panneau détail utilisateur",
+                    fields: ["id", "email", "role", "createdAt", "password"]
+                },
+                {
+                    id: "user-mobile-320x50",
+                    name: "User Mobile Sticky",
+                    file: "dynamic/user-mobile-320x50.html",
+                    size: "320x50",
+                    description: "Barre flottante mobile utilisateur",
+                    fields: ["email", "role"]
+                }
+            ]
+        },
         fashion: {
             name: "Mode & Fashion",
             icon: "Sparkles",

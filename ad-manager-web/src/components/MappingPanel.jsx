@@ -36,15 +36,15 @@ const MappingPanel = () => {
         );
     }
 
+    // Colonnes à utiliser (standard ou dynamique)
+    const activeColumns = mappingMode === 'dynamic' ? dynamicColumns : DB_COLUMNS;
+
     // Récupérer les zones depuis les fields du template
     const zones = (selectedTemplate.fields || []).map(field => ({
         name: field,
-        label: DB_COLUMNS.find(c => c.key === field)?.label || field,
-        type: DB_COLUMNS.find(c => c.key === field)?.type || 'text'
+        label: activeColumns.find(c => c.key === field)?.label || field,
+        type: activeColumns.find(c => c.key === field)?.type || 'text'
     }));
-
-    // Colonnes à utiliser (standard ou dynamique)
-    const activeColumns = mappingMode === 'dynamic' ? dynamicColumns : DB_COLUMNS;
 
     // Grouper les colonnes par type
     const groupedColumns = activeColumns.reduce((acc, col) => {
@@ -139,7 +139,7 @@ const MappingPanel = () => {
                 {zones.map((zone) => {
                     const isActive = activeZone === zone.name;
                     const mappedColumn = mapping[zone.name];
-                    const columnInfo = DB_COLUMNS.find(c => c.key === mappedColumn);
+                    const columnInfo = activeColumns.find(c => c.key === mappedColumn);
 
                     return (
                         <div

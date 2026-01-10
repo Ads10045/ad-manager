@@ -21,6 +21,28 @@ const PORT = currentConfig.port || process.env.PORT || 3001;
 app.use(cors({ origin: currentConfig.cors }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public'))); // Serve static files (e.g. test pages)
+
+// Logging Route
+const fs = require('fs');
+app.post('/api/log', (req, res) => {
+    const { error, info } = req.body;
+    const logEntry = `[${new Date().toISOString()}] ${info ? `[${info}] ` : ''}${error}\n`;
+    const logPath = path.join(__dirname, '../logs/server.log');
+    
+    // Ensure logs directory exists
+    if (!fs.existsSync(path.join(__dirname, '../logs'))) {
+        fs.mkdirSync(path.join(__dirname, '../logs'));
+    }
+
+    fs.appendFile(logPath, logEntry, (err) => {
+        if (err) {
+            console.error('Failed to write to log file:', err);
+            return res.status(500).json({ error: 'Logging failed' });
+        }
+        res.json({ success: true });
+    });
+});
+
 // Routes Prioritaires
 app.get('/catalog-test', (req, res) => {
   const filePath = path.join(__dirname, '../public/catalog-test/index.html');

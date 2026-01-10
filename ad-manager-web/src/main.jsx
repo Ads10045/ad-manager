@@ -6,12 +6,16 @@ import './index.css';
 
 import { ThemeProvider } from './context/ThemeContext';
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <MappingProvider>
-            <ThemeProvider>
-                <App />
-            </ThemeProvider>
-        </MappingProvider>
+        <ErrorBoundary>
+            <MappingProvider>
+                <ThemeProvider>
+                    <App />
+                </ThemeProvider>
+            </MappingProvider>
+        </ErrorBoundary>
     </React.StrictMode>
 );

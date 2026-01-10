@@ -12,16 +12,36 @@ const TEMPLATE_BASE_URL = 'http://localhost:3001/api/templates';
  */
 const BannerPreview = () => {
     const {
+        selectedTemplate,
+        mapping,
+        previewData,
+        editMode,
         setActiveZone,
         setIsCodeEditorOpen,
         sourceTable,
-        setPreviewData
+        setPreviewData,
+        mappingMode,
+        dynamicColumns
     } = useMapping();
+
     const { theme } = useTheme();
 
     const [bannerHtml, setBannerHtml] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    // États pour le mode de récupération
+    const [fetchMode, setFetchMode] = useState('random'); // 'random' | 'specific'
+    const [searchColumn, setSearchColumn] = useState('');
+    const [searchValue, setSearchValue] = useState('');
+
+    // Initialiser searchColumn avec la première colonne dispo (souvent id)
+    useEffect(() => {
+        if (dynamicColumns && dynamicColumns.length > 0 && !searchColumn) {
+            const idCol = dynamicColumns.find(c => c.key.toLowerCase().includes('id'));
+            setSearchColumn(idCol ? idCol.key : dynamicColumns[0].key);
+        }
+    }, [dynamicColumns, searchColumn]);
 
     // Charger le template HTML quand le template sélectionné change
     useEffect(() => {
@@ -58,23 +78,57 @@ const BannerPreview = () => {
         loadTemplate();
     }, [selectedTemplate?.file]);
 
-    // Charger un produit aléatoire de la table source
-    useEffect(() => {
-        const fetchRandomData = async () => {
-            if (!sourceTable) return;
-            try {
-                const apiBase = TEMPLATE_BASE_URL.replace('/templates', '');
-                const response = await fetch(`${apiBase}/dynamic/random/${sourceTable}?limit=1`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setPreviewData(data);
-                }
-            } catch (err) {
-                console.warn(`[Ads-AI] Erreur lors du chargement des données aléatoires pour ${sourceTable}:`, err);
+    // Fonction de récupération des données
+    const fetchData = React.useCallback(async () => {
+        if (!sourceTable) return;
+
+        // Si mode produit standard, on garde le fetch random pour l'instant (ou fix id=1)
+        if (mappingMode === 'product') {
+            // ... existing product logic if needed, actually we can use random dynamic on Product table too
+        }
+
+        try {
+            const apiBase = TEMPLATE_BASE_URL.replace('/templates', '');
+            let url = '';
+
+            if (fetchMode === 'random') {
+                url = `${apiBase}/dynamic/random/${sourceTable}?limit=1`;
+            } else {
+                if (!searchColumn || !searchValue) return;
+                url = `${apiBase}/dynamic/row/${sourceTable}/${searchColumn}/${searchValue}`;
             }
-        };
-        fetchRandomData();
-    }, [sourceTable, setPreviewData]);
+
+            const response = await fetch(url);
+
+            if (response.ok) {
+                const data = await response.json();
+                // Si c'est un tableau (random), on prend le premier
+                // Si c'est un objet (specific), on le prend direct
+                const row = Array.isArray(data) ? data[0] : data;
+
+                if (row) {
+                    setPreviewData(row);
+                    setError(null);
+                } else {
+                    setError('Aucune donnée trouvée');
+                }
+            } else {
+                const errText = await response.text();
+                setError(`Erreur API: ${errText}`);
+            }
+        } catch (err) {
+            console.warn(`[Ads-AI] Erreur fetch pour ${sourceTable}:`, err);
+            setError(err.message);
+        }
+    }, [sourceTable, fetchMode, searchColumn, searchValue, mappingMode, setPreviewData]);
+
+    // Charger les données quand les dépendances changent (mode random uniquement)
+    useEffect(() => {
+        if (fetchMode === 'random') {
+            fetchData();
+        }
+    }, [fetchData, fetchMode]);
+
 
     // Générer un HTML de fallback si le template n'est pas accessible
     const generateFallbackHtml = (template) => {
@@ -110,7 +164,7 @@ const BannerPreview = () => {
 
         // Remplacer les placeholders avec les données mappées
         Object.entries(mapping).forEach(([zoneName, columnKey]) => {
-            if (previewData[columnKey] !== undefined) {
+            if (previewData && previewData[columnKey] !== undefined) {
                 const value = previewData[columnKey];
                 // Remplacer [zoneName] par la valeur
                 const regex = new RegExp(`\\[${zoneName}\\]`, 'gi');
@@ -123,14 +177,16 @@ const BannerPreview = () => {
         });
 
         // Remplacer aussi les données directes de previewData
-        Object.entries(previewData).forEach(([key, value]) => {
-            const regex = new RegExp(`\\[${key}\\]`, 'gi');
-            html = html.replace(regex, String(value));
-        });
+        if (previewData) {
+            Object.entries(previewData).forEach(([key, value]) => {
+                const regex = new RegExp(`\\[${key}\\]`, 'gi');
+                html = html.replace(regex, String(value));
+            });
 
-        // Gérer le badge promo
-        if (previewData.isPromo) {
-            html = html.replace(/style="display:\s*none;?"([^>]*data-field="promoBadge")/gi, '$1');
+            // Gérer le badge promo
+            if (previewData.isPromo) {
+                html = html.replace(/style="display:\s*none;?"([^>]*data-field="promoBadge")/gi, '$1');
+            }
         }
 
         return html;
@@ -165,6 +221,61 @@ const BannerPreview = () => {
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
+                    {/* Data Fetch Controls for Dynamic Mode */}
+                    {mappingMode === 'dynamic' && (
+                        <div className="flex items-center gap-2 mr-2 bg-black/20 p-1 rounded-lg border border-white/5">
+                            <div className="flex rounded-md overflow-hidden text-[10px] font-bold">
+                                <button
+                                    onClick={() => setFetchMode('random')}
+                                    className={`px-2 py-1 ${fetchMode === 'random' ? theme.accentBg + ' text-white' : 'opacity-50 hover:opacity-100'}`}
+                                >
+                                    🎲 Aléatoire
+                                </button>
+                                <button
+                                    onClick={() => setFetchMode('specific')}
+                                    className={`px-2 py-1 ${fetchMode === 'specific' ? theme.accentBg + ' text-white' : 'opacity-50 hover:opacity-100'}`}
+                                >
+                                    🎯 Par ID
+                                </button>
+                            </div>
+
+                            {fetchMode === 'specific' && (
+                                <div className="flex items-center gap-1 animate-fade-in pl-2 border-l border-white/10">
+                                    <select
+                                        value={searchColumn}
+                                        onChange={(e) => setSearchColumn(e.target.value)}
+                                        className={`bg-transparent text-[10px] ${theme.text} border-b border-white/10 outline-none w-16`}
+                                    >
+                                        {dynamicColumns.map(col => (
+                                            <option key={col.key} value={col.key}>{col.label}</option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        type="text"
+                                        placeholder="Valeur..."
+                                        value={searchValue}
+                                        onChange={(e) => setSearchValue(e.target.value)}
+                                        className={`bg-transparent text-[10px] ${theme.text} border-b border-white/10 outline-none w-16`}
+                                        onKeyDown={(e) => e.key === 'Enter' && fetchData()}
+                                    />
+                                    <button
+                                        onClick={fetchData}
+                                        className={`p-1 rounded hover:bg-white/10 ${theme.accent}`}
+                                    >
+                                        <div className="scale-75">🔍</div>
+                                    </button>
+                                </div>
+                            )}
+
+                            {fetchMode === 'random' && (
+                                <button onClick={fetchData} className={`p-1 rounded hover:bg-white/10 ${theme.accent}`} title="Recharger">
+                                    <div className="scale-75">🔄</div>
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+
                     {editMode && (
                         <div className={`px-3 py-1 ${theme.accentBg}/20 border border-purple-500/50 rounded-full ${theme.accent} text-xs font-bold animate-pulse`}>
                             Mode Édition Actif
