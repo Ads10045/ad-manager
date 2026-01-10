@@ -35,7 +35,7 @@ const App = () => {
                         </div>
                         <div>
                             <h1 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
-                                Ads-AI <Wand2 size={20} className={theme.accent} /> <span className={theme.accent}>Banner Studio</span>
+                                Ads-AI <Wand2 size={20} className={theme.accent} /> <span className={theme.accent}>Banner Manager</span>
                             </h1>
                             <p className="opacity-40 text-xs">
                                 Générateur de bannières dynamiques

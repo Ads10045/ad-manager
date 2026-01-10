@@ -37,9 +37,9 @@ Ce dossier centralise tous les composants du système de gestion publicitaire et
 
 ---
 
-## 🎨 Banner Studio
+## 🎨 Banner Manager
 
-Le Banner Studio est l'interface de création et gestion de bannières publicitaires.
+Le Banner Manager est l'interface de création et gestion de bannières publicitaires.
 
 ### Fonctionnalités
 
@@ -80,7 +80,7 @@ Le Banner Studio est l'interface de création et gestion de bannières publicita
 ## 📝 Changelog
 
 ### v1.0.0 (2026-01-09)
-- ✅ Banner Studio avec éditeur de code
+- ✅ Banner Manager avec éditeur de code
 - ✅ Prévisualisation en temps réel (onglets Code/Aperçu)
 - ✅ Suppression de templates
 - ✅ Sélection/création de catégories

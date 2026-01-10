@@ -1,4 +1,4 @@
-# 🚀 Banner Studio - Guide d'Implémentation Étape par Étape
+# 🚀 Banner Manager - Guide d'Implémentation Étape par Étape
 
 ## 📊 État Actuel (v1.0.0) ✅
 - ✅ Création/édition de bannières
@@ -56,8 +56,9 @@ npm install stripe @stripe/stripe-js
 ```
 
 ### Créer sur Stripe Dashboard :
-1. [ ] Produit "Banner Studio Pro" - 29€/mois
-2. [ ] Produit "Banner Studio Enterprise" - 99€/mois
+1. [ ] Produit "Banner Manager Pro"
+ - 29€/mois
+2. [ ] Produit "Banner Manager Enterprise" - 99€/mois
 3. [ ] Récupérer les Price IDs
 
 ### Variables d'environnement :
