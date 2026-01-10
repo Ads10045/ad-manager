@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMapping } from '../context/MappingContext';
 import { useTheme } from '../context/ThemeContext';
-import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 } from 'lucide-react';
+import { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Trash2 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -142,7 +142,7 @@ const TemplateSidebar = () => {
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
                 {Object.entries(filteredCategories).map(([categoryKey, category]) => {
                     const isExpanded = expandedCategories.includes(categoryKey) || searchTerm.length > 0;
-                    const icons = { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Sparkles, Trash2 };
+                    const icons = { Layout, ChevronRight, Layers, ChevronDown, Smartphone, Monitor, LayoutGrid, Plus, Trash2 };
                     const Icon = icons[category.icon] || Layout;
                     const gradientClass = categoryGradients[categoryKey] || 'bg-gradient-to-r from-gray-500/10 to-slate-500/10 border-gray-500/20';
                     const listGradientClass = categoryListGradients[categoryKey] || 'bg-gray-500/5 border-gray-500/10';

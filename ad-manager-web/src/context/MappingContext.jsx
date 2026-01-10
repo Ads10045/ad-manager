@@ -570,6 +570,7 @@ export const MappingProvider = ({ children }) => {
         setEditMode,
         setPreviewData,
         setIsCodeEditorOpen,
+        setEditorCode,
 
         // Actions
         updateMapping,
