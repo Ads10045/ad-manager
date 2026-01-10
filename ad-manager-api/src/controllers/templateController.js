@@ -40,7 +40,7 @@ const getTemplate = async (req, res) => {
           }
         }
         if (!html) {
-          const templatePath = path.join(__dirname, '../../../ad-manager-banner', relativePath);
+          const templatePath = path.join(__dirname, '../../templates', relativePath);
           if (fs.existsSync(templatePath)) {
             html = fs.readFileSync(templatePath, 'utf8');
           } else {
@@ -63,7 +63,7 @@ const getTemplate = async (req, res) => {
 const createTemplate = async (req, res) => {
   const { name, category, size, htmlContent } = req.body;
   try {
-    const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+    const bannersDir = path.join(__dirname, '../../templates');
     const categoryDir = path.join(bannersDir, category);
     
     if (!fs.existsSync(categoryDir)) {
@@ -96,7 +96,7 @@ const createTemplate = async (req, res) => {
  */
 const getLocalTemplates = async (req, res) => {
   try {
-    const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+    const bannersDir = path.join(__dirname, '../../templates');
     const categories = fs.readdirSync(bannersDir).filter(f => {
         try {
             return fs.statSync(path.join(bannersDir, f)).isDirectory();
@@ -134,7 +134,7 @@ const deleteTemplate = async (req, res) => {
     let id = req.params.id || req.params[0];
 
     try {
-        const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+        const bannersDir = path.join(__dirname, '../../templates');
         const safeId = id.replace(/\.\./g, '');
         const filePath = path.join(bannersDir, safeId);
 
@@ -157,7 +157,7 @@ const updateTemplate = async (req, res) => {
     const { name, category, size, htmlContent } = req.body;
 
     try {
-        const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+    const bannersDir = path.join(__dirname, '../../templates');
         const safeId = id.replace(/\.\./g, '');
         const filePath = path.join(bannersDir, safeId);
 
