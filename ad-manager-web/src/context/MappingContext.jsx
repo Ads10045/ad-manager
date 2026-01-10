@@ -258,6 +258,7 @@ export const MappingProvider = ({ children }) => {
     const [bannerConfig, setBannerConfig] = useState(INITIAL_CONFIG);
 
     // Source Table (Dynamic Backend)
+    const [mappingMode, setMappingMode] = useState('product'); // 'product' or 'dynamic'
     const [sourceTable, setSourceTable] = useState('Product');
     const [availableTables, setAvailableTables] = useState([]);
     const [dynamicColumns, setDynamicColumns] = useState(DB_COLUMNS);
@@ -592,6 +593,7 @@ export const MappingProvider = ({ children }) => {
         isCodeEditorOpen,
         editorCode,
         bannerConfig,
+        mappingMode,
         sourceTable,
         availableTables,
         dynamicColumns,
@@ -603,6 +605,7 @@ export const MappingProvider = ({ children }) => {
         setPreviewData,
         setIsCodeEditorOpen,
         setEditorCode,
+        setMappingMode,
         setSourceTable,
 
         // Actions
@@ -619,7 +622,7 @@ export const MappingProvider = ({ children }) => {
         deleteTemplateFromConfig,
 
         // Constants
-        DB_COLUMNS: dynamicColumns || DB_COLUMNS
+        DB_COLUMNS: mappingMode === 'product' ? DB_COLUMNS : dynamicColumns
     };
 
     return (

@@ -9,8 +9,16 @@ import { ChevronRight, Link2, Unlink, Database, Sparkles } from 'lucide-react';
  */
 const MappingPanel = () => {
     const {
+        selectedTemplate,
+        mapping,
+        activeZone,
+        setActiveZone,
+        updateMapping,
+        removeMapping,
         editMode,
         setEditMode,
+        mappingMode,
+        setMappingMode,
         sourceTable,
         setSourceTable,
         availableTables
@@ -69,24 +77,53 @@ const MappingPanel = () => {
                     </button>
                 </div>
 
-                {/* Source Table Selector */}
-                <div className="mb-4">
-                    <label className={`text-[10px] uppercase tracking-widest mb-1.5 block font-bold ${theme.text} opacity-30 flex items-center gap-1.5`}>
-                        <Database size={10} />
-                        Source de données
-                    </label>
-                    <select
-                        value={sourceTable}
-                        onChange={(e) => setSourceTable(e.target.value)}
-                        className={`w-full px-3 py-2 rounded-lg border text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/50 ${theme.input} ${theme.text} ${theme.border}`}
+                {/* Mode Selector */}
+                <div className="flex bg-black/20 p-1 rounded-xl mb-4 border border-white/5">
+                    <button
+                        onClick={() => {
+                            setMappingMode('product');
+                            setSourceTable('Product');
+                        }}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all ${mappingMode === 'product'
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                            : 'text-white/40 hover:text-white/60'
+                            }`}
                     >
-                        {availableTables.map(table => (
-                            <option key={table} value={table}>
-                                📊 {table}
-                            </option>
-                        ))}
-                    </select>
+                        <Sparkles size={14} />
+                        Standard
+                    </button>
+                    <button
+                        onClick={() => setMappingMode('dynamic')}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all ${mappingMode === 'dynamic'
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                            : 'text-white/40 hover:text-white/60'
+                            }`}
+                    >
+                        <Database size={14} />
+                        Dynamic
+                    </button>
                 </div>
+
+                {/* Source Table Selector (Show only in Dynamic mode) */}
+                {mappingMode === 'dynamic' && (
+                    <div className="mb-4 animate-fade-in">
+                        <label className={`text-[10px] uppercase tracking-widest mb-1.5 block font-bold ${theme.text} opacity-30 flex items-center gap-1.5`}>
+                            <Database size={10} />
+                            Source de données
+                        </label>
+                        <select
+                            value={sourceTable}
+                            onChange={(e) => setSourceTable(e.target.value)}
+                            className={`w-full px-3 py-2 rounded-lg border text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/50 ${theme.input} ${theme.text} ${theme.border}`}
+                        >
+                            {availableTables.map(table => (
+                                <option key={table} value={table}>
+                                    📊 {table}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
                 <p className={`opacity-40 text-xs ${theme.text}`}>
                     {selectedTemplate.name} • {zones.length} zones
