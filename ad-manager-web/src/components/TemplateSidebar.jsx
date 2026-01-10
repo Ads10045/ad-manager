@@ -83,6 +83,21 @@ const TemplateSidebar = () => {
         setIsCodeEditorOpen(true);
     };
 
+    // Open visual editor directly when creating a new banner
+    const handleNewVisualTemplateClick = () => {
+        // Create a temporary template with default size/category for visual editor
+        const defaultTemplate = {
+            id: 'new-visual',
+            name: 'Nouveau Visuel',
+            size: '728x90', // default size (leaderboard)
+            categoryKey: 'leaderboard'
+        };
+        setSelectedTemplate(defaultTemplate);
+        setEditorCode('');
+        setIsVisualEditorOpen(true);
+        setIsCodeEditorOpen(false);
+    };
+
     const totalTemplates = Object.values(filteredCategories)
         .reduce((acc, cat) => acc + cat.templates.length, 0);
 
@@ -135,7 +150,7 @@ const TemplateSidebar = () => {
                     className="mt-3 w-full py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-xs font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
                 >
                     <Plus size={14} />
-                    Nouveau Template (Éditeur)
+                    Nouveau Template
                 </button>
             </div>
 

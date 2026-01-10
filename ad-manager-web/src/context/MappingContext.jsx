@@ -276,6 +276,7 @@ export const MappingProvider = ({ children }) => {
     // Mode Éditeur de Code (Tab dans App.jsx)
     const [isCodeEditorOpen, setIsCodeEditorOpen] = useState(false);
     // Contenu HTML en cours d'édition (si null, non chargé)
+    const [editorCode, setEditorCode] = useState('');
     // Mode Éditeur Visuel (Drag & Drop)
     const [isVisualEditorOpen, setIsVisualEditorOpen] = useState(false);
     // Éléments de l'éditeur visuel

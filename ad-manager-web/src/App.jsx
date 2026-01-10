@@ -7,7 +7,7 @@ import ExportPanel from './components/ExportPanel';
 import VisualEditor from './components/VisualEditor';
 import { useMapping } from './context/MappingContext';
 import { useTheme } from './context/ThemeContext';
-import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check } from 'lucide-react';
+import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check, Move } from 'lucide-react';
 
 /**
  * App - Application principale du générateur de bannières dynamiques
@@ -35,8 +35,8 @@ const App = () => {
                             <Wand2 size={20} className="text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-black uppercase tracking-tighter">
-                                Ads-AI <span className={theme.accent}>Banner Studio</span>
+                            <h1 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
+                                Ads-AI <Wand2 size={20} className={theme.accent} /> <span className={theme.accent}>Banner Studio</span>
                             </h1>
                             <p className="opacity-40 text-xs">
                                 Générateur de bannières dynamiques
@@ -100,7 +100,7 @@ const App = () => {
                                     : `${theme.input} ${theme.border} ${theme.text} opacity-60 hover:opacity-100`}`}
                             >
                                 <Move size={14} />
-                                <span className="text-xs font-bold">Éditeur Visuel</span>
+                                <span className="text-xs font-bold">Studio Créatif (Bêta)</span>
                             </button>
                         )}
                     </div>
