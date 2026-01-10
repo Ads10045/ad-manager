@@ -92,17 +92,15 @@ const App = () => {
                                 <span className="text-xs text-blue-300 font-bold">Éditeur HTML</span>
                             </div>
                         )}
-                        {selectedTemplate && (
-                            <button
-                                onClick={() => setIsVisualEditorOpen(!isVisualEditorOpen)}
-                                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${isVisualEditorOpen
-                                    ? 'bg-purple-500/20 border-purple-500/50 text-purple-400'
-                                    : `${theme.input} ${theme.border} ${theme.text} opacity-60 hover:opacity-100`}`}
-                            >
-                                <Move size={14} />
-                                <span className="text-xs font-bold">Studio Créatif (Bêta)</span>
-                            </button>
-                        )}
+                        <button
+                            onClick={() => setIsVisualEditorOpen(!isVisualEditorOpen)}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${isVisualEditorOpen
+                                ? 'bg-purple-500/20 border-purple-500/50 text-purple-400'
+                                : `${theme.input} ${theme.border} ${theme.text} opacity-60 hover:opacity-100`}`}
+                        >
+                            <Move size={14} />
+                            <span className="text-xs font-bold">Studio Créatif (Bêta)</span>
+                        </button>
                     </div>
                 </header>
 
@@ -124,37 +122,39 @@ const App = () => {
                 </div>
             </main>
 
-            {/* Right Panel - Tabs */}
-            <aside className={`w-80 flex-shrink-0 flex flex-col border-l ${theme.border} ${theme.sidebar} z-10`}>
-                {/* Tab Headers */}
-                <div className={`flex border-b ${theme.border}`}>
-                    <button
-                        onClick={() => setActivePanel('mapping')}
-                        className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'mapping'
-                            ? `${theme.text} border-b-2 border-purple-500 ${theme.input}`
-                            : 'opacity-40 hover:opacity-100 hover:bg-white/5'
-                            }`}
-                    >
-                        <SlidersHorizontal size={16} />
-                        Mapping
-                    </button>
-                    <button
-                        onClick={() => setActivePanel('export')}
-                        className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'export'
-                            ? `${theme.text} border-b-2 border-purple-500 ${theme.input}`
-                            : 'opacity-40 hover:opacity-100 hover:bg-white/5'
-                            }`}
-                    >
-                        <Code size={16} />
-                        Export
-                    </button>
-                </div>
+            {/* Right Panel - Tabs: Only show if NOT in an editor mode */}
+            {(!isVisualEditorOpen && !isCodeEditorOpen) && (
+                <aside className={`w-80 flex-shrink-0 flex flex-col border-l ${theme.border} ${theme.sidebar} z-10`}>
+                    {/* Tab Headers */}
+                    <div className={`flex border-b ${theme.border}`}>
+                        <button
+                            onClick={() => setActivePanel('mapping')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'mapping'
+                                ? `${theme.text} border-b-2 border-purple-500 ${theme.input}`
+                                : 'opacity-40 hover:opacity-100 hover:bg-white/5'
+                                }`}
+                        >
+                            <SlidersHorizontal size={16} />
+                            Mapping
+                        </button>
+                        <button
+                            onClick={() => setActivePanel('export')}
+                            className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-bold transition-all ${activePanel === 'export'
+                                ? `${theme.text} border-b-2 border-purple-500 ${theme.input}`
+                                : 'opacity-40 hover:opacity-100 hover:bg-white/5'
+                                }`}
+                        >
+                            <Code size={16} />
+                            Export
+                        </button>
+                    </div>
 
-                {/* Tab Content */}
-                <div className={`flex-1 overflow-hidden ${currentTheme === 'light' ? 'bg-gray-50' : 'bg-[#0a0a0a]'}`}>
-                    {activePanel === 'mapping' ? <MappingPanel /> : <ExportPanel />}
-                </div>
-            </aside>
+                    {/* Tab Content */}
+                    <div className={`flex-1 overflow-hidden ${currentTheme === 'light' ? 'bg-gray-50' : 'bg-[#0a0a0a]'}`}>
+                        {activePanel === 'mapping' ? <MappingPanel /> : <ExportPanel />}
+                    </div>
+                </aside>
+            )}
         </div>
     );
 };
