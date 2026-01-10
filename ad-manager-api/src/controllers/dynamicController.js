@@ -125,9 +125,40 @@ const getRandomRows = async (req, res) => {
     }
 };
 
+/**
+ * @desc Get a single row from a specific table by column value (e.g., id)
+ */
+const getRowByColumn = async (req, res) => {
+    const { tableName, columnName, value } = req.params;
+
+    try {
+        // Basic sanitization for value (simple quote wrapping for SQL)
+        // Note: For production, use parameterized queries.
+        const formattedValue = isNaN(value) ? `'${value}'` : value;
+        const sql = `SELECT * FROM "${tableName}" WHERE "${columnName}" = ${formattedValue} LIMIT 1`;
+
+        const result = await db.execute(
+            () => db.prisma.$queryRawUnsafe(sql),
+            sql
+        );
+
+        const rows = result.rows ? result.rows : result;
+        
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({ error: `No record found in ${tableName} where ${columnName} = ${value}` });
+        }
+
+        res.json(rows[0]);
+    } catch (error) {
+        console.error(`[DynamicAPI] Error fetching data from ${tableName} by ${columnName}:`, error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
   getTables,
   getColumns,
   getData,
-  getRandomRows
+  getRandomRows,
+  getRowByColumn
 };

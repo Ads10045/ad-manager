@@ -61,6 +61,23 @@ router.get('/columns/:tableName', dynamicController.getColumns);
  *         schema:
  *           type: integer
  */
-router.get('/random/:tableName', dynamicController.getRandomRows);
+/**
+ * @swagger
+ * /api/dynamic/row/{tableName}/{columnName}/{value}:
+ *   get:
+ *     summary: Get a single row from a specific table by a column value (e.g., ID)
+ *     tags: [Dynamic]
+ *     parameters:
+ *       - in: path
+ *         name: tableName
+ *         required: true
+ *       - in: path
+ *         name: columnName
+ *         required: true
+ *       - in: path
+ *         name: value
+ *         required: true
+ */
+router.get('/row/:tableName/:columnName/:value', dynamicController.getRowByColumn);
 
 module.exports = router;
