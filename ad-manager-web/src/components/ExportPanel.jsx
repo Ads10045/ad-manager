@@ -115,7 +115,7 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
             success: function(data) {
                 // 2. Récupération du template HTML
                 $.ajax({
-                    url: CONFIG.apiUrl + '/api/banners/template/' + CONFIG.templateFile,
+                    url: CONFIG.apiUrl + '/api/templates/' + CONFIG.templateFile,
                     method: 'GET',
                     success: function(html) {
                         let renderedHtml = html;

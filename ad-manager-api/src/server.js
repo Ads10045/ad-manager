@@ -187,7 +187,7 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const locationRoutes = require('./routes/locationRoutes');
-const bannerRoutes = require('./routes/bannerRoutes');
+const templateRoutes = require('./routes/templateRoutes');
 const renderRoutes = require('./routes/renderRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 
@@ -196,7 +196,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/locations', locationRoutes);
-app.use('/api/banners', bannerRoutes);
+app.use('/api/templates', templateRoutes);
 app.use('/api/render-preview', renderRoutes);
 app.use('/api/settings', settingRoutes);
 

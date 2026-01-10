@@ -9,43 +9,26 @@ const config = require('../../config/config.json');
  */
 const renderDynamicPreview = async (req, res) => {
   try {
-    // 0. Determine if the provided "path" is actually a banner UUID
     let identifier = req.query.path || 'achats/materiaux-pro-banner.html';
-    // Auto‑fix: add .html if missing and not a UUID
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    let isUuid = uuidRegex.test(identifier);
-    let relativePath;
     let injectDataMap = {};
 
-    if (isUuid) {
-      // ----- UUID branch ----------------------------------------------------
-      // Fetch banner record by its ID
-      const banner = await db.prisma.banner.findUnique({ where: { id: identifier } });
-      if (!banner) {
-        return res.status(404).send(`Banner with id ${identifier} not found`);
-      }
-      // Use the stored path column for the template
-      relativePath = banner.path;
-      // Use all other columns of the banner as injection data
-      injectDataMap = { ...banner };
-    } else {
-      // ----- Normal path branch --------------------------------------------
-      relativePath = identifier;
-      if (!relativePath.includes('.')) {
-        relativePath += '.html';
-      }
-      // Existing logic: fetch a random product for injection
-      const products = await db.execute(
-        () => db.prisma.product.findMany({ where: { isActive: true } }),
-        'SELECT * FROM "Product" WHERE "isActive" = true'
-      );
-      const rows = products.rows ? products.rows : products;
-      if (!rows || rows.length === 0) {
-        return res.status(404).send('No products found to render');
-      }
-      const randomProduct = rows[Math.floor(Math.random() * rows.length)];
-      injectDataMap = { ...randomProduct };
+    // Simplified path-based template loading (Banner model removed)
+    let relativePath = identifier;
+    if (!relativePath.includes('.')) {
+      relativePath += '.html';
     }
+
+    // Existing logic: fetch a random product for injection
+    const products = await db.execute(
+      () => db.prisma.product.findMany({ where: { isActive: true } }),
+      'SELECT * FROM "Product" WHERE "isActive" = true'
+    );
+    const rows = products.rows ? products.rows : products;
+    if (!rows || rows.length === 0) {
+      return res.status(404).send('No products found to render');
+    }
+    const randomProduct = rows[Math.floor(Math.random() * rows.length)];
+    injectDataMap = { ...randomProduct };
 
     // Merge any query parameters (overrides) – ignore the original "path" key
     const queryOverrides = { ...req.query };

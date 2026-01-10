@@ -426,22 +426,8 @@ export const MappingProvider = ({ children }) => {
             return [...prev, config];
         });
 
-        // Essayer de sauvegarder en DB via l'API
-        try {
-            const response = await fetch(`${API_URL}/banners/config`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(config)
-            });
-
-            if (response.ok) {
-                console.log('[Ads-AI] Configuration sauvegardée en DB:', config.id);
-            } else {
-                console.warn('[Ads-AI] API non disponible, sauvegarde locale uniquement');
-            }
-        } catch (e) {
-            console.warn('[Ads-AI] Sauvegarde API échouée, localStorage utilisé:', e.message);
-        }
+        // Sauvegarde locale effectuée
+        console.log('[Ads-AI] Configuration sauvegardée localement:', config.id);
 
         setIsSaving(false);
         return config;

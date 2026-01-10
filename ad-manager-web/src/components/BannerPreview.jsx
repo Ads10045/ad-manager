@@ -4,7 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { Edit3 } from 'lucide-react';
 
 // URL de base pour les templates (local ou GitHub)
-const TEMPLATE_BASE_URL = 'http://localhost:3001/api/banners/template';
+const TEMPLATE_BASE_URL = 'http://localhost:3001/api/templates';
 
 /**
  * BannerPreview - Composant de prévisualisation en temps réel

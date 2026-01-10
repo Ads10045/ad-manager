@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-const TEMPLATE_BASE_URL = `${API_URL}/banners/template`;
+const TEMPLATE_BASE_URL = `${API_URL}/templates`;
 
 // Placeholders pour autocomplétion
 const PLACEHOLDERS = [

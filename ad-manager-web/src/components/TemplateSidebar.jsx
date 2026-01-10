@@ -58,7 +58,7 @@ const TemplateSidebar = () => {
         try {
             const fileId = template.file;
 
-            const response = await fetch(`${API_URL}/banners/template/${fileId}`, {
+            const response = await fetch(`${API_URL}/templates/${fileId}`, {
                 method: 'DELETE'
             });
 
