@@ -4,7 +4,6 @@ import BannerPreview from './components/BannerPreview';
 import BannerEditor from './components/BannerEditor';
 import MappingPanel from './components/MappingPanel';
 import ExportPanel from './components/ExportPanel';
-import ExportPanel from './components/ExportPanel';
 import { useMapping } from './context/MappingContext';
 import { useTheme } from './context/ThemeContext';
 import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check, Move } from 'lucide-react';
