@@ -46,6 +46,8 @@ router.get('/columns/:tableName', dynamicController.getColumns);
  *         schema:
  *           type: integer
  */
+router.get('/data/:tableName', dynamicController.getData);
+
 /**
  * @swagger
  * /api/dynamic/random/{tableName}:
@@ -61,6 +63,7 @@ router.get('/columns/:tableName', dynamicController.getColumns);
  *         schema:
  *           type: integer
  */
+router.get('/random/:tableName', dynamicController.getRandomRows);
 /**
  * @swagger
  * /api/dynamic/row/{tableName}/{columnName}/{value}:
