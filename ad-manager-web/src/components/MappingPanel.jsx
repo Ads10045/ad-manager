@@ -21,7 +21,8 @@ const MappingPanel = () => {
         setMappingMode,
         sourceTable,
         setSourceTable,
-        availableTables
+        availableTables,
+        dynamicColumns
     } = useMapping();
     const { theme } = useTheme();
 
@@ -42,8 +43,11 @@ const MappingPanel = () => {
         type: DB_COLUMNS.find(c => c.key === field)?.type || 'text'
     }));
 
+    // Colonnes à utiliser (standard ou dynamique)
+    const activeColumns = mappingMode === 'dynamic' ? dynamicColumns : DB_COLUMNS;
+
     // Grouper les colonnes par type
-    const groupedColumns = DB_COLUMNS.reduce((acc, col) => {
+    const groupedColumns = activeColumns.reduce((acc, col) => {
         if (!acc[col.type]) acc[col.type] = [];
         acc[col.type].push(col);
         return acc;
