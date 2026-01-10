@@ -277,10 +277,6 @@ export const MappingProvider = ({ children }) => {
     const [isCodeEditorOpen, setIsCodeEditorOpen] = useState(false);
     // Contenu HTML en cours d'édition (si null, non chargé)
     const [editorCode, setEditorCode] = useState('');
-    // Mode Éditeur Visuel (Drag & Drop)
-    const [isVisualEditorOpen, setIsVisualEditorOpen] = useState(false);
-    // Éléments de l'éditeur visuel
-    const [visualElements, setVisualElements] = useState([]);
 
     // Données de prévisualisation (produit exemple)
     const [previewData, setPreviewData] = useState({
@@ -566,8 +562,6 @@ export const MappingProvider = ({ children }) => {
         saveError,
         isCodeEditorOpen,
         editorCode,
-        isVisualEditorOpen,
-        visualElements,
         bannerConfig, // Export config
 
         // Setters
@@ -576,9 +570,6 @@ export const MappingProvider = ({ children }) => {
         setEditMode,
         setPreviewData,
         setIsCodeEditorOpen,
-        setEditorCode,
-        setIsVisualEditorOpen,
-        setVisualElements,
 
         // Actions
         updateMapping,

@@ -11,7 +11,6 @@ const TemplateSidebar = () => {
         setSelectedTemplate,
         resetMapping,
         setIsCodeEditorOpen,
-        setIsVisualEditorOpen,
         setEditorCode,
         bannerConfig,
         deleteTemplateFromConfig
@@ -26,7 +25,6 @@ const TemplateSidebar = () => {
         // Add categoryKey to template for editor
         setSelectedTemplate({ ...template, categoryKey });
         setIsCodeEditorOpen(false); // Switch back to preview
-        setIsVisualEditorOpen(false); // Close visual editor
     };
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -83,20 +81,6 @@ const TemplateSidebar = () => {
         setIsCodeEditorOpen(true);
     };
 
-    // Open visual editor directly when creating a new banner
-    const handleNewVisualTemplateClick = () => {
-        // Create a temporary template with default size/category for visual editor
-        const defaultTemplate = {
-            id: 'new-visual',
-            name: 'Nouveau Visuel',
-            size: '728x90', // default size (leaderboard)
-            categoryKey: 'leaderboard'
-        };
-        setSelectedTemplate(defaultTemplate);
-        setEditorCode('');
-        setIsVisualEditorOpen(true);
-        setIsCodeEditorOpen(false);
-    };
 
     const totalTemplates = Object.values(filteredCategories)
         .reduce((acc, cat) => acc + cat.templates.length, 0);
