@@ -257,6 +257,11 @@ export const MappingProvider = ({ children }) => {
     // Banner Config (List of templates)
     const [bannerConfig, setBannerConfig] = useState(INITIAL_CONFIG);
 
+    // Source Table (Dynamic Backend)
+    const [sourceTable, setSourceTable] = useState('Product');
+    const [availableTables, setAvailableTables] = useState([]);
+    const [dynamicColumns, setDynamicColumns] = useState(DB_COLUMNS);
+
     // Mappings par template : { templateId: { zoneName: columnKey } }
     const [templateMappings, setTemplateMappings] = useState({});
 
@@ -296,6 +301,44 @@ export const MappingProvider = ({ children }) => {
         promoExpiry: '2026-01-15',
         sourceUrl: 'https://amazon.fr/dp/B09XYZ123'
     });
+
+    // Charger les tables disponibles au démarrage
+    useEffect(() => {
+        const fetchTables = async () => {
+            try {
+                const response = await fetch(`${API_URL}/dynamic/tables`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setAvailableTables(data.tables || []);
+                }
+            } catch (err) {
+                console.warn('[Ads-AI] Erreur lors du chargement des tables:', err);
+            }
+        };
+        fetchTables();
+    }, []);
+
+    // Charger les colonnes quand la table change
+    useEffect(() => {
+        const fetchColumns = async () => {
+            if (!sourceTable) return;
+            try {
+                const response = await fetch(`${API_URL}/dynamic/columns/${sourceTable}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const formattedColumns = data.columns.map(col => ({
+                        key: col.name,
+                        label: col.name.charAt(0).toUpperCase() + col.name.slice(1).replace(/_/g, ' '),
+                        type: col.type.includes('char') ? 'text' : (col.type.includes('int') || col.type.includes('numeric') ? 'value' : 'text')
+                    }));
+                    setDynamicColumns(formattedColumns);
+                }
+            } catch (err) {
+                console.warn(`[Ads-AI] Erreur lors du chargement des colonnes pour ${sourceTable}:`, err);
+            }
+        };
+        fetchColumns();
+    }, [sourceTable]);
 
     // Charger les mappings et config depuis localStorage au démarrage
     useEffect(() => {
@@ -548,7 +591,10 @@ export const MappingProvider = ({ children }) => {
         saveError,
         isCodeEditorOpen,
         editorCode,
-        bannerConfig, // Export config
+        bannerConfig,
+        sourceTable,
+        availableTables,
+        dynamicColumns,
 
         // Setters
         setSelectedTemplate,
@@ -557,6 +603,7 @@ export const MappingProvider = ({ children }) => {
         setPreviewData,
         setIsCodeEditorOpen,
         setEditorCode,
+        setSourceTable,
 
         // Actions
         updateMapping,
@@ -572,7 +619,7 @@ export const MappingProvider = ({ children }) => {
         deleteTemplateFromConfig,
 
         // Constants
-        DB_COLUMNS
+        DB_COLUMNS: dynamicColumns || DB_COLUMNS
     };
 
     return (

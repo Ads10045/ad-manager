@@ -188,6 +188,7 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const locationRoutes = require('./routes/locationRoutes');
 const templateRoutes = require('./routes/templateRoutes');
+const dynamicRoutes = require('./routes/dynamicRoutes');
 const renderRoutes = require('./routes/renderRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 
@@ -197,6 +198,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/templates', templateRoutes);
+app.use('/api/dynamic', dynamicRoutes);
 app.use('/api/render-preview', renderRoutes);
 app.use('/api/settings', settingRoutes);
 

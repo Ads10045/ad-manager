@@ -9,14 +9,11 @@ import { ChevronRight, Link2, Unlink, Database, Sparkles } from 'lucide-react';
  */
 const MappingPanel = () => {
     const {
-        selectedTemplate,
-        mapping,
-        activeZone,
-        setActiveZone,
-        updateMapping,
-        removeMapping,
         editMode,
-        setEditMode
+        setEditMode,
+        sourceTable,
+        setSourceTable,
+        availableTables
     } = useMapping();
     const { theme } = useTheme();
 
@@ -71,6 +68,26 @@ const MappingPanel = () => {
                         {editMode ? '✨ Actif' : 'Édition'}
                     </button>
                 </div>
+
+                {/* Source Table Selector */}
+                <div className="mb-4">
+                    <label className={`text-[10px] uppercase tracking-widest mb-1.5 block font-bold ${theme.text} opacity-30 flex items-center gap-1.5`}>
+                        <Database size={10} />
+                        Source de données
+                    </label>
+                    <select
+                        value={sourceTable}
+                        onChange={(e) => setSourceTable(e.target.value)}
+                        className={`w-full px-3 py-2 rounded-lg border text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-purple-500/50 ${theme.input} ${theme.text} ${theme.border}`}
+                    >
+                        {availableTables.map(table => (
+                            <option key={table} value={table}>
+                                📊 {table}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
                 <p className={`opacity-40 text-xs ${theme.text}`}>
                     {selectedTemplate.name} • {zones.length} zones
                 </p>

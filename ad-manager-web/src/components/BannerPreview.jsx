@@ -12,12 +12,10 @@ const TEMPLATE_BASE_URL = 'http://localhost:3001/api/templates';
  */
 const BannerPreview = () => {
     const {
-        selectedTemplate,
-        mapping,
-        previewData,
-        editMode,
         setActiveZone,
-        setIsCodeEditorOpen
+        setIsCodeEditorOpen,
+        sourceTable,
+        setPreviewData
     } = useMapping();
     const { theme } = useTheme();
 
@@ -59,6 +57,24 @@ const BannerPreview = () => {
 
         loadTemplate();
     }, [selectedTemplate?.file]);
+
+    // Charger un produit aléatoire de la table source
+    useEffect(() => {
+        const fetchRandomData = async () => {
+            if (!sourceTable) return;
+            try {
+                const apiBase = TEMPLATE_BASE_URL.replace('/templates', '');
+                const response = await fetch(`${apiBase}/dynamic/random/${sourceTable}?limit=1`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setPreviewData(data);
+                }
+            } catch (err) {
+                console.warn(`[Ads-AI] Erreur lors du chargement des données aléatoires pour ${sourceTable}:`, err);
+            }
+        };
+        fetchRandomData();
+    }, [sourceTable, setPreviewData]);
 
     // Générer un HTML de fallback si le template n'est pas accessible
     const generateFallbackHtml = (template) => {
