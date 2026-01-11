@@ -399,8 +399,8 @@ const BannerEditor = ({ config }) => {
 
         try {
             const endpoint = isEditing && selectedTemplate?.file
-                ? `${API_URL}/banners/template/${selectedTemplate.file}`
-                : `${API_URL}/banners/template`;
+                ? `${API_URL}/templates/${selectedTemplate.file}`
+                : `${API_URL}/templates`;
 
             const method = isEditing ? 'PUT' : 'POST';
 
