@@ -274,5 +274,21 @@
             }
         });
     </script>
+<script>
+    // Margin rounding and name truncation
+    document.querySelectorAll(".margin-badge, .stat-value").forEach(function(el) {
+        var text = el.textContent;
+        var match = text.match(/([\d.]+)/);
+        if (match) {
+            el.textContent = text.replace(match[1], Math.round(parseFloat(match[1])));
+        }
+    });
+    document.querySelectorAll(".product-name, .banner-title").forEach(function(el) {
+        var text = el.textContent.trim();
+        if (text.length > 50) {
+            el.textContent = text.substring(0, 50) + "...";
+        }
+    });
+</script>
 </body>
 </html>
