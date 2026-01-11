@@ -109,6 +109,20 @@
                     "fields": ["product1ImageUrl", "product1Name", "product1Price", "product1SourceUrl", "product2ImageUrl", "product2Name", "product2Price", "product2SourceUrl", "product3ImageUrl", "product3Name", "product3Price", "product3SourceUrl", "product4ImageUrl", "product4Name", "product4Price", "product4SourceUrl", "storeUrl"]
                 }
             ]
+        },
+        "facebook": {
+            "name": "Facebook",
+            "description": "Bannières pour réseaux sociaux",
+            "templates": [
+                {
+                    "id": "facebook-cover-black-friday-820x312",
+                    "name": "Black Friday Cover",
+                    "file": "facebook/black-friday-cover-820x312.html",
+                    "size": "820x312",
+                    "description": "Design Gold & Black Friday avec sphères flottantes",
+                    "fields": ["imageUrl", "sourceUrl", "stock", "margin"]
+                }
+            ]
         }
     },
     "dbColumns": [
