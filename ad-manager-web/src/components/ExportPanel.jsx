@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMapping } from '../context/MappingContext';
 import { useTheme } from '../context/ThemeContext';
-import { Code, Copy, Check, Download, ExternalLink, Settings, Package } from 'lucide-react';
+import { Code, Copy, Check, Download, ExternalLink, Settings, Package, Database } from 'lucide-react';
 import ProductPickerModal from './ProductPickerModal';
 
-const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
+const generateIntegrationScript = (template, mapping, apiUrl, productId, dynamicOptions = null) => {
     if (!template) return '// Sélectionnez un template pour générer le script';
 
     const mappingJson = JSON.stringify(mapping, null, 4);
-    const displayProductId = productId || 'YOUR_PRODUCT_ID_HERE';
+
+    // Check if we're in dynamic mode
+    const isDynamic = dynamicOptions !== null;
+
+    let displayProductId = productId || 'YOUR_PRODUCT_ID_HERE';
+    let dataUrlCode = '';
+
+    if (isDynamic) {
+        const { sourceTable, fetchMode, column, value } = dynamicOptions;
+        if (fetchMode === 'random') {
+            dataUrlCode = `CONFIG.apiUrl + '/api/dynamic/random/${sourceTable}?limit=1'`;
+            displayProductId = `dynamic-random-${sourceTable}`;
+        } else {
+            dataUrlCode = `CONFIG.apiUrl + '/api/dynamic/row/${sourceTable}/${column}/${value || 'VALUE'}'`;
+            displayProductId = `dynamic-${sourceTable}-${column}-${value || 'VALUE'}`;
+        }
+    }
 
     // Déterminer s'il s'agit d'une bannière multi-produit
     const isMultiProduct = template.categoryKey === 'multi-product' || template.category === 'Mode & Fashion' || Object.keys(mapping).some(k => k.startsWith('product'));
@@ -25,9 +41,21 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
         productCount = Math.max(1, ...productIndices);
     }
 
+    // Build the data URL logic for the script
+    const dataUrlLogic = isDynamic
+        ? `let dataUrl = ${dataUrlCode};`
+        : `// Déterminer l'URL pour les données
+        let dataUrl = CONFIG.apiUrl + '/api/products/' + sourceId;
+        if (CONFIG.isMulti && (sourceId === 'random-promo' || !sourceId)) {
+            dataUrl = CONFIG.apiUrl + '/api/products/random?limit=' + CONFIG.productCount;
+        } else if (sourceId === 'random-promo') {
+            dataUrl = CONFIG.apiUrl + '/api/products/random-promo';
+        }`;
+
     return `<!-- Ads-AI Dynamic Banner Integration -->
 <!-- Template: ${template.name} (${template.size}) -->
-<div id="ads-ai-banner" data-product-id="${displayProductId}"></div>
+<!-- Mode: ${isDynamic ? 'Dynamic (' + dynamicOptions.sourceTable + ')' : 'Product'} -->
+<div id="ads-ai-banner" data-source-id="${displayProductId}"></div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
@@ -42,6 +70,7 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
         mapping: ${mappingJson},
         isMulti: ${isMultiProduct},
         productCount: ${productCount},
+        isDynamic: ${isDynamic},
         affiliationTags: {
             amazon: {
                 fr: 'nutriplusap-21',
@@ -77,10 +106,10 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
     // Initialisation
     $(document).ready(function() {
         const $container = $('#ads-ai-banner');
-        const productId = $container.data('product-id');
+        const sourceId = $container.data('source-id');
         
         // Vérifier si l'ID est le placeholder
-        if (productId === 'YOUR_PRODUCT_ID_HERE') {
+        if (sourceId && sourceId.includes('YOUR_')) {
             $container.css({
                 'display': 'flex',
                 'flex-direction': 'column',
@@ -94,19 +123,12 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
                 'font-size': '12px'
             }).html(
                 '<div style="font-weight:bold;color:#ff9900;margin-bottom:5px;">⚠️ Configuration Requise</div>' +
-                'Veuillez remplacer <b>YOUR_PRODUCT_ID_HERE</b> par un ID produit réel ' +
-                'ou charger la bannière en <b>mode aléatoire</b>.'
+                'Veuillez configurer une source de données valide.'
             );
             return;
         }
 
-        // Déterminer l'URL pour les données
-        let dataUrl = CONFIG.apiUrl + '/api/products/' + productId;
-        if (CONFIG.isMulti && (productId === 'random-promo' || !productId)) {
-            dataUrl = CONFIG.apiUrl + '/api/products/random?limit=' + CONFIG.productCount;
-        } else if (productId === 'random-promo') {
-            dataUrl = CONFIG.apiUrl + '/api/products/random-promo';
-        }
+        ${dataUrlLogic}
 
         // 1. Récupération des données (objet unique ou tableau)
         $.ajax({
@@ -119,15 +141,17 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
                     method: 'GET',
                     success: function(html) {
                         let renderedHtml = html;
-                        const products = Array.isArray(data) ? data : [data];
+                        // Normaliser en tableau
+                        const items = Array.isArray(data) ? data : [data];
+                        const mainItem = items[0] || {};
                         
-                        // Injection pour chaque produit si multi, ou juste le premier
-                        products.forEach(function(product, index) {
+                        // Injection pour chaque item si multi, ou juste le premier
+                        items.forEach(function(item, index) {
                             const pIdx = index + 1;
                             const prefix = CONFIG.isMulti ? 'product' + pIdx : '';
                             
-                            // Parcourir les propriétés du produit
-                            Object.entries(product).forEach(function([key, value]) {
+                            // Parcourir les propriétés
+                            Object.entries(item).forEach(function([key, value]) {
                                 if (key === 'sourceUrl' || key.toLowerCase().includes('url')) {
                                     value = applyAffiliation(value);
                                 }
@@ -135,23 +159,22 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
                                 // Remplacer avec préfixe (ex: [product1Name])
                                 if (CONFIG.isMulti) {
                                     const pKey = prefix + key.charAt(0).toUpperCase() + key.slice(1);
-                                    const regex = new RegExp('\\\\[' + pKey + '\\\\]', 'gi');
+                                    const regex = new RegExp('\\[' + pKey + '\\]', 'gi');
                                     renderedHtml = renderedHtml.replace(regex, String(value));
                                     
-                                    // Cas spécifique pour compatibilité (ex: product1Image vs product1ImageUrl)
                                     if (key === 'imageUrl') {
-                                        const imgRegex = new RegExp('\\\\[' + prefix + 'Image\\\\]', 'gi');
+                                        const imgRegex = new RegExp('\\[' + prefix + 'Image\\]', 'gi');
                                         renderedHtml = renderedHtml.replace(imgRegex, String(value));
                                     }
                                     if (key === 'sourceUrl') {
-                                        const linkRegex = new RegExp('\\\\[' + prefix + 'Link\\\\]', 'gi');
+                                        const linkRegex = new RegExp('\\[' + prefix + 'Link\\]', 'gi');
                                         renderedHtml = renderedHtml.replace(linkRegex, String(value));
                                     }
                                 }
                                 
-                                // Remplacer sans préfixe pour le premier produit ou si non multi
+                                // Remplacer sans préfixe pour le premier item ou si non multi
                                 if (!CONFIG.isMulti || index === 0) {
-                                    const regex = new RegExp('\\\\[' + key + '\\\\]', 'gi');
+                                    const regex = new RegExp('\\[' + key + '\\]', 'gi');
                                     renderedHtml = renderedHtml.replace(regex, String(value));
                                 }
                             });
@@ -159,19 +182,18 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
                         
                         // Injection des mappings personnalisés
                         Object.entries(CONFIG.mapping).forEach(function([zone, column]) {
-                            const mainProduct = products[0];
-                            if (mainProduct && mainProduct[column] !== undefined) {
-                                let value = mainProduct[column];
+                            if (mainItem && mainItem[column] !== undefined) {
+                                let value = mainItem[column];
                                 if (column === 'sourceUrl' || column.toLowerCase().includes('url')) {
                                     value = applyAffiliation(value);
                                 }
-                                const regex = new RegExp('\\\\[' + zone + '\\\\]', 'gi');
+                                const regex = new RegExp('\\[' + zone + '\\]', 'gi');
                                 renderedHtml = renderedHtml.replace(regex, value);
                             }
                         });
                         
                         // Nettoyage des placeholders restants
-                        renderedHtml = renderedHtml.replace(/\\[.*?\\]/g, '');
+                        renderedHtml = renderedHtml.replace(/\[.*?\]/g, '');
 
                         // Injecter dans le container
                         $container.html(renderedHtml);
@@ -204,7 +226,16 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId) => {
  * ExportPanel - Panneau d'exportation du script d'intégration
  */
 const ExportPanel = () => {
-    const { selectedTemplate, mapping, saveConfiguration, savedBanners, isSaving } = useMapping();
+    const {
+        selectedTemplate,
+        mapping,
+        saveConfiguration,
+        savedBanners,
+        isSaving,
+        mappingMode,
+        sourceTable,
+        dynamicColumns
+    } = useMapping();
     const { theme, currentTheme } = useTheme();
     const [copied, setCopied] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -213,11 +244,40 @@ const ExportPanel = () => {
     const [showProductPicker, setShowProductPicker] = useState(false);
     const [exportError, setExportError] = useState(null);
 
-    const script = generateIntegrationScript(selectedTemplate, mapping, apiUrl, selectedProduct?.id);
+    // Dynamic mode states
+    const [dynamicFetchMode, setDynamicFetchMode] = useState('random');
+    const [dynamicColumn, setDynamicColumn] = useState('');
+    const [dynamicValue, setDynamicValue] = useState('');
+
+    // Initialize dynamicColumn when dynamicColumns change
+    useEffect(() => {
+        if (dynamicColumns && dynamicColumns.length > 0 && !dynamicColumn) {
+            const idCol = dynamicColumns.find(c => c.key.toLowerCase().includes('id'));
+            setDynamicColumn(idCol ? idCol.key : dynamicColumns[0].key);
+        }
+    }, [dynamicColumns, dynamicColumn]);
+
+    // Generate script based on mode
+    const script = mappingMode === 'dynamic'
+        ? generateIntegrationScript(selectedTemplate, mapping, apiUrl, null, {
+            sourceTable,
+            fetchMode: dynamicFetchMode,
+            column: dynamicColumn,
+            value: dynamicValue
+        })
+        : generateIntegrationScript(selectedTemplate, mapping, apiUrl, selectedProduct?.id);
+
 
     const handleCopy = async () => {
-        if (!selectedProduct) {
+        // In product mode, require a product selection
+        if (mappingMode === 'product' && !selectedProduct) {
             setExportError('Sélectionnez un produit pour continuer');
+            setTimeout(() => setExportError(null), 3000);
+            return;
+        }
+        // In dynamic specific mode, require a value
+        if (mappingMode === 'dynamic' && dynamicFetchMode === 'specific' && !dynamicValue) {
+            setExportError('Entrez une valeur de recherche');
             setTimeout(() => setExportError(null), 3000);
             return;
         }
@@ -239,8 +299,15 @@ const ExportPanel = () => {
     };
 
     const handleDownload = () => {
-        if (!selectedProduct) {
+        // In product mode, require a product selection
+        if (mappingMode === 'product' && !selectedProduct) {
             setExportError('Sélectionnez un produit pour continuer');
+            setTimeout(() => setExportError(null), 3000);
+            return;
+        }
+        // In dynamic specific mode, require a value
+        if (mappingMode === 'dynamic' && dynamicFetchMode === 'specific' && !dynamicValue) {
+            setExportError('Entrez une valeur de recherche');
             setTimeout(() => setExportError(null), 3000);
             return;
         }
@@ -297,7 +364,7 @@ const ExportPanel = () => {
                     />
                 </label>
 
-                {/* Product Selector */}
+                {/* Product Selector - Always visible */}
                 <div>
                     <div className="flex justify-between items-center mb-2">
                         <span className={`opacity-60 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${theme.text}`}>
@@ -336,6 +403,63 @@ const ExportPanel = () => {
                         </span>
                     </button>
                 </div>
+
+                {/* Dynamic Mode Selector - Visible when in dynamic mode */}
+                {mappingMode === 'dynamic' && (
+                    <div className={`pt-3 mt-3 border-t ${theme.border}`}>
+                        <div className="flex justify-between items-center mb-2">
+                            <span className={`opacity-60 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${theme.text}`}>
+                                <Database size={10} /> Ligne Dynamique ({sourceTable})
+                            </span>
+                        </div>
+
+                        {/* Fetch Mode Toggle */}
+                        <div className={`flex rounded-lg overflow-hidden mb-2 ${theme.input} border ${theme.border}`}>
+                            <button
+                                onClick={() => setDynamicFetchMode('random')}
+                                className={`flex-1 py-2 text-[10px] font-bold transition-all ${dynamicFetchMode === 'random' ? 'bg-purple-500 text-white' : `${theme.text} opacity-60 hover:opacity-100`}`}
+                            >
+                                🎲 Aléatoire
+                            </button>
+                            <button
+                                onClick={() => setDynamicFetchMode('specific')}
+                                className={`flex-1 py-2 text-[10px] font-bold transition-all ${dynamicFetchMode === 'specific' ? 'bg-purple-500 text-white' : `${theme.text} opacity-60 hover:opacity-100`}`}
+                            >
+                                🎯 Par Colonne
+                            </button>
+                        </div>
+
+                        {/* Specific Column/Value Inputs */}
+                        {dynamicFetchMode === 'specific' && (
+                            <div className="flex gap-2 animate-fade-in">
+                                <select
+                                    value={dynamicColumn}
+                                    onChange={(e) => setDynamicColumn(e.target.value)}
+                                    className={`flex-1 ${theme.input} border ${theme.border} rounded-lg px-2 py-2 ${theme.text} text-xs focus:border-purple-500 outline-none`}
+                                >
+                                    {dynamicColumns.map(col => (
+                                        <option key={col.key} value={col.key}>{col.label}</option>
+                                    ))}
+                                </select>
+                                <input
+                                    type="text"
+                                    placeholder="Valeur..."
+                                    value={dynamicValue}
+                                    onChange={(e) => setDynamicValue(e.target.value)}
+                                    className={`flex-1 ${theme.input} border ${theme.border} rounded-lg px-2 py-2 ${theme.text} text-xs focus:border-purple-500 outline-none`}
+                                />
+                            </div>
+                        )}
+
+                        {/* Info display */}
+                        <div className={`mt-2 px-3 py-2 ${theme.card} border ${theme.border} rounded-lg text-[10px] ${theme.text} opacity-60`}>
+                            {dynamicFetchMode === 'random'
+                                ? `📊 Script généré pour: Table "${sourceTable}", ligne aléatoire`
+                                : `📊 Script généré pour: Table "${sourceTable}", ${dynamicColumn} = "${dynamicValue || '...'}"`
+                            }
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Code Preview */}

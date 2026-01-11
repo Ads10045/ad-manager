@@ -40,7 +40,7 @@ const getTemplate = async (req, res) => {
           }
         }
         if (!html) {
-          const templatePath = path.join(__dirname, '../../templates', relativePath);
+          const templatePath = path.join(__dirname, '../../../ad-manager-banner', relativePath);
           if (fs.existsSync(templatePath)) {
             html = fs.readFileSync(templatePath, 'utf8');
           } else {
