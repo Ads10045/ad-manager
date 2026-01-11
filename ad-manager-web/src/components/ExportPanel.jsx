@@ -156,6 +156,15 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId, dynamic
                                     value = applyAffiliation(value);
                                 }
                                 
+                                // Arrondir la marge et autres nombres décimaux
+                                if (key === 'margin' || (typeof value === 'number' && value % 1 !== 0)) {
+                                    value = Math.round(value);
+                                }
+                                // Arrondir si c'est une string qui ressemble à un float (ex: "12.5") pour la marge
+                                if (key === 'margin' && typeof value === 'string' && !isNaN(parseFloat(value))) {
+                                    value = Math.round(parseFloat(value));
+                                }
+                                
                                 // Remplacer avec préfixe (ex: [[product1Name]])
                                 if (CONFIG.isMulti) {
                                     const pKey = prefix + key.charAt(0).toUpperCase() + key.slice(1);
