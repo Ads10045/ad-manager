@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=970, height=90">
+    <title>Gradient Wave 970x90</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .banner-container {
+            width: 970px;
+            height: 90px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            position: relative;
+        }
+        
+        .product-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .content {
+            flex: 1;
+            padding: 0 30px;
+            color: #ffffff;
+        }
+        
+        .product-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 500px;
+        }
+        
+        .product-category {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 16px;
+            margin-right: 30px;
+        }
+        
+        .stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        
+        .stat-label {
+            font-size: 9px;
+            opacity: 0.7;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        
+        .price {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-right: 24px;
+        }
+        
+        .cta-button {
+            background: #ffffff;
+            color: #764ba2;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <img src="[[imageUrl]]" alt="[[name]]" class="product-image">
+        <div class="content">
+            <div class="product-name">[[name]]</div>
+            <div class="product-category">[[category]]</div>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">[[stock]]</div>
+                <div class="stat-label">Stock</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">[[margin]]%</div>
+                <div class="stat-label">Marge</div>
+            </div>
+        </div>
+        <span class="price">[[price]]€</span>
+        <a href="[[sourceUrl]]" class="cta-button" target="_blank">Acheter</a>
+    </div>
+</body>
+</html>

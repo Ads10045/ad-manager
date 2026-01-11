@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=728, height=90">
+    <title>Gradient Wave 728x90</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        .banner-container {
+            width: 728px;
+            height: 90px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            position: relative;
+        }
+        
+        .product-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .content {
+            flex: 1;
+            padding: 0 20px;
+            color: #ffffff;
+        }
+        
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 350px;
+        }
+        
+        .product-category {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .price-section {
+            text-align: right;
+            margin-right: 20px;
+        }
+        
+        .price {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffffff;
+        }
+        
+        .margin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        
+        .cta-button {
+            background: #ffffff;
+            color: #764ba2;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <img src="[[imageUrl]]" alt="[[name]]" class="product-image">
+        <div class="content">
+            <div class="product-name">[[name]]</div>
+            <div class="product-category">[[category]]</div>
+        </div>
+        <div class="price-section">
+            <div class="price">[[price]]€</div>
+            <span class="margin-badge">+[[margin]]%</span>
+        </div>
+        <a href="[[sourceUrl]]" class="cta-button" target="_blank">Acheter</a>
+    </div>
+</body>
+</html>
