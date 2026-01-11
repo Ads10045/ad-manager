@@ -141,7 +141,7 @@ const getDefaultTemplate = (size) => {
                 <span class="margin-badge" data-field="margin">+[[margin]]%</span>
             </div>
         </div>
-        <a href="[[sourceUrl]]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter</a>
+        <a href="[[sourceUrl]]" class="cta-button" target="_blank" data-field="sourceUrl"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13.5a2 2 0 0 0 2 1.5h9.4a2 2 0 0 0 2-1.5L23 6H6"/></svg></a>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
