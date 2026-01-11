@@ -184,10 +184,89 @@ const updateTemplate = async (req, res) => {
     }
 };
 
+/**
+ * @desc Get categories with their templates grouped (for frontend)
+ */
+const getCategoriesWithTemplates = async (req, res) => {
+    try {
+        const bannersDir = path.join(__dirname, '../../../ad-manager-banner');
+        
+        // Check if local directory exists
+        if (!fs.existsSync(bannersDir)) {
+            return res.json({ categories: {} });
+        }
+
+        const categoryFolders = fs.readdirSync(bannersDir).filter(f => {
+            try {
+                return fs.statSync(path.join(bannersDir, f)).isDirectory();
+            } catch(e) { return false; }
+        });
+
+        const categories = {};
+        
+        const categoryIcons = {
+            'rectangle': 'Square',
+            'leaderboard': 'LayoutDashboard',
+            'skyscraper': 'MoveVertical',
+            'halfpage': 'SplitSquareVertical',
+            'mobile': 'Smartphone',
+            'multi-product': 'Grid',
+            'fashion': 'Sparkles',
+            'test': 'FlaskConical'
+        };
+
+        categoryFolders.forEach(cat => {
+            const catPath = path.join(bannersDir, cat);
+            try {
+                const files = fs.readdirSync(catPath).filter(f => f.endsWith('.html'));
+                
+                if (files.length > 0) {
+                    const templates = files.map(file => {
+                        // Extract size from filename (e.g., "banner-300x250.html" -> "300x250")
+                        const sizeMatch = file.match(/(\d+x\d+)/);
+                        const size = sizeMatch ? sizeMatch[1] : 'Banner';
+                        
+                        // Extract fields from file content
+                        let fields = ['name', 'price', 'imageUrl', 'sourceUrl'];
+                        try {
+                            const content = fs.readFileSync(path.join(catPath, file), 'utf8');
+                            const fieldMatches = content.match(/\[\[([a-zA-Z0-9_]+)\]\]/g) || [];
+                            fields = [...new Set(fieldMatches.map(f => f.replace(/[\[\]]/g, '')))];
+                        } catch(e) {}
+                        
+                        return {
+                            id: `${cat}-${file.replace('.html', '')}`,
+                            name: file.replace('.html', '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                            file: `${cat}/${file}`,
+                            size: size,
+                            description: `Template ${size}`,
+                            fields: fields
+                        };
+                    });
+
+                    categories[cat] = {
+                        name: cat.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                        icon: categoryIcons[cat] || 'Folder',
+                        description: `${templates.length} template(s)`,
+                        templates: templates
+                    };
+                }
+            } catch(e) {
+                console.warn(`Error reading category ${cat}:`, e.message);
+            }
+        });
+
+        res.json({ categories });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = { 
   getTemplate,
   getLocalTemplates,
   createTemplate,
   updateTemplate,
-  deleteTemplate
+  deleteTemplate,
+  getCategoriesWithTemplates
 };

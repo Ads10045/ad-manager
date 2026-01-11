@@ -341,48 +341,62 @@ export const MappingProvider = ({ children }) => {
         fetchColumns();
     }, [sourceTable]);
 
-    // Charger les mappings et config depuis localStorage au démarrage
+    // Charger les catégories depuis l'API et les mappings depuis localStorage
     useEffect(() => {
-        try {
-            // Always use INITIAL_CONFIG as base, then merge any custom templates from localStorage
-            const storedConfig = localStorage.getItem(CONFIG_KEY);
-            if (storedConfig) {
-                const parsed = JSON.parse(storedConfig);
-                // Merge: Start with INITIAL_CONFIG, add any custom templates from localStorage
-                const mergedConfig = { categories: { ...INITIAL_CONFIG.categories } };
+        const loadConfig = async () => {
+            try {
+                // Fetch categories from API
+                const response = await fetch(`${API_URL}/templates/categories`);
+                let apiCategories = {};
 
-                // Add any custom templates that aren't in INITIAL_CONFIG
-                Object.entries(parsed.categories || {}).forEach(([catKey, cat]) => {
-                    if (!mergedConfig.categories[catKey]) {
-                        // New category from localStorage
-                        mergedConfig.categories[catKey] = cat;
-                    } else {
-                        // Existing category - add custom templates
-                        const existingIds = mergedConfig.categories[catKey].templates.map(t => t.id);
-                        const customTemplates = cat.templates.filter(t => !existingIds.includes(t.id));
-                        mergedConfig.categories[catKey].templates = [
-                            ...mergedConfig.categories[catKey].templates,
-                            ...customTemplates
-                        ];
-                    }
-                });
+                if (response.ok) {
+                    const data = await response.json();
+                    apiCategories = data.categories || {};
+                    console.log('[Ads-AI] Catégories chargées depuis l\'API:', Object.keys(apiCategories));
+                }
 
-                setBannerConfig(mergedConfig);
-            } else {
+                // Start with API categories as base
+                let finalConfig = { categories: apiCategories };
+
+                // Merge custom templates from localStorage
+                const storedConfig = localStorage.getItem(CONFIG_KEY);
+                if (storedConfig) {
+                    const parsed = JSON.parse(storedConfig);
+                    Object.entries(parsed.categories || {}).forEach(([catKey, cat]) => {
+                        if (!finalConfig.categories[catKey]) {
+                            finalConfig.categories[catKey] = cat;
+                        } else {
+                            const existingIds = finalConfig.categories[catKey].templates.map(t => t.id);
+                            const customTemplates = cat.templates.filter(t => !existingIds.includes(t.id));
+                            finalConfig.categories[catKey].templates = [
+                                ...finalConfig.categories[catKey].templates,
+                                ...customTemplates
+                            ];
+                        }
+                    });
+                }
+
+                // If no categories from API, fallback to INITIAL_CONFIG
+                if (Object.keys(finalConfig.categories).length === 0) {
+                    finalConfig = INITIAL_CONFIG;
+                }
+
+                setBannerConfig(finalConfig);
+
+                // Load mappings from localStorage
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    setTemplateMappings(parsed.templateMappings || {});
+                    setSavedBanners(parsed.savedBanners || []);
+                    console.log('[Ads-AI] Mappings chargés depuis localStorage');
+                }
+            } catch (e) {
+                console.warn('[Ads-AI] Erreur chargement config:', e);
                 setBannerConfig(INITIAL_CONFIG);
             }
-
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                const parsed = JSON.parse(stored);
-                setTemplateMappings(parsed.templateMappings || {});
-                setSavedBanners(parsed.savedBanners || []);
-                console.log('[Ads-AI] Mappings chargés depuis localStorage');
-            }
-        } catch (e) {
-            console.warn('[Ads-AI] Erreur chargement localStorage:', e);
-            setBannerConfig(INITIAL_CONFIG);
-        }
+        };
+        loadConfig();
     }, []);
 
     // Sauvegarder dans localStorage à chaque changement

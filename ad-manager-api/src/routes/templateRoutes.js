@@ -9,6 +9,7 @@ const templateController = require('../controllers/templateController');
  *   description: HTML Banner Templates Management
  */
 
+router.get('/categories', templateController.getCategoriesWithTemplates);
 router.get('/local', templateController.getLocalTemplates);
 
 router.get('/*', (req, res, next) => {
