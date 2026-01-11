@@ -358,22 +358,33 @@ export const MappingProvider = ({ children }) => {
                 // Start with API categories as base
                 let finalConfig = { categories: apiCategories };
 
-                // Merge custom templates from localStorage
+                // Merge custom templates from localStorage (only truly custom ones)
                 const storedConfig = localStorage.getItem(CONFIG_KEY);
                 if (storedConfig) {
                     const parsed = JSON.parse(storedConfig);
                     Object.entries(parsed.categories || {}).forEach(([catKey, cat]) => {
-                        if (!finalConfig.categories[catKey]) {
-                            finalConfig.categories[catKey] = cat;
-                        } else {
+                        // Skip categories that now come from API (studio, leaderboard, etc.)
+                        if (finalConfig.categories[catKey]) {
+                            // Only add templates that don't exist in API (check by file path)
+                            const existingFiles = finalConfig.categories[catKey].templates.map(t => t.file);
                             const existingIds = finalConfig.categories[catKey].templates.map(t => t.id);
-                            const customTemplates = cat.templates.filter(t => !existingIds.includes(t.id));
-                            finalConfig.categories[catKey].templates = [
-                                ...finalConfig.categories[catKey].templates,
-                                ...customTemplates
-                            ];
+                            const customTemplates = cat.templates.filter(t =>
+                                !existingFiles.includes(t.file) && !existingIds.includes(t.id)
+                            );
+                            if (customTemplates.length > 0) {
+                                finalConfig.categories[catKey].templates = [
+                                    ...finalConfig.categories[catKey].templates,
+                                    ...customTemplates
+                                ];
+                            }
+                        } else {
+                            // Entirely custom category from localStorage
+                            finalConfig.categories[catKey] = cat;
                         }
                     });
+
+                    // Clear old localStorage config to prevent stale data issues
+                    localStorage.removeItem(CONFIG_KEY);
                 }
 
                 // If no categories from API, fallback to INITIAL_CONFIG
