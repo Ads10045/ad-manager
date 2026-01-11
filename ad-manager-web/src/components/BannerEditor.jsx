@@ -14,18 +14,22 @@ const TEMPLATE_BASE_URL = `${API_URL}/templates`;
 
 // Placeholders pour autocomplétion
 const PLACEHOLDERS = [
-    { label: '[name]', detail: 'Nom du produit' },
-    { label: '[price]', detail: 'Prix du produit' },
-    { label: '[imageUrl]', detail: 'URL de l\'image' },
-    { label: '[category]', detail: 'Catégorie' },
-    { label: '[margin]', detail: 'Marge (%)' },
-    { label: '[description]', detail: 'Description' },
-    { label: '[sourceUrl]', detail: 'Lien vers le produit' },
-    { label: '[source]', detail: 'Site source (Amazon, AliExpress...)' },
-    { label: '[sourceLogo]', detail: 'Logo du site source' },
-    { label: '[stock]', detail: 'Stock disponible' },
-    { label: '[supplierPrice]', detail: 'Prix fournisseur' },
-    { label: '[isPromo]', detail: 'En promotion (true/false)' },
+    { label: '[[id]]', detail: 'ID du produit' },
+    { label: '[[name]]', detail: 'Nom du produit' },
+    { label: '[[price]]', detail: 'Prix du produit' },
+    { label: '[[imageUrl]]', detail: 'URL de l\'image' },
+    { label: '[[category]]', detail: 'Catégorie' },
+    { label: '[[margin]]', detail: 'Marge (%)' },
+    { label: '[[description]]', detail: 'Description' },
+    { label: '[[sourceUrl]]', detail: 'Lien vers le produit' },
+    { label: '[[source]]', detail: 'Site source (Amazon, AliExpress...)' },
+    { label: '[[sourceLogo]]', detail: 'Logo du site source' },
+    { label: '[[stock]]', detail: 'Stock disponible' },
+    { label: '[[supplierPrice]]', detail: 'Prix fournisseur' },
+    { label: '[[isPromo]]', detail: 'En promotion (true/false)' },
+    { label: '[[rating]]', detail: 'Note du produit' },
+    { label: '[[brand]]', detail: 'Marque du produit' },
+    { label: '[[sku]]', detail: 'Référence SKU' },
 ];
 
 // Templates par défaut pour chaque taille
@@ -125,19 +129,19 @@ const getDefaultTemplate = (size) => {
 </head>
 <body>
     <div class="banner-container">
-        <img src="[imageUrl]" alt="[name]" class="product-image" data-field="imageUrl">
+        <img src="[[imageUrl]]" alt="[[name]]" class="product-image" data-field="imageUrl">
         <div class="content">
-            <div class="product-name" data-field="name">[name]</div>
+            <div class="product-name" data-field="name">[[name]]</div>
             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                <img src="[sourceLogo]" class="source-logo" style="height: 12px; width: auto; display: none;" data-field="sourceLogo" onerror="this.style.display='none'">
-                <div class="product-category" data-field="category" style="margin-bottom: 0;">[category]</div>
+                <img src="[[sourceLogo]]" class="source-logo" style="height: 12px; width: auto; display: none;" data-field="sourceLogo" onerror="this.style.display='none'">
+                <div class="product-category" data-field="category" style="margin-bottom: 0;">[[category]]</div>
             </div>
             <div class="price-row">
-                <span class="price" data-field="price">[price]€</span>
-                <span class="margin-badge" data-field="margin">+[margin]%</span>
+                <span class="price" data-field="price">[[price]]€</span>
+                <span class="margin-badge" data-field="margin">+[[margin]]%</span>
             </div>
         </div>
-        <a href="[sourceUrl]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter</a>
+        <a href="[[sourceUrl]]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter</a>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
