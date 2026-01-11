@@ -103,15 +103,15 @@
 <body>
     <div class="banner-container">
         <div class="wave-decoration"></div>
-        <img src="[imageUrl]" alt="[name]" class="product-image" data-field="imageUrl">
+        <img src="[[imageUrl]]" alt="[[name]]" class="product-image" data-field="imageUrl">
         <div class="content">
-            <div class="product-name" data-field="name">[name]</div>
+            <div class="product-name" data-field="name">[[name]]</div>
             <div class="price-row">
-                <span class="price" data-field="price">[price]€</span>
-                <span class="margin-badge" data-field="margin">+[margin]%</span>
+                <span class="price" data-field="price">[[price]]€</span>
+                <span class="margin-badge" data-field="margin">+[[margin]]%</span>
             </div>
         </div>
-        <a href="[sourceUrl]" class="cta-button" target="_blank" data-field="sourceUrl">Voir</a>
+        <a href="[[sourceUrl]]" class="cta-button" target="_blank" data-field="sourceUrl">Voir</a>
     </div>
     
     <script>
@@ -121,7 +121,7 @@
                 const text = marginEl.textContent;
                 const match = text.match(/([\d.]+)/);
                 if (match) {
-                    marginEl.textContent = '+' + Math.round(parseFloat(match[1])) + '%';
+                    marginEl.textContent = '+' + Math.round(parseFloat(match[[1]])) + '%';
                 }
             }
         });

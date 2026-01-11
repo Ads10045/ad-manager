@@ -135,14 +135,14 @@
             <div class="brand-label">Collection Exclusive</div>
         </div>
         
-        <img src="[imageUrl]" alt="[name]" class="product-image" data-field="imageUrl">
+        <img src="[[imageUrl]]" alt="[[name]]" class="product-image" data-field="imageUrl">
         
         <div class="content">
-            <div class="product-name" data-field="name">[name]</div>
-            <div class="category" data-field="category">[category]</div>
-            <div class="price" data-field="price">[price]€</div>
-            <div class="margin-text" data-field="margin">Marge +[margin]%</div>
-            <a href="[sourceUrl]" class="cta-button" target="_blank" data-field="sourceUrl">Découvrir</a>
+            <div class="product-name" data-field="name">[[name]]</div>
+            <div class="category" data-field="category">[[category]]</div>
+            <div class="price" data-field="price">[[price]]€</div>
+            <div class="margin-text" data-field="margin">Marge +[[margin]]%</div>
+            <a href="[[sourceUrl]]" class="cta-button" target="_blank" data-field="sourceUrl">Découvrir</a>
         </div>
     </div>
     
@@ -153,7 +153,7 @@
                 const text = marginEl.textContent;
                 const match = text.match(/([\d.]+)/);
                 if (match) {
-                    marginEl.textContent = 'Marge +' + Math.round(parseFloat(match[1])) + '%';
+                    marginEl.textContent = 'Marge +' + Math.round(parseFloat(match[[1]])) + '%';
                 }
             }
         });

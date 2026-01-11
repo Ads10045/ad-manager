@@ -149,15 +149,15 @@
         
         <div class="header">
             <span class="tag">PROMO</span>
-            <span class="margin-tag" data-field="margin">+[margin]% profit</span>
+            <span class="margin-tag" data-field="margin">+[[margin]]% profit</span>
         </div>
         
         <div class="product-section">
-            <img src="[imageUrl]" alt="[name]" class="product-image" data-field="imageUrl">
+            <img src="[[imageUrl]]" alt="[[name]]" class="product-image" data-field="imageUrl">
             <div class="product-info">
-                <div class="product-name" data-field="name">[name]</div>
-                <div class="category" data-field="category"># [category]</div>
-                <div class="price" data-field="price">[price]€</div>
+                <div class="product-name" data-field="name">[[name]]</div>
+                <div class="category" data-field="category"># [[category]]</div>
+                <div class="price" data-field="price">[[price]]€</div>
             </div>
         </div>
         
@@ -165,7 +165,7 @@
             <div class="stats">
                 <span class="stat">Stock: <span class="stat-value">Disponible</span></span>
             </div>
-            <a href="[sourceUrl]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter →</a>
+            <a href="[[sourceUrl]]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter →</a>
         </div>
     </div>
     
@@ -176,7 +176,7 @@
                 const text = marginEl.textContent;
                 const match = text.match(/([\d.]+)/);
                 if (match) {
-                    marginEl.textContent = '+' + Math.round(parseFloat(match[1])) + '% profit';
+                    marginEl.textContent = '+' + Math.round(parseFloat(match[[1]])) + '% profit';
                 }
             }
         });

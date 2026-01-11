@@ -120,15 +120,15 @@
         <div class="floating-circle circle-2"></div>
         <div class="glass-card">
             <div class="product-image-wrapper">
-                <img src="[imageUrl]" alt="[name]" data-field="imageUrl">
+                <img src="[[imageUrl]]" alt="[[name]]" data-field="imageUrl">
             </div>
-            <div class="product-name" data-field="name">[name]</div>
-            <div class="category" data-field="category">[category]</div>
+            <div class="product-name" data-field="name">[[name]]</div>
+            <div class="category" data-field="category">[[category]]</div>
             <div class="price-section">
-                <span class="price" data-field="price">[price]€</span>
-                <span class="margin-pill" data-field="margin">+[margin]%</span>
+                <span class="price" data-field="price">[[price]]€</span>
+                <span class="margin-pill" data-field="margin">+[[margin]]%</span>
             </div>
-            <a href="[sourceUrl]" class="cta-button" target="_blank" data-field="sourceUrl">Découvrir →</a>
+            <a href="[[sourceUrl]]" class="cta-button" target="_blank" data-field="sourceUrl">Découvrir →</a>
         </div>
     </div>
     
@@ -139,7 +139,7 @@
                 const text = marginEl.textContent;
                 const match = text.match(/([\d.]+)/);
                 if (match) {
-                    marginEl.textContent = '+' + Math.round(parseFloat(match[1])) + '%';
+                    marginEl.textContent = '+' + Math.round(parseFloat(match[[1]])) + '%';
                 }
             }
         });

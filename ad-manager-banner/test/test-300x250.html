@@ -91,19 +91,19 @@
 </head>
 <body>
     <div class="banner-container">
-        <img src="[bannerId]" alt="[name]" class="product-image" data-field="imageUrl">
+        <img src="[[bannerId]]" alt="[[name]]" class="product-image" data-field="imageUrl">
         <div class="content">
-            <div class="product-name" data-field="name">[name]</div>
+            <div class="product-name" data-field="name">[[name]]</div>
             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                <img src="[sourceBanner]" class="source-logo" style="height: 12px; width: auto; display: none;" data-field="sourceLogo" onerror="this.style.display='none'">
-                <div class="product-category" data-field="category" style="margin-bottom: 0;">[category]</div>
+                <img src="[[sourceBanner]]" class="source-logo" style="height: 12px; width: auto; display: none;" data-field="sourceLogo" onerror="this.style.display='none'">
+                <div class="product-category" data-field="category" style="margin-bottom: 0;">[[category]]</div>
             </div>
             <div class="price-row">
-                <span class="price" data-field="price">[priceBanner]€</span>
-                <span class="margin-badge" data-field="margin">+[marginBanner]%</span>
+                <span class="price" data-field="price">[[priceBanner]]€</span>
+                <span class="margin-badge" data-field="margin">+[[marginBanner]]%</span>
             </div>
         </div>
-        <a href="[sourceBanner]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter</a>
+        <a href="[[sourceBanner]]" class="cta-button" target="_blank" data-field="sourceUrl">Acheter</a>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -121,7 +121,7 @@
                 var text = marginEl.text();
                 var match = text.match(/([\d.]+)/);
                 if (match) {
-                    marginEl.text('+' + Math.round(parseFloat(match[1])) + '%');
+                    marginEl.text('+' + Math.round(parseFloat(match[[1]])) + '%');
                 }
             }
             

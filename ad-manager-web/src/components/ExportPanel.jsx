@@ -156,25 +156,25 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId, dynamic
                                     value = applyAffiliation(value);
                                 }
                                 
-                                // Remplacer avec préfixe (ex: [product1Name])
+                                // Remplacer avec préfixe (ex: [[product1Name]])
                                 if (CONFIG.isMulti) {
                                     const pKey = prefix + key.charAt(0).toUpperCase() + key.slice(1);
-                                    const regex = new RegExp('\\\\[' + pKey + '\\\\]', 'gi');
+                                    const regex = new RegExp('\\\\[\\\\[' + pKey + '\\\\]\\\\]', 'gi');
                                     renderedHtml = renderedHtml.replace(regex, String(value));
                                     
                                     if (key === 'imageUrl') {
-                                        const imgRegex = new RegExp('\\\\[' + prefix + 'Image\\\\]', 'gi');
+                                        const imgRegex = new RegExp('\\\\[\\\\[' + prefix + 'Image\\\\]\\\\]', 'gi');
                                         renderedHtml = renderedHtml.replace(imgRegex, String(value));
                                     }
                                     if (key === 'sourceUrl') {
-                                        const linkRegex = new RegExp('\\\\[' + prefix + 'Link\\\\]', 'gi');
+                                        const linkRegex = new RegExp('\\\\[\\\\[' + prefix + 'Link\\\\]\\\\]', 'gi');
                                         renderedHtml = renderedHtml.replace(linkRegex, String(value));
                                     }
                                 }
                                 
                                 // Remplacer sans préfixe pour le premier item ou si non multi
                                 if (!CONFIG.isMulti || index === 0) {
-                                    const regex = new RegExp('\\\\[' + key + '\\\\]', 'gi');
+                                    const regex = new RegExp('\\\\[\\\\[' + key + '\\\\]\\\\]', 'gi');
                                     renderedHtml = renderedHtml.replace(regex, String(value));
                                 }
                             });
@@ -187,13 +187,13 @@ const generateIntegrationScript = (template, mapping, apiUrl, productId, dynamic
                                 if (column === 'sourceUrl' || column.toLowerCase().includes('url')) {
                                     value = applyAffiliation(value);
                                 }
-                                const regex = new RegExp('\\\\[' + zone + '\\\\]', 'gi');
+                                const regex = new RegExp('\\\\[\\\\[' + zone + '\\\\]\\\\]', 'gi');
                                 renderedHtml = renderedHtml.replace(regex, value);
                             }
                         });
                         
                         // Nettoyage des placeholders restants
-                        renderedHtml = renderedHtml.replace(/\\[.*?\\]/g, '');
+                        renderedHtml = renderedHtml.replace(/\\[\\[.*?\\]\\]/g, '');
 
                         // Injecter dans le container
                         $container.html(renderedHtml);

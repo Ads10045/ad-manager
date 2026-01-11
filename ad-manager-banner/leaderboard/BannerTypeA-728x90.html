@@ -214,21 +214,21 @@
         <div class="promo-badge" data-field="promoBadge" style="display: none;">PROMO</div>
         
         <!-- Image -->
-        <div class="banner-image" onclick="window.showPreview('[imageUrl]')">
-            <img src="[imageUrl]" alt="[name]" data-field="imageUrl">
+        <div class="banner-image" onclick="window.showPreview('[[imageUrl]]')">
+            <img src="[[imageUrl]]" alt="[[name]]" data-field="imageUrl">
         </div>
         
         <!-- Content -->
         <div class="banner-content">
-            <div class="banner-title" data-truncate="50" data-field="name">[name]</div>
-            <div class="banner-subtitle" data-field="category">[category]</div>
-            <div class="banner-margin" data-field="margin">+[margin]%</div>
+            <div class="banner-title" data-truncate="50" data-field="name">[[name]]</div>
+            <div class="banner-subtitle" data-field="category">[[category]]</div>
+            <div class="banner-margin" data-field="margin">+[[margin]]%</div>
         </div>
         
         <!-- Price Section -->
         <div class="banner-price-section">
-            <div class="banner-price" data-field="price">[price]€</div>
-            <a href="[sourceUrl]" class="banner-cta" target="_blank" data-field="sourceUrl">Voir →</a>
+            <div class="banner-price" data-field="price">[[price]]€</div>
+            <a href="[[sourceUrl]]" class="banner-cta" target="_blank" data-field="sourceUrl">Voir →</a>
         </div>
 </div>
 
@@ -248,7 +248,7 @@
                 const text = marginEl.textContent;
                 const match = text.match(/([\d.]+)/);
                 if (match) {
-                    const rounded = Math.round(parseFloat(match[1]));
+                    const rounded = Math.round(parseFloat(match[[1]]));
                     marginEl.textContent = '+' + rounded + '%';
                 }
             }
