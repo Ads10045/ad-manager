@@ -6,7 +6,7 @@ import MappingPanel from './components/MappingPanel';
 import ExportPanel from './components/ExportPanel';
 import { useMapping } from './context/MappingContext';
 import { useTheme } from './context/ThemeContext';
-import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check, Move } from 'lucide-react';
+import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check, Move, LayoutGrid } from 'lucide-react';
 
 import GalleryView from './components/GalleryView';
 
@@ -15,27 +15,27 @@ import GalleryView from './components/GalleryView';
  * Charge les templates depuis ad-manager-banner
  */
 const App = () => {
-    const { selectedTemplate, isCodeEditorOpen, bannerConfig, setSelectedTemplate } = useMapping();
+    const { selectedTemplate, isCodeEditorOpen, bannerConfig } = useMapping();
     const { theme, currentTheme, setTheme, themes } = useTheme();
     const [activePanel, setActivePanel] = React.useState('mapping');
     const [themeMenuOpen, setThemeMenuOpen] = React.useState(false);
     const [view, setView] = React.useState('gallery'); // 'gallery' | 'editor'
 
-    // Auto-switch to editor when a template is selected
-    React.useEffect(() => {
-        if (selectedTemplate) {
-            setView('editor');
-        }
-    }, [selectedTemplate]);
-
     const handleBackToGallery = () => {
-        setSelectedTemplate(null);
         setView('gallery');
     };
 
+    const handleTemplateSelect = () => {
+        setView('editor');
+    };
+
+    if (view === 'gallery') {
+        return <GalleryView onSelect={handleTemplateSelect} />;
+    }
+
     return (
         <div className={`h-screen w-screen flex ${theme.bg} ${theme.text} overflow-hidden font-sans selection:bg-purple-500/30 transition-colors duration-300`}>
-            {/* Left Sidebar - Templates (Always visible) */}
+            {/* Left Sidebar - Templates */}
             <aside className={`w-72 flex-shrink-0 ${theme.sidebar} border-r ${theme.border}`}>
                 <TemplateSidebar />
             </aside>
@@ -45,15 +45,13 @@ const App = () => {
                 {/* Top Header */}
                 <header className={`h-16 border-b ${theme.border} ${theme.header} backdrop-blur-xl flex items-center justify-between px-6 z-10`}>
                     <div className="flex items-center gap-3">
-                        {view === 'editor' && (
-                            <button
-                                onClick={handleBackToGallery}
-                                className={`p-2 rounded-lg ${theme.hover} mr-2`}
-                                title="Retour à la galerie"
-                            >
-                                <LayoutGrid size={20} />
-                            </button>
-                        )}
+                        <button
+                            onClick={handleBackToGallery}
+                            className={`p-2 rounded-lg ${theme.hover} mr-2`}
+                            title="Retour à la galerie"
+                        >
+                            <LayoutGrid size={20} />
+                        </button>
                         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
                             <Wand2 size={20} className="text-white" />
                         </div>
@@ -101,7 +99,7 @@ const App = () => {
                             )}
                         </div>
 
-                        {selectedTemplate && view === 'editor' && (
+                        {selectedTemplate && (
                             <div className={`flex items-center gap-2 px-3 py-1.5 ${theme.input} rounded-full border ${theme.border}`}>
                                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                                 <span className={`text-xs ${theme.text} opacity-60`}>
@@ -109,7 +107,7 @@ const App = () => {
                                 </span>
                             </div>
                         )}
-                        {isCodeEditorOpen && view === 'editor' && (
+                        {isCodeEditorOpen && (
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 rounded-full border border-blue-500/50">
                                 <Edit3 size={14} className="text-blue-400" />
                                 <span className="text-xs text-blue-300 font-bold">Éditeur HTML</span>
@@ -123,23 +121,19 @@ const App = () => {
                     {/* Background Grid Effect - conditional opacity based on theme */}
                     <div className={`absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none mix-blend-overlay ${currentTheme === 'light' ? 'opacity-5' : 'opacity-20'}`}></div>
 
-                    {/* Gallery or Editor Section */}
+                    {/* Preview or Editor Section */}
                     <div className="flex-1 flex flex-col relative z-0">
-                        {view === 'gallery' ? (
-                            <GalleryView onSelect={() => setView('editor')} />
+                        {isCodeEditorOpen ? (
+                            <BannerEditor config={bannerConfig} />
                         ) : (
-                            isCodeEditorOpen ? (
-                                <BannerEditor config={bannerConfig} />
-                            ) : (
-                                <BannerPreview />
-                            )
+                            <BannerPreview />
                         )}
                     </div>
                 </div>
             </main>
 
-            {/* Right Panel - Tabs: Only show if NOT in an editor mode AND in editor view */}
-            {!isCodeEditorOpen && view === 'editor' && (
+            {/* Right Panel - Tabs: Only show if NOT in an editor mode */}
+            {!isCodeEditorOpen && (
                 <aside className={`w-80 flex-shrink-0 flex flex-col border-l ${theme.border} ${theme.sidebar} z-10`}>
                     {/* Tab Headers */}
                     <div className={`flex border-b ${theme.border}`}>
