@@ -6,9 +6,7 @@ import MappingPanel from './components/MappingPanel';
 import ExportPanel from './components/ExportPanel';
 import { useMapping } from './context/MappingContext';
 import { useTheme } from './context/ThemeContext';
-import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check, Move, LayoutGrid } from 'lucide-react';
-
-import GalleryView from './components/GalleryView';
+import { Wand2, SlidersHorizontal, Code, Edit3, Palette, Check, Move } from 'lucide-react';
 
 /**
  * App - Application principale du générateur de bannières dynamiques
@@ -19,19 +17,6 @@ const App = () => {
     const { theme, currentTheme, setTheme, themes } = useTheme();
     const [activePanel, setActivePanel] = React.useState('mapping');
     const [themeMenuOpen, setThemeMenuOpen] = React.useState(false);
-    const [view, setView] = React.useState('gallery'); // 'gallery' | 'editor'
-
-    const handleBackToGallery = () => {
-        setView('gallery');
-    };
-
-    const handleTemplateSelect = () => {
-        setView('editor');
-    };
-
-    if (view === 'gallery') {
-        return <GalleryView onSelect={handleTemplateSelect} />;
-    }
 
     return (
         <div className={`h-screen w-screen flex ${theme.bg} ${theme.text} overflow-hidden font-sans selection:bg-purple-500/30 transition-colors duration-300`}>
@@ -45,13 +30,7 @@ const App = () => {
                 {/* Top Header */}
                 <header className={`h-16 border-b ${theme.border} ${theme.header} backdrop-blur-xl flex items-center justify-between px-6 z-10`}>
                     <div className="flex items-center gap-3">
-                        <button
-                            onClick={handleBackToGallery}
-                            className={`p-2 rounded-lg ${theme.hover} mr-2`}
-                            title="Retour à la galerie"
-                        >
-                            <LayoutGrid size={20} />
-                        </button>
+
                         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
                             <Wand2 size={20} className="text-white" />
                         </div>
