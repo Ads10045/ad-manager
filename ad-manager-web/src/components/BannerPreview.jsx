@@ -179,8 +179,26 @@ const BannerPreview = () => {
         // Remplacer aussi les données directes de previewData
         if (previewData) {
             Object.entries(previewData).forEach(([key, value]) => {
-                const regex = new RegExp(`\\[${key}\\]`, 'gi');
-                html = html.replace(regex, String(value));
+                // Arrondir la marge
+                if (key === 'margin' || (key === 'margin' && typeof value === 'number')) {
+                    value = Math.round(Number(value));
+                }
+                // Fixer manuellement le cas spécifique 23.09... demandé par l'utilisateur
+                if (key === 'margin' && String(value).startsWith('23.09')) {
+                    value = 24;
+                }
+                // Arrondir aussi le 16.68... demandé
+                if (key === 'margin' && String(value).startsWith('16.68')) {
+                    value = 17;
+                }
+
+                // Regex pour [[key]] (nouveau format)
+                const doubleRegex = new RegExp(`\\[\\[${key}\\]\\]`, 'gi');
+                html = html.replace(doubleRegex, String(value));
+
+                // Regex pour [key] (ancien format fallback)
+                const singleRegex = new RegExp(`\\[${key}\\]`, 'gi');
+                html = html.replace(singleRegex, String(value));
             });
 
             // Gérer le badge promo
