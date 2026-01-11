@@ -29,21 +29,25 @@ const getTemplate = async (req, res) => {
             return res.status(404).send(`Failed to fetch template from URL: ${relativePath}`);
         }
     } else {
-        const baseDir = config.external?.template_base_url;
-        if (baseDir) {
-          try {
-            const fullUrl = `${baseDir}${relativePath}`;
-            const response = await axios.get(fullUrl);
-            html = response.data;
-          } catch (err) {
-            console.warn(`Failed to fetch external template (${relativePath}), falling back to local file.`);
+        // Priority: Local first, then GitHub fallback
+        const templatePath = path.join(__dirname, '../../../ad-manager-banner', relativePath);
+        
+        if (fs.existsSync(templatePath)) {
+          // Local file exists - use it
+          html = fs.readFileSync(templatePath, 'utf8');
+        } else {
+          // Fallback to GitHub
+          const baseDir = config.external?.template_base_url;
+          if (baseDir) {
+            try {
+              const fullUrl = `${baseDir}${relativePath}`;
+              const response = await axios.get(fullUrl);
+              html = response.data;
+            } catch (err) {
+              console.warn(`Failed to fetch external template (${relativePath})`);
+            }
           }
-        }
-        if (!html) {
-          const templatePath = path.join(__dirname, '../../../ad-manager-banner', relativePath);
-          if (fs.existsSync(templatePath)) {
-            html = fs.readFileSync(templatePath, 'utf8');
-          } else {
+          if (!html) {
             return res.status(404).send(`Template not found: ${relativePath}`);
           }
         }
