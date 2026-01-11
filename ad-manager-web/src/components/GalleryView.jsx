@@ -52,19 +52,10 @@ const GalleryView = ({ onSelect }) => {
     };
 
     return (
-        <div className={`flex flex-col h-full ${theme.bg} ${theme.text} font-sans overflow-hidden p-8`}>
-            {/* Header / Search */}
-            <div className="max-w-7xl mx-auto w-full mb-8 space-y-6">
-                <div className="text-center space-y-2">
-                    <h1 className="text-4xl font-black tracking-tighter bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-                        Banner Studio
-                    </h1>
-                    <p className={`text-lg opacity-60 ${theme.text}`}>
-                        Choisissez un template pour commencer à créer
-                    </p>
-                </div>
-
-                <div className="flex items-center gap-4 justify-center">
+        <div className={`flex flex-col h-full ${theme.bg} ${theme.text} font-sans overflow-hidden p-6`}>
+            {/* Search Bar */}
+            <div className="max-w-7xl mx-auto w-full mb-8 flex flex-col items-center space-y-6">
+                <div className="flex items-center gap-4 justify-center w-full">
                     <div className={`relative w-full max-w-md group`}>
                         <div className={`absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition-opacity`}></div>
                         <div className={`relative flex items-center ${theme.card} border ${theme.border} rounded-xl px-4 py-3 shadow-2xl`}>
