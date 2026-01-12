@@ -17,16 +17,18 @@
         }
 
         .banner-container {
-            position: absolute;
-            left: 270px;
-            top: 3%;
-            /* transform: translateY(-50%); */
-            /* width: 350px; */
-            height: 280px;
-            z-index: 15;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 820px;
+            height: 312px;
+            background: #f8f8fc;
+            background-image: 
+                radial-gradient(#e5e7eb 15%, transparent 16%),
+                radial-gradient(#e5e7eb 15%, transparent 16%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         /* Abstract Triangle Shapes */
@@ -59,12 +61,35 @@
         .sphere.blur {
             filter: blur(2px);
         }
+        .sphere-1 {
+            width: 60px;
+            height: 60px;
+            top: 50%;
+            left: 50px;
+            font-size: 20px;
+        }
+        .sphere-2 {
+            width: 80px;
+            height: 80px;
+            bottom: -20px;
+            right: 50px;
+            font-size: 28px;
+            filter: blur(4px);
+            z-index: 30;
+        }
+        .sphere-3 {
+            width: 30px;
+            height: 30px;
+            bottom: 40px;
+            left: 360px;
+            background: #8b4513;
+        }
 
         /* Main Content Layout */
         .content-left {
             position: absolute;
             top: 50%;
-            left: 50px;
+            left: 120px;
             transform: translateY(-50%);
             z-index: 10;
         }
@@ -139,11 +164,11 @@
         .offer-box {
             position: absolute;
             top: 60px;
-            right: 120px;
+            left: 420px;
             border: 2px solid #8b4513;
             padding: 5px 15px;
-            /* transform: rotate(-5deg); */
-            background: rgba(255, 255, 255, 0.8);
+            transform: rotate(-5deg);
+            background: rgba(255,255,255,0.8);
             z-index: 5;
         }
         .offer-percent {
@@ -160,12 +185,12 @@
         }
 
         /* Product Image */
-       .product-container {
+        .product-container {
             position: absolute;
-            left: 308px;
-            top: 3%;
-            /* transform: translateY(-50%); */
-            /* width: 350px; */
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 350px;
             height: 280px;
             z-index: 15;
             display: flex;
@@ -177,11 +202,12 @@
             max-height: 100%;
             object-fit: contain;
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
-            
+            transform: rotate(-10deg);
         }
 
         /* Popin Logic (kept from previous requests) */
         .product-img { cursor: zoom-in; transition: transform 0.3s ease; }
+        .product-img:hover { transform: rotate(-10deg) scale(1.05); }
 
     </style>
 </head>
@@ -191,6 +217,11 @@
         <!-- Background Shapes -->
         <div class="shape-triangle bg-shape-1"></div>
         <div class="shape-triangle bg-shape-2"></div>
+
+        <!-- Floating Spheres -->
+        <div class="sphere sphere-1 blur">%</div>
+        <div class="sphere sphere-2">%</div>
+        <div class="sphere sphere-3"></div>
 
         <!-- Text Content -->
         <div class="content-left">
