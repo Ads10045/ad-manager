@@ -62,25 +62,35 @@ pipeline {
             }
         }
 
-        stage('🐳 Docker Build - ad-manager-web') {
-            steps {
-                dir('ad-manager-web') {
-                    sh """
-                        docker build -t ad-manager-web:${params.VERSION} .
-                        docker tag ad-manager-web:${params.VERSION} ad-manager-web:latest
-                    """
+        stage('🐳 Docker Build') {
+            when {
+                expression { 
+                    try {
+                        sh(script: 'docker --version', returnStatus: true) == 0
+                    } catch (Exception e) {
+                        return false
+                    }
                 }
             }
-        }
-
-        stage('🐳 Docker Build - ad-manager-api') {
             steps {
-                dir('ad-manager-api') {
-                    sh """
-                        docker build -t ad-manager-api:${params.VERSION} .
-                        docker tag ad-manager-api:${params.VERSION} ad-manager-api:latest
-                    """
-                }
+                parallel(
+                    'ad-manager-web': {
+                        dir('ad-manager-web') {
+                            sh """
+                                docker build -t ad-manager-web:${params.VERSION} .
+                                docker tag ad-manager-web:${params.VERSION} ad-manager-web:latest
+                            """
+                        }
+                    },
+                    'ad-manager-api': {
+                        dir('ad-manager-api') {
+                            sh """
+                                docker build -t ad-manager-api:${params.VERSION} .
+                                docker tag ad-manager-api:${params.VERSION} ad-manager-api:latest
+                            """
+                        }
+                    }
+                )
             }
         }
 
